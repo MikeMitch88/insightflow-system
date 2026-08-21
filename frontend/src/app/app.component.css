@@ -1,0 +1,2 @@
+.app-layout { display: flex; min-height: 100vh; }
+.sidebar.collapsed { transform: translateX(-100%); }

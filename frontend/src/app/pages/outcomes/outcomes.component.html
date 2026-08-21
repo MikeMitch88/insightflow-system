@@ -1,0 +1,95 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1>Outcomes &amp; Impact</h1>
+      <p class="subtitle">Measuring program effectiveness and beneficiary outcomes</p>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label for="period-select">Reporting Period</label>
+      <select id="period-select" [(ngModel)]="selectedPeriod" (change)="onPeriodChange()">
+        <option [ngValue]="null">All Periods</option>
+        <option *ngFor="let period of periods" [ngValue]="period.id">{{ period.name }}</option>
+      </select>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading outcomes...</p>
+  </div>
+
+  <ng-container *ngIf="!loading">
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon icon-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        </div>
+        <div class="kpi-content">
+          <span class="kpi-value">{{ outcomes.total_outcomes ?? 0 }}</span>
+          <span class="kpi-label">Total Outcomes</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon icon-success">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+        </div>
+        <div class="kpi-content">
+          <span class="kpi-value">{{ outcomes.employment_rate ?? 0 }}%</span>
+          <span class="kpi-label">Employment Rate</span>
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-icon icon-accent">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+        </div>
+        <div class="kpi-content">
+          <span class="kpi-value">{{ outcomes.completion_rate ?? 0 }}%</span>
+          <span class="kpi-label">Completion Rate</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" *ngIf="outcomes.by_program && outcomes.by_program.length > 0; else emptyState">
+      <div class="card-header">
+        <h2>Outcomes by Program</h2>
+      </div>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Program</th>
+              <th>Total</th>
+              <th>Employed</th>
+              <th>Completed</th>
+              <th>Employment Rate</th>
+              <th>Completion Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of outcomes.by_program">
+              <td class="cell-strong">{{ row.program || row.name }}</td>
+              <td>{{ row.total ?? 0 }}</td>
+              <td>{{ row.employed ?? 0 }}</td>
+              <td>{{ row.completed ?? 0 }}</td>
+              <td>{{ row.employment_rate ?? 0 }}%</td>
+              <td>{{ row.completion_rate ?? 0 }}%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        <h3>No outcome data available</h3>
+        <p>Outcome data will appear here once beneficiaries are tracked through program completion.</p>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>

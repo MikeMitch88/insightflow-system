@@ -1,0 +1,158 @@
+<div class="page-container animate-in">
+  <div class="page-header">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <h1>Program Overview</h1>
+        <p>Real-time visibility across Inuka Foundation programs</p>
+      </div>
+      <div style="display:flex;gap:8px">
+        <select class="form-input" [(ngModel)]="selectedPeriod" (change)="onPeriodChange()" style="width:auto">
+          <option [ngValue]="null">All Periods</option>
+          <option *ngFor="let p of periods" [ngValue]="p.id">{{ p.name }}</option>
+        </select>
+        <button class="btn btn-secondary" routerLink="/report-builder">
+          <span class="material-icons-outlined" style="font-size:16px">description</span>
+          Generate Report
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-grid" *ngIf="!loading">
+    <div class="kpi-card">
+      <div class="kpi-label">Total Beneficiaries</div>
+      <div class="kpi-value">{{ summary.total_beneficiaries | number }}</div>
+      <div class="kpi-trend up">
+        <span class="material-icons-outlined" style="font-size:14px">trending_up</span>
+        Across all programs
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Active Beneficiaries</div>
+      <div class="kpi-value">{{ summary.active_beneficiaries | number }}</div>
+      <div class="kpi-trend up">
+        <span class="material-icons-outlined" style="font-size:14px">trending_up</span>
+        Currently enrolled
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Completion Rate</div>
+      <div class="kpi-value">{{ summary.completion_rate | number:'1.1-1' }}%</div>
+      <div class="kpi-trend" [class.up]="summary.completion_rate >= 75" [class.down]="summary.completion_rate < 75">
+        <span class="material-icons-outlined" style="font-size:14px">{{ summary.completion_rate >= 75 ? 'trending_up' : 'trending_down' }}</span>
+        Program completion
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Programs</div>
+      <div class="kpi-value">{{ summary.program_count }}</div>
+      <div class="kpi-trend neutral">
+        <span class="material-icons-outlined" style="font-size:14px">category</span>
+        Active programs
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Counties Reached</div>
+      <div class="kpi-value">{{ summary.counties_reached }}</div>
+      <div class="kpi-trend up">
+        <span class="material-icons-outlined" style="font-size:14px">location_on</span>
+        Across Kenya
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Data Quality Score</div>
+      <div class="kpi-value">{{ summary.data_quality_score | number:'1.0-0' }}/100</div>
+      <div class="kpi-trend" [class.up]="summary.data_quality_score >= 85" [class.down]="summary.data_quality_score < 85">
+        <span class="material-icons-outlined" style="font-size:14px">{{ summary.data_quality_score >= 85 ? 'check_circle' : 'warning' }}</span>
+        {{ summary.data_quality_score >= 85 ? 'Healthy' : 'Needs attention' }}
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-grid" *ngIf="loading">
+    <div class="kpi-card" *ngFor="let i of [1,2,3,4,5,6]">
+      <div class="kpi-label">Loading...</div>
+      <div class="kpi-value" style="opacity:0.3">--</div>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-card">
+      <h3>Beneficiary Growth</h3>
+      <div class="bar-chart" *ngIf="trends.length">
+        <div class="bar-row" *ngFor="let t of trends">
+          <div class="bar-label">{{ t.period }}</div>
+          <div class="bar-track">
+            <div class="bar-fill" [style.width.%]="(t.beneficiary_count || t.enrollment_count || 0) / getMaxTrend() * 100"
+                 style="background: #1565c0">
+              {{ t.beneficiary_count || t.enrollment_count || 0 | number }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="empty-state" *ngIf="!trends.length">
+        <span class="material-icons-outlined">bar_chart</span>
+        <p>No trend data available</p>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h3>Program Performance</h3>
+      <div class="bar-chart" *ngIf="programs.length">
+        <div class="bar-row" *ngFor="let p of programs">
+          <div class="bar-label">{{ p.program_name }}</div>
+          <div class="bar-track">
+            <div class="bar-fill" [style.width.%]="p.total_enrolled / getMaxProgram() * 100"
+                 [style.background]="programColors[p.program_name] || '#666'">
+              {{ p.total_enrolled | number }}
+            </div>
+          </div>
+          <div class="bar-value">{{ p.completion_rate | number:'1.0-0' }}%</div>
+        </div>
+      </div>
+      <div class="empty-state" *ngIf="!programs.length">
+        <span class="material-icons-outlined">analytics</span>
+        <p>No program data available</p>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h3>Program Distribution</h3>
+      <div style="display:flex;gap:20px;align-items:center">
+        <div>
+          <div class="pie-chart" [style.background]="'conic-gradient(' +
+            (programColors['Scholarship']||'#1565c0') + ' 0% ' + ((programs[0]?.total_enrolled||0) / (summary.total_beneficiaries||1) * 100) + '%, ' +
+            (programColors['Plus']||'#7c3aed') + ' ' + ((programs[0]?.total_enrolled||0) / (summary.total_beneficiaries||1) * 100) + '% ' + (((programs[0]?.total_enrolled||0)+(programs[1]?.total_enrolled||0)) / (summary.total_beneficiaries||1) * 100) + '%, ' +
+            (programColors['Vocational']||'#059669') + ' ' + (((programs[0]?.total_enrolled||0)+(programs[1]?.total_enrolled||0)) / (summary.total_beneficiaries||1) * 100) + '% ' + (((programs[0]?.total_enrolled||0)+(programs[1]?.total_enrolled||0)+(programs[2]?.total_enrolled||0)) / (summary.total_beneficiaries||1) * 100) + '%, ' +
+            (programColors['Tech']||'#d97706') + ' ' + (((programs[0]?.total_enrolled||0)+(programs[1]?.total_enrolled||0)+(programs[2]?.total_enrolled||0)) / (summary.total_beneficiaries||1) * 100) + '% 100%)'">
+          </div>
+        </div>
+        <div class="pie-legend" style="flex-direction:column;align-items:flex-start">
+          <div class="pie-legend-item" *ngFor="let p of programs">
+            <div class="pie-legend-dot" [style.background]="programColors[p.program_name]"></div>
+            {{ p.program_name }}: {{ p.total_enrolled | number }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-card">
+      <h3>Program Comparison</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div *ngFor="let p of programs" style="padding:12px;border-radius:8px;border:1px solid var(--border)">
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px">{{ p.program_name }}</div>
+          <div style="font-size:11px;color:var(--text-secondary)">
+            Completion: <strong>{{ p.completion_rate | number:'1.1-1' }}%</strong>
+          </div>
+          <div style="font-size:11px;color:var(--text-secondary)">
+            Attendance: <strong>{{ p.avg_attendance_rate | number:'1.1-1' }}%</strong>
+          </div>
+          <div style="margin-top:6px;height:4px;background:var(--bg);border-radius:2px">
+            <div [style.width.%]="p.completion_rate" [style.height]="'4px'" [style.border-radius]="'2px'"
+                 [style.background]="programColors[p.program_name] || '#666'"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

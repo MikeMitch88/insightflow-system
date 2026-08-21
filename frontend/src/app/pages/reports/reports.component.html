@@ -1,0 +1,85 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1>Reports</h1>
+      <p class="subtitle">View, generate, and manage program reports</p>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-group filter-search">
+      <input
+        type="text"
+        placeholder="Search reports..."
+        [(ngModel)]="searchTerm"
+        (keyup.enter)="onSearch()" />
+    </div>
+    <div class="filter-group">
+      <select [(ngModel)]="filterType" (change)="onFilterChange()">
+        <option value="">All Types</option>
+        <option value="executive">Executive</option>
+        <option value="program_performance">Program Performance</option>
+        <option value="donor">Donor</option>
+        <option value="monday_evidence">M&amp;E</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" routerLink="/report-builder">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      Generate Report
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading reports...</p>
+  </div>
+
+  <ng-container *ngIf="!loading">
+    <div class="card" *ngIf="reports.length > 0; else emptyState">
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Type</th>
+              <th>Period</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let report of reports">
+              <td class="cell-strong">{{ report.title }}</td>
+              <td>{{ getTypeLabel(report.report_type) }}</td>
+              <td>{{ report.period_name || report.reporting_period || '—' }}</td>
+              <td>
+                <span class="badge {{ getStatusClass(report.status) }}">{{ report.status }}</span>
+              </td>
+              <td>{{ report.created_at | date:'mediumDate' }}</td>
+              <td class="actions-cell">
+                <button class="btn btn-sm btn-secondary">View</button>
+                <button class="btn btn-sm btn-outline">Download</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="pagination">
+        <button class="btn btn-sm btn-secondary" [disabled]="page <= 1" (click)="prevPage()">Previous</button>
+        <span class="page-info">Page {{ page }} of {{ totalReports > 0 ? (totalReports + pageSize - 1 - ((totalReports + pageSize - 1) % pageSize)) / pageSize : 1 }}</span>
+        <button class="btn btn-sm btn-secondary" [disabled]="page * pageSize >= totalReports" (click)="nextPage()">Next</button>
+      </div>
+    </div>
+
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+        <h3>No reports found</h3>
+        <p>Generate your first report to see it listed here.</p>
+        <button class="btn btn-primary" routerLink="/report-builder">Generate Report</button>
+      </div>
+    </ng-template>
+  </ng-container>
+</div>

@@ -1,0 +1,74 @@
+<div class="page-container animate-in">
+  <div class="page-header">
+    <h1>Data Sources Integration</h1>
+    <p>Monitor data ingestion from all program systems</p>
+  </div>
+
+  <div class="kpi-grid" *ngIf="sources.length">
+    <div class="kpi-card" *ngFor="let s of sources">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+        <div>
+          <div class="kpi-label">{{ s.type || 'Data Source' }}</div>
+          <div style="font-size:16px;font-weight:600;color:var(--text);margin-top:4px">{{ s.name }}</div>
+        </div>
+        <span class="status-badge" [ngClass]="getStatusClass(s.status)">{{ s.status }}</span>
+      </div>
+      <div style="display:flex;gap:16px;font-size:12px;color:var(--text-secondary)">
+        <div>
+          <div style="font-weight:600;color:var(--text);font-size:18px">{{ s.records | number }}</div>
+          Records
+        </div>
+        <div>
+          <div style="font-weight:500;color:var(--text)">{{ s.last_sync || 'N/A' }}</div>
+          Last Sync
+        </div>
+      </div>
+      <button class="btn btn-sm btn-secondary" style="margin-top:12px;width:100%">
+        <span class="material-icons-outlined" style="font-size:14px">sync</span>
+        Sync Now
+      </button>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="!sources.length && !loading">
+    <span class="material-icons-outlined">database</span>
+    <p>No data sources configured</p>
+  </div>
+
+  <div class="card" style="margin-top:24px" *ngIf="sources.length">
+    <div class="card-header">
+      <div class="card-title">Ancillary Data Sources</div>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr><th>Source</th><th>Type</th><th>Status</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-weight:600">Attendance Tracking</td>
+          <td>Operational</td>
+          <td><span class="status-badge badge-active">Active</span></td>
+          <td>Daily session attendance records across all programs</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600">Outcomes Database</td>
+          <td>Impact</td>
+          <td><span class="status-badge badge-active">Active</span></td>
+          <td>Employment, education, and community impact outcomes</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600">Geographic Data</td>
+          <td>Reference</td>
+          <td><span class="status-badge badge-active">Active</span></td>
+          <td>County and sub-county geographic reference data</td>
+        </tr>
+        <tr>
+          <td style="font-weight:600">Demographics</td>
+          <td>Reference</td>
+          <td><span class="status-badge badge-completed">Loaded</span></td>
+          <td>Beneficiary demographic information</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

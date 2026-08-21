@@ -1,0 +1,98 @@
+<div class="page-container animate-in">
+  <div class="page-header">
+    <h1>Program Intelligence</h1>
+    <p>Detailed performance metrics across all Inuka Foundation programs</p>
+  </div>
+
+  <div class="filter-bar">
+    <select class="form-input" [(ngModel)]="selectedPeriod" (change)="onFilterChange()">
+      <option [ngValue]="null">All Periods</option>
+      <option *ngFor="let p of periods" [ngValue]="p.id">{{ p.name }}</option>
+    </select>
+    <select class="form-input" [(ngModel)]="selectedProgram" (change)="onFilterChange()">
+      <option value="">All Programs</option>
+      <option>Scholarship</option>
+      <option>Plus</option>
+      <option>Vocational</option>
+      <option>Tech</option>
+    </select>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Total Enrolled</div>
+      <div class="kpi-value">{{ totalEnrolled | number }}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Active</div>
+      <div class="kpi-value" style="color:#16a34a">{{ totalActive | number }}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Completed</div>
+      <div class="kpi-value" style="color:#1565c0">{{ totalCompleted | number }}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Dropped Out</div>
+      <div class="kpi-value" style="color:#dc2626">{{ totalDropped | number }}</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:24px">
+    <div class="card-header">
+      <div class="card-title">Program Performance Comparison</div>
+    </div>
+    <div class="bar-chart" *ngIf="programs.length">
+      <div class="bar-row" *ngFor="let p of programs">
+        <div class="bar-label">{{ p.program_name }}</div>
+        <div class="bar-track">
+          <div class="bar-fill" [style.width.%]="p.total_enrolled / getMax() * 100" style="background:#1565c0">
+            {{ p.total_enrolled | number }}
+          </div>
+        </div>
+        <div class="bar-value">{{ p.completion_rate | number:'1.1-1' }}%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Detailed Program Metrics</div>
+    </div>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Program</th>
+          <th>Enrolled</th>
+          <th>Active</th>
+          <th>Completed</th>
+          <th>Dropped</th>
+          <th>Completion Rate</th>
+          <th>Avg Attendance</th>
+          <th>Avg Participation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of programs">
+          <td style="font-weight:600">{{ p.program_name }}</td>
+          <td>{{ p.total_enrolled | number }}</td>
+          <td>{{ p.active | number }}</td>
+          <td>{{ p.completed | number }}</td>
+          <td>{{ p.dropped_out | number }}</td>
+          <td>
+            <span class="status-badge" [class.badge-completed]="p.completion_rate >= 80"
+                  [class.badge-active]="p.completion_rate >= 70 && p.completion_rate < 80"
+                  [class.badge-dropped]="p.completion_rate < 70">
+              {{ p.completion_rate | number:'1.1-1' }}%
+            </span>
+          </td>
+          <td>{{ p.avg_attendance_rate | number:'1.1-1' }}%</td>
+          <td>{{ p.avg_participation_rate | number:'1.1-1' }}%</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="empty-state" *ngIf="!programs.length && !loading">
+      <span class="material-icons-outlined">analytics</span>
+      <p>No program data available</p>
+    </div>
+  </div>
+</div>

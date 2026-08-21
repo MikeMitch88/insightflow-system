@@ -1,0 +1,97 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1>InsightFlow AI Assistant</h1>
+      <p class="subtitle">Intelligent analysis powered by verified organizational data</p>
+    </div>
+  </div>
+
+  <div class="quick-questions">
+    <button
+      class="quick-q"
+      *ngFor="let question of quickQuestions"
+      (click)="askQuickQuestion(question)"
+      [disabled]="loading">
+      {{ question }}
+    </button>
+  </div>
+
+  <div class="chat-layout">
+    <div class="chat-area">
+      <div class="messages-container">
+        <div class="message animate-in" *ngFor="let msg of messages" [ngClass]="msg.role">
+          <div class="message-avatar">{{ msg.role === 'user' ? 'You' : 'AI' }}</div>
+          <div class="message-content">
+            <ng-container *ngIf="msg.role === 'user'; else assistantContent">
+              {{ msg.content }}
+            </ng-container>
+            <ng-template #assistantContent>
+              <p>{{ msg.content.answer }}</p>
+
+              <div *ngIf="msg.content.kpis && msg.content.kpis.length" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px;">
+                <span
+                  *ngFor="let kpi of msg.content.kpis"
+                  style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 12px; background: var(--surface); border: 1px solid var(--border); font-size: 11px; color: var(--text-secondary);">
+                  {{ kpi.label }}: <strong style="color: var(--primary);">{{ kpi.value }}</strong>
+                </span>
+              </div>
+
+              <ng-container *ngIf="msg.content.recommendation">
+                <h4>Recommendation</h4>
+                <p class="recommendation">{{ msg.content.recommendation }}</p>
+              </ng-container>
+
+              <button class="add-to-report" type="button">+ Add to Report</button>
+            </ng-template>
+          </div>
+        </div>
+
+        <div class="message assistant" *ngIf="loading">
+          <div class="message-avatar">AI</div>
+          <div class="message-content">
+            <div class="loading-state" style="padding: 0;">
+              <div class="spinner"></div>
+              <p>Analyzing organizational data&hellip;</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-input-bar">
+        <input
+          type="text"
+          placeholder="Ask about programs, trends, outcomes, or data quality..."
+          [(ngModel)]="userInput"
+          (keyup.enter)="sendMessage()"
+          [disabled]="loading" />
+        <button
+          class="btn btn-primary"
+          type="button"
+          (click)="sendMessage()"
+          [disabled]="loading || !userInput.trim()">
+          Send
+        </button>
+      </div>
+    </div>
+
+    <aside class="context-panel">
+      <h3>Data Context</h3>
+      <div class="context-metric">
+        <div class="context-metric-label">Total Beneficiaries</div>
+        <div class="context-metric-value">{{ contextMetrics.total_beneficiaries || '—' }}</div>
+      </div>
+      <div class="context-metric">
+        <div class="context-metric-label">Completion Rate</div>
+        <div class="context-metric-value">{{ contextMetrics.completion_rate != null ? (contextMetrics.completion_rate | number:'1.1-1') + '%' : '—' }}</div>
+      </div>
+      <div class="context-metric">
+        <div class="context-metric-label">Attendance Rate</div>
+        <div class="context-metric-value">{{ contextMetrics.attendance_rate != null ? (contextMetrics.attendance_rate | number:'1.1-1') + '%' : '—' }}</div>
+      </div>
+      <div class="context-metric">
+        <div class="context-metric-label">Active Programs</div>
+        <div class="context-metric-value">{{ contextMetrics.program_count || '—' }}</div>
+      </div>
+    </aside>
+  </div>
+</div>

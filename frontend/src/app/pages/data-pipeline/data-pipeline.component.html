@@ -1,0 +1,64 @@
+<div class="page-container animate-in">
+  <div class="page-header">
+    <h1>Data Pipeline</h1>
+    <p>Stage 1 to Stage 2: From raw data to unified program intelligence</p>
+  </div>
+
+  <div class="card" style="margin-bottom:24px;overflow-x:auto">
+    <div class="card-header">
+      <div class="card-title">Pipeline Architecture</div>
+      <span class="status-badge badge-active" *ngIf="!loading">Operational</span>
+    </div>
+    <div class="pipeline-visual">
+      <ng-container *ngFor="let stage of stages; let last = last">
+        <div class="pipeline-node" [ngClass]="stage.status">
+          <span class="material-icons-outlined pipeline-node-icon">{{ stage.icon }}</span>
+          <div class="pipeline-node-label">{{ stage.label }}</div>
+          <div style="font-size:10px;color:var(--text-secondary);max-width:90px">{{ stage.desc }}</div>
+        </div>
+        <span class="material-icons-outlined pipeline-arrow" *ngIf="!last">arrow_forward</span>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Records Processed</div>
+      <div class="kpi-value">{{ (pipeline.records_processed || 0) | number }}</div>
+      <div class="kpi-trend up">Across all sources</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Last Synchronization</div>
+      <div class="kpi-value" style="font-size:18px">{{ pipeline.last_sync || 'N/A' }}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Processing Time</div>
+      <div class="kpi-value" style="font-size:18px">{{ pipeline.processing_time || 'N/A' }}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Validation Errors</div>
+      <div class="kpi-value" style="color:#d97706">{{ pipeline.validation_errors || 0 }}</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Pipeline Status</div>
+      <div class="kpi-value" style="font-size:16px;color:#16a34a">{{ pipeline.status || 'Operational' }}</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Data Flow Narrative</div>
+    </div>
+    <div class="flow-narrative">
+      <div class="flow-step" style="background:#dc2626">Fragmented Data</div>
+      <span class="material-icons-outlined flow-arrow">arrow_forward</span>
+      <div class="flow-step" style="background:#d97706">Trusted Data</div>
+      <span class="material-icons-outlined flow-arrow">arrow_forward</span>
+      <div class="flow-step" style="background:#1565c0">Unified Intelligence</div>
+      <span class="material-icons-outlined flow-arrow">arrow_forward</span>
+      <div class="flow-step" style="background:#5c3fbf">Automated Reporting</div>
+      <span class="material-icons-outlined flow-arrow">arrow_forward</span>
+      <div class="flow-step" style="background:#16a34a">Better Decisions</div>
+    </div>
+  </div>
+</div>

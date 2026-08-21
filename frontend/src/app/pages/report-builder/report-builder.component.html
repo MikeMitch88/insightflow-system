@@ -1,0 +1,197 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1>Report Builder</h1>
+      <p class="subtitle">Create customized reports with AI-powered insights</p>
+    </div>
+  </div>
+
+  <div class="wizard-steps">
+    <div class="step" [class.active]="currentStep === 1" [class.done]="currentStep > 1">
+      <span class="step-number">1</span>
+      <span class="step-label">Select Data</span>
+    </div>
+    <div class="step-connector" [class.done]="currentStep > 1"></div>
+    <div class="step" [class.active]="currentStep === 2" [class.done]="currentStep > 2">
+      <span class="step-number">2</span>
+      <span class="step-label">Configure</span>
+    </div>
+    <div class="step-connector" [class.done]="currentStep > 2"></div>
+    <div class="step" [class.active]="currentStep === 3" [class.done]="currentStep > 3">
+      <span class="step-number">3</span>
+      <span class="step-label">Review</span>
+    </div>
+    <div class="step-connector" [class.done]="currentStep > 3"></div>
+    <div class="step" [class.active]="currentStep === 4">
+      <span class="step-number">4</span>
+      <span class="step-label">Generate</span>
+    </div>
+  </div>
+
+  <div class="card wizard-card">
+    <!-- Step 1: Select Data -->
+    <div *ngIf="currentStep === 1" class="wizard-step-content">
+      <h2>Select Report Data</h2>
+      <p class="step-description">Choose the basic details for your report.</p>
+
+      <div class="form-group">
+        <label for="report-title">Report Title *</label>
+        <input
+          id="report-title"
+          type="text"
+          placeholder="e.g. Q3 2026 Executive Summary"
+          [(ngModel)]="config.title" />
+      </div>
+
+      <div class="form-group">
+        <label for="report-type">Report Type</label>
+        <select id="report-type" [(ngModel)]="config.report_type">
+          <option *ngFor="let type of reportTypes" [value]="type.value">{{ type.label }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="report-period">Reporting Period *</label>
+        <select id="report-period" [(ngModel)]="config.reporting_period_id">
+          <option [ngValue]="null">Select a reporting period...</option>
+          <option *ngFor="let period of periods" [ngValue]="period.id">{{ period.name }}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="report-program">Program (optional)</label>
+        <input
+          id="report-program"
+          type="text"
+          placeholder="Filter report to a specific program"
+          [(ngModel)]="config.program" />
+      </div>
+    </div>
+
+    <!-- Step 2: Configure -->
+    <div *ngIf="currentStep === 2" class="wizard-step-content">
+      <h2>Configure Sections</h2>
+      <p class="step-description">Choose which sections to include in your report.</p>
+
+      <div class="sections-grid">
+        <label
+          class="section-check"
+          *ngFor="let section of availableSections"
+          [class.selected]="isSectionSelected(section.id)">
+          <input
+            type="checkbox"
+            [checked]="isSectionSelected(section.id)"
+            (change)="toggleSection(section.id)" />
+          <span>{{ section.label }}</span>
+        </label>
+      </div>
+
+      <div class="ai-toggle-row">
+        <div class="ai-toggle-text">
+          <strong>AI Insights</strong>
+          <p>Use AI to generate executive summary and insights</p>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" [(ngModel)]="config.use_ai_insights" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Step 3: Review -->
+    <div *ngIf="currentStep === 3" class="wizard-step-content">
+      <h2>Review Configuration</h2>
+      <p class="step-description">Confirm your report settings before generating.</p>
+
+      <div class="review-card">
+        <div class="review-item">
+          <span class="review-label">Title</span>
+          <span class="review-value">{{ config.title || '—' }}</span>
+        </div>
+        <div class="review-item">
+          <span class="review-label">Report Type</span>
+          <span class="review-value">{{ reportTypes.find(t => t.value === config.report_type)?.label || config.report_type }}</span>
+        </div>
+        <div class="review-item">
+          <span class="review-label">Reporting Period</span>
+          <span class="review-value">{{ config.reporting_period_id ? getPeriodName(config.reporting_period_id) : '—' }}</span>
+        </div>
+        <div class="review-item">
+          <span class="review-label">Program</span>
+          <span class="review-value">{{ config.program || 'All Programs' }}</span>
+        </div>
+        <div class="review-item">
+          <span class="review-label">Sections</span>
+          <span class="review-value">
+            <span *ngFor="let section of availableSections; let last = last">
+              <ng-container *ngIf="isSectionSelected(section.id)">{{ section.label }}{{ last ? '' : ', ' }}</ng-container>
+            </span>
+            <ng-container *ngIf="config.sections.length === 0">None selected</ng-container>
+          </span>
+        </div>
+        <div class="review-item">
+          <span class="review-label">AI Insights</span>
+          <span class="review-value">{{ config.use_ai_insights ? 'Enabled' : 'Disabled' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Generate -->
+    <div *ngIf="currentStep === 4" class="wizard-step-content">
+      <h2>Generate Report</h2>
+      <p class="step-description">Your report is ready to be generated.</p>
+
+      <div *ngIf="generating" class="generating-state">
+        <div class="spinner"></div>
+        <p>Generating your report... This may take a moment.</p>
+      </div>
+
+      <div *ngIf="!generating && generatedReport" class="success-state">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        <h3>Report Generated Successfully!</h3>
+        <div class="success-details">
+          <div class="review-item">
+            <span class="review-label">Title</span>
+            <span class="review-value">{{ generatedReport.title || config.title }}</span>
+          </div>
+          <div class="review-item">
+            <span class="review-label">Type</span>
+            <span class="review-value">{{ reportTypes.find(t => t.value === generatedReport.report_type)?.label || generatedReport.report_type || 'Executive Report' }}</span>
+          </div>
+          <div class="review-item">
+            <span class="review-label">Status</span>
+            <span class="review-value">{{ generatedReport.status || 'completed' }}</span>
+          </div>
+        </div>
+        <button class="btn btn-primary" routerLink="/reports">View All Reports</button>
+      </div>
+
+      <div *ngIf="!generating && !generatedReport" class="generate-ready">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+        <p>All set! Click below to generate your report.</p>
+        <button class="btn btn-primary btn-lg" (click)="generateReport()" [disabled]="!config.reporting_period_id || !config.title">
+          Generate Report
+        </button>
+      </div>
+    </div>
+
+    <!-- Wizard Navigation -->
+    <div class="wizard-nav" *ngIf="currentStep < 4">
+      <button class="btn btn-secondary" (click)="prevStep()" [disabled]="currentStep === 1">Previous</button>
+      <button
+        *ngIf="currentStep < 3"
+        class="btn btn-primary"
+        (click)="nextStep()"
+        [disabled]="currentStep === 1 && (!config.title || !config.reporting_period_id)">
+        Next
+      </button>
+      <button
+        *ngIf="currentStep === 3"
+        class="btn btn-primary"
+        (click)="generateReport()"
+        [disabled]="generating">
+        Submit
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,68 @@
+registerPage('outcomes-impact', () => `
+<div class="p-xl max-w-container-max mx-auto w-full flex-1 space-y-lg">
+  <div class="flex justify-between items-end mb-8">
+    <div><h1 class="font-display-lg text-display-lg text-primary mb-2">Outcomes & Impact</h1><p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl">Executive intelligence summary detailing long-term foundation impact, beneficiary reach against targeted outcomes, and regional growth metrics for Q3 2024.</p></div>
+    <div class="flex gap-4">
+      <button class="px-4 py-2 bg-white border border-outline-variant text-primary rounded-lg font-title-md text-title-md hover:bg-surface-variant/20 transition-colors flex items-center gap-2"><span class="material-symbols-outlined" style="font-size:18px">download</span> Export Brief</button>
+      <button class="px-4 py-2 bg-secondary text-white rounded-lg font-title-md text-title-md shadow-sm hover:bg-secondary/90 transition-colors flex items-center gap-2"><span class="material-symbols-outlined" style="font-size:18px">auto_awesome</span> Generate AI Summary</button>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-md">
+    <div class="glass-card rounded-xl p-6"><div class="flex justify-between items-start mb-4"><p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Total Beneficiaries</p><span class="material-symbols-outlined text-secondary bg-secondary-fixed p-1 rounded-md" style="font-size:20px">groups</span></div><h3 class="font-headline-lg text-headline-lg text-primary mb-1 data-value">2.4M</h3><p class="font-label-md text-label-md text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-green-600" style="font-size:16px">trending_up</span><span class="text-green-700 font-semibold">+12.4%</span> vs target</p></div>
+    <div class="glass-card rounded-xl p-6"><div class="flex justify-between items-start mb-4"><p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Program Completion</p><span class="material-symbols-outlined text-secondary bg-secondary-fixed p-1 rounded-md" style="font-size:20px">task_alt</span></div><h3 class="font-headline-lg text-headline-lg text-primary mb-1 data-value">84.2%</h3><p class="font-label-md text-label-md text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-green-600" style="font-size:16px">trending_up</span><span class="text-green-700 font-semibold">+3.1%</span> YoY</p></div>
+    <div class="glass-card rounded-xl p-6"><div class="flex justify-between items-start mb-4"><p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Employment Outcome</p><span class="material-symbols-outlined text-secondary bg-secondary-fixed p-1 rounded-md" style="font-size:20px">work</span></div><h3 class="font-headline-lg text-headline-lg text-primary mb-1 data-value">68.5%</h3><p class="font-label-md text-label-md text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-green-600" style="font-size:16px">trending_up</span><span class="text-green-700 font-semibold">+5.2%</span> post-intervention</p></div>
+    <div class="glass-card rounded-xl p-6 relative overflow-hidden"><div class="absolute inset-0 bg-gradient-to-br from-secondary/10 to-transparent z-0"></div><div class="relative z-10"><div class="flex justify-between items-start mb-4"><p class="font-label-sm text-label-sm text-secondary uppercase tracking-wider font-bold">AI Insight</p><span class="material-symbols-outlined text-secondary" style="font-size:20px">auto_awesome</span></div><p class="font-body-md text-body-md text-primary font-medium leading-relaxed">Interventions in Sub-Saharan Africa show a 40% higher retention rate when paired with localized mentorship programs.</p></div></div>
+  </div>
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-md">
+    <div class="glass-card rounded-xl lg:col-span-2 p-6 flex flex-col">
+      <div class="flex justify-between items-center mb-6 pb-4 border-b border-surface-variant"><div><h3 class="font-title-lg text-title-lg text-primary">Beneficiary Reach vs Targets</h3><p class="font-label-md text-label-md text-on-surface-variant">Cumulative assessment across key initiatives FY23-FY24</p></div><div class="flex gap-2"><button class="p-1 border border-outline-variant rounded hover:bg-surface-variant/20"><span class="material-symbols-outlined text-on-surface-variant" style="font-size:18px">filter_list</span></button><button class="p-1 border border-outline-variant rounded hover:bg-surface-variant/20"><span class="material-symbols-outlined text-on-surface-variant" style="font-size:18px">more_vert</span></button></div></div>
+      <div class="flex-1 min-h-[300px] w-full relative bg-surface-container-lowest rounded border border-surface-variant/50 flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-x-0 bottom-0 h-full flex items-end justify-around px-8 pb-8 pt-12">
+          <div class="absolute inset-0 flex flex-col justify-between px-8 py-8 z-0 pointer-events-none"><div class="w-full h-[0.5px] bg-outline-variant/30"></div><div class="w-full h-[0.5px] bg-outline-variant/30"></div><div class="w-full h-[0.5px] bg-outline-variant/30"></div><div class="w-full h-[0.5px] bg-outline-variant/30"></div><div class="w-full h-[0.5px] bg-outline-variant/30"></div></div>
+          <div class="relative z-10 w-12 flex items-end gap-1 group"><div class="w-5 bg-outline-variant/50 rounded-t h-[40%]"></div><div class="w-5 bg-secondary rounded-t h-[45%] shadow-[0_0_15px_rgba(0,88,190,0.3)]"></div><span class="absolute -bottom-6 left-1/2 -translate-x-1/2 font-label-sm text-label-sm text-on-surface-variant">Q1</span></div>
+          <div class="relative z-10 w-12 flex items-end gap-1"><div class="w-5 bg-outline-variant/50 rounded-t h-[55%]"></div><div class="w-5 bg-secondary rounded-t h-[62%] shadow-[0_0_15px_rgba(0,88,190,0.3)]"></div><span class="absolute -bottom-6 left-1/2 -translate-x-1/2 font-label-sm text-label-sm text-on-surface-variant">Q2</span></div>
+          <div class="relative z-10 w-12 flex items-end gap-1"><div class="w-5 bg-outline-variant/50 rounded-t h-[65%]"></div><div class="w-5 bg-secondary rounded-t h-[60%]"></div><span class="absolute -bottom-6 left-1/2 -translate-x-1/2 font-label-sm text-label-sm text-on-surface-variant">Q3</span></div>
+          <div class="relative z-10 w-12 flex items-end gap-1"><div class="w-5 bg-outline-variant/50 rounded-t h-[75%]"></div><div class="w-5 bg-secondary rounded-t h-[85%] shadow-[0_0_15px_rgba(0,88,190,0.4)]"></div><span class="absolute -bottom-6 left-1/2 -translate-x-1/2 font-label-sm text-label-sm text-on-surface-variant">Q4</span></div>
+          <div class="relative z-10 w-12 flex items-end gap-1"><div class="w-5 bg-outline-variant/50 rounded-t h-[80%]"></div><div class="w-5 bg-secondary rounded-t h-[95%] shadow-[0_0_15px_rgba(0,88,190,0.5)]"></div><span class="absolute -bottom-6 left-1/2 -translate-x-1/2 font-label-sm text-label-sm text-on-surface-variant">Q1'24</span></div>
+        </div>
+        <div class="absolute top-4 right-4 flex gap-4 bg-white/90 px-3 py-1.5 rounded border border-surface-variant text-label-sm font-label-sm backdrop-blur-sm z-20"><div class="flex items-center gap-2"><div class="w-3 h-3 rounded-sm bg-outline-variant/50"></div>Target</div><div class="flex items-center gap-2"><div class="w-3 h-3 rounded-sm bg-secondary"></div>Actual Reach</div></div>
+      </div>
+    </div>
+    <div class="glass-card rounded-xl p-6 flex flex-col">
+      <div class="mb-4 pb-4 border-b border-surface-variant"><h3 class="font-title-lg text-title-lg text-primary flex items-center gap-2"><span class="material-symbols-outlined text-on-tertiary-container">psychology</span> Strategic Insights</h3></div>
+      <div class="flex-1 space-y-4 overflow-y-auto pr-2">
+        <div class="p-4 bg-surface-container-low rounded border border-surface-variant/50 hover:bg-surface-variant/10 transition-colors"><h4 class="font-title-md text-title-md text-primary mb-1">Accelerated Digital Adoption</h4><p class="font-body-md text-body-md text-on-surface-variant">Programs incorporating mobile-first delivery showed a 2.4x higher completion rate compared to traditional in-person modules.</p></div>
+        <div class="p-4 bg-surface-container-low rounded border border-surface-variant/50 hover:bg-surface-variant/10 transition-colors"><h4 class="font-title-md text-title-md text-primary mb-1">Employment Gap Narrowing</h4><p class="font-body-md text-body-md text-on-surface-variant">Post-intervention tracking indicates a 15% reduction in the structural unemployment gap within targeted demographics over 18 months.</p></div>
+        <div class="p-4 bg-surface-container-low rounded border border-surface-variant/50 hover:bg-surface-variant/10 transition-colors"><h4 class="font-title-md text-title-md text-primary mb-1">Resource Allocation Shift</h4><p class="font-body-md text-body-md text-on-surface-variant">Predictive models suggest reallocating 12% of Q4 funding from legacy infrastructure to digital upskilling will maximize ROI.</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-md">
+    <div class="glass-card rounded-xl p-6">
+      <div class="flex justify-between items-center mb-4"><h3 class="font-title-lg text-title-lg text-primary">Regional Impact Distribution</h3><span class="material-symbols-outlined text-on-surface-variant">public</span></div>
+      <div class="w-full h-64 bg-surface-container-low rounded border border-surface-variant/50 relative overflow-hidden flex items-center justify-center">
+        <div class="absolute inset-0 bg-cover bg-center opacity-60 mix-blend-multiply" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuChMU9A_V_dMfiAkMbitJuDbeoiq34FXngNyKZ9Fi8xijzJA0NT6J7y0u7dpW-9LBpT4pNW2_7GtiYPFZ0QJubt5BFX3O9tH9IeCVBLdoP4Mie23JOhHqCwH_QWycRpOQtgZosc6LPNhYKX5nZnFslltblJsql74N2K9ykO4cN0CKELtNrS2oEDc--SDvrSaKqF6g_UeI-39f_Uwyfs1yZwxX1uNTKI_1euKaWSLTqzbJKDW4-2YaGepQ')"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-white/80 to-transparent"></div>
+        <div class="absolute bottom-4 left-4 right-4 flex justify-between">
+          <div class="bg-white/90 backdrop-blur border border-surface-variant rounded p-3 shadow-sm"><p class="font-label-sm text-label-sm text-on-surface-variant">Highest Growth</p><p class="font-title-md text-title-md text-primary">Southeast Asia <span class="text-secondary ml-2">+28%</span></p></div>
+          <div class="bg-white/90 backdrop-blur border border-surface-variant rounded p-3 shadow-sm"><p class="font-label-sm text-label-sm text-on-surface-variant">Largest Baseline</p><p class="font-title-md text-title-md text-primary">Sub-Saharan Africa</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="glass-card rounded-xl p-0 overflow-hidden flex flex-col">
+      <div class="p-6 pb-4 border-b border-surface-variant flex justify-between items-center"><h3 class="font-title-lg text-title-lg text-primary">Program Efficacy</h3><button class="text-secondary font-label-md text-label-md hover:underline">View Full Report</button></div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead><tr class="bg-surface-container-low"><th class="p-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold border-b border-surface-variant/50">Initiative</th><th class="p-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold border-b border-surface-variant/50 text-right">Cohorts</th><th class="p-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold border-b border-surface-variant/50 text-right">Completion</th><th class="p-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider font-semibold border-b border-surface-variant/50 text-right">Outcome Status</th></tr></thead>
+          <tbody class="font-body-md text-body-md text-primary divide-y divide-surface-variant/30">
+            <tr class="hover:bg-blue-50/50 transition-colors"><td class="p-4 font-medium">Digital Literacy Core</td><td class="p-4 text-right">124</td><td class="p-4 text-right">92%</td><td class="p-4 text-right"><span class="inline-flex items-center px-2 py-1 rounded bg-green-100 text-green-800 font-label-sm text-label-sm">Exceeds</span></td></tr>
+            <tr class="hover:bg-blue-50/50 transition-colors"><td class="p-4 font-medium">Advanced Agri-Tech</td><td class="p-4 text-right">48</td><td class="p-4 text-right">76%</td><td class="p-4 text-right"><span class="inline-flex items-center px-2 py-1 rounded bg-blue-100 text-blue-800 font-label-sm text-label-sm">On Track</span></td></tr>
+            <tr class="hover:bg-blue-50/50 transition-colors"><td class="p-4 font-medium">Youth Micro-Finance</td><td class="p-4 text-right">86</td><td class="p-4 text-right">88%</td><td class="p-4 text-right"><span class="inline-flex items-center px-2 py-1 rounded bg-green-100 text-green-800 font-label-sm text-label-sm">Exceeds</span></td></tr>
+            <tr class="hover:bg-blue-50/50 transition-colors"><td class="p-4 font-medium">Civic Infrastructure</td><td class="p-4 text-right">12</td><td class="p-4 text-right">64%</td><td class="p-4 text-right"><span class="inline-flex items-center px-2 py-1 rounded bg-yellow-100 text-yellow-800 font-label-sm text-label-sm">Monitor</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+`);

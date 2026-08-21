@@ -1,0 +1,112 @@
+<div class="page">
+  <div class="page-header">
+    <div>
+      <h1>Administration</h1>
+      <p class="subtitle">Manage users, roles, and system settings</p>
+    </div>
+  </div>
+
+  <div class="tab-bar">
+    <div class="tab-item" [class.active]="activeTab === 'users'" (click)="activeTab = 'users'">Users &amp; Roles</div>
+    <div class="tab-item" [class.active]="activeTab === 'settings'" (click)="activeTab = 'settings'">Settings</div>
+    <div class="tab-item" [class.active]="activeTab === 'audit'" (click)="activeTab = 'audit'">Audit Logs</div>
+  </div>
+
+  <div class="card" *ngIf="activeTab === 'users'">
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Last Active</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td class="cell-strong">{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="user.status === 'Active' ? 'badge-active' : 'badge-draft'">{{ user.status }}</span>
+            </td>
+            <td>{{ user.lastActive }}</td>
+            <td class="actions-cell">
+              <button class="btn btn-sm btn-secondary">Edit</button>
+              <button class="btn btn-sm btn-outline">Deactivate</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" *ngIf="activeTab === 'settings'">
+    <div style="max-width: 480px;">
+      <div class="form-group">
+        <label for="orgName">Organization Name</label>
+        <input id="orgName" type="text" class="form-input" [(ngModel)]="settings.orgName" />
+      </div>
+
+      <div class="form-group">
+        <label for="reportingFrequency">Reporting Frequency</label>
+        <select id="reportingFrequency" class="form-input" [(ngModel)]="settings.reportingFrequency">
+          <option value="monthly">Monthly</option>
+          <option value="quarterly">Quarterly</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="defaultPeriod">Default Period</label>
+        <select id="defaultPeriod" class="form-input" [(ngModel)]="settings.defaultPeriod">
+          <option value="Q1 2026">Q1 2026</option>
+          <option value="Q2 2026">Q2 2026</option>
+          <option value="Q3 2026">Q3 2026</option>
+          <option value="Q4 2026">Q4 2026</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="emailNotifications">Email Notifications</label>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <input
+            id="emailNotifications"
+            type="checkbox"
+            [(ngModel)]="settings.emailNotifications"
+            style="width: 16px; height: 16px; cursor: pointer;" />
+          <span style="font-size: 13px; color: var(--text-secondary);">
+            {{ settings.emailNotifications ? 'Enabled — receive email alerts for reports and data quality issues' : 'Disabled' }}
+          </span>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" type="button">Save Settings</button>
+    </div>
+  </div>
+
+  <div class="card" *ngIf="activeTab === 'audit'">
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>User</th>
+            <th>Action</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let log of auditLogs">
+            <td>{{ log.timestamp }}</td>
+            <td class="cell-strong">{{ log.user }}</td>
+            <td>{{ log.action }}</td>
+            <td>{{ log.details }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

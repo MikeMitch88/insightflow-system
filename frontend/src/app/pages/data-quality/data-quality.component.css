@@ -1,0 +1,10 @@
+:host { display: block; }
+.quality-score-circle {
+  width: 120px; height: 120px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px; font-weight: 700; color: #fff;
+  margin: 0 auto 16px;
+}
+.quality-good { background: linear-gradient(135deg, #16a34a, #22c55e); }
+.quality-warning { background: linear-gradient(135deg, #d97706, #f59e0b); }
+.quality-bad { background: linear-gradient(135deg, #dc2626, #ef4444); }
