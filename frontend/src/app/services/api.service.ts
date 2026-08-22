@@ -101,4 +101,12 @@ export class ApiService {
   syncDataSources(): Observable<any> {
     return this.http.post(`${this.baseUrl}/pipeline/sync`, {});
   }
+
+  getSettings(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/admin/settings`);
+  }
+
+  updateSettings(settings: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/admin/settings`, settings);
+  }
 }

@@ -63,9 +63,10 @@ export class ReportBuilderComponent implements OnInit {
   generateReport(): void {
     if (!this.config.reporting_period_id || !this.config.title) return;
     this.generating = true;
+    this.currentStep = 4; // Transition immediately to show loading spinner
     this.api.generateReport(this.config).subscribe({
-      next: (data) => { this.generatedReport = data; this.generating = false; this.currentStep = 4; },
-      error: () => { this.generating = false; }
+      next: (data) => { this.generatedReport = data; this.generating = false; },
+      error: () => { this.generating = false; this.currentStep = 3; } // Fallback on failure
     });
   }
 

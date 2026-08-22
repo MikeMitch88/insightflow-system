@@ -74,10 +74,35 @@ export class AdminComponent implements OnInit {
     emailNotifications: true,
     defaultPeriod: 'Q3 2026'
   };
+  settingsSaved = false;
+  settingsSaving = false;
+
+  periods: any[] = [];
 
   constructor(private api: ApiService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.api.getSettings().subscribe({
+      next: (data) => { if (data) this.settings = { ...this.settings, ...data }; }
+    });
+    this.api.getPeriods().subscribe({
+      next: (data: any) => { this.periods = data.items || (Array.isArray(data) ? data : []); }
+    });
+  }
+
+  saveSettings(): void {
+    this.settingsSaving = true;
+    this.settingsSaved = false;
+    this.api.updateSettings(this.settings).subscribe({
+      next: (data) => {
+        this.settings = data;
+        this.settingsSaving = false;
+        this.settingsSaved = true;
+        setTimeout(() => this.settingsSaved = false, 3000);
+      },
+      error: () => { this.settingsSaving = false; }
+    });
+  }
 
   getUserPermissions(user: any): string[] {
     return this.rolePermissions[user.roleKey] || [];
