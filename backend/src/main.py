@@ -14,6 +14,7 @@ from src.api.data_quality import router as data_quality_router
 from src.api.reports import router as reports_router
 from src.api.ai_routes import router as ai_router
 from src.api.periods import router as periods_router
+from src.api.admin import router as admin_router
 from src.auth.routes import router as auth_router
 
 
@@ -47,6 +48,7 @@ app.include_router(reports_router)
 app.include_router(ai_router)
 app.include_router(periods_router)
 app.include_router(auth_router)
+app.include_router(admin_router)
 
 
 @app.get("/api/health")
