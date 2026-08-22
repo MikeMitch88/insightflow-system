@@ -19,7 +19,7 @@
   <div class="chat-layout">
     <div class="chat-area">
       <div class="messages-container">
-        <div class="message animate-in" *ngFor="let msg of messages" [ngClass]="msg.role">
+        <div class="message animate-in" *ngFor="let msg of messages; let i = index" [ngClass]="msg.role">
           <div class="message-avatar">{{ msg.role === 'user' ? 'You' : 'AI' }}</div>
           <div class="message-content">
             <ng-container *ngIf="msg.role === 'user'; else assistantContent">
@@ -41,7 +41,19 @@
                 <p class="recommendation">{{ msg.content.recommendation }}</p>
               </ng-container>
 
-              <button class="add-to-report" type="button">+ Add to Report</button>
+              <div class="ai-actions">
+                <button class="add-to-report" type="button" (click)="addToReport(msg, i)" *ngIf="addedToReport !== i">
+                  <span class="material-icons-outlined" style="font-size:14px">add_chart</span>
+                  Add to Report
+                </button>
+                <span *ngIf="addedToReport === i" class="add-success">
+                  <span class="material-icons-outlined" style="font-size:14px">check_circle</span>
+                  Added to report
+                </span>
+                <button class="btn btn-sm btn-secondary" routerLink="/reports" *ngIf="addedToReport === i">
+                  View Reports
+                </button>
+              </div>
             </ng-template>
           </div>
         </div>

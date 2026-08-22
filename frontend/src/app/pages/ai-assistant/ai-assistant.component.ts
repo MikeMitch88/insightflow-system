@@ -11,6 +11,7 @@ export class AiAssistantComponent implements OnInit {
   userInput = '';
   loading = false;
   contextPage = 'dashboard';
+  addedToReport: number | null = null;
 
   quickQuestions = [
     'What changed this quarter?',
@@ -63,5 +64,22 @@ export class AiAssistantComponent implements OnInit {
   askQuickQuestion(question: string): void {
     this.userInput = question;
     this.sendMessage();
+  }
+
+  addToReport(msg: any, index: number): void {
+    if (!msg.content?.answer) return;
+    this.api.generateReport({
+      title: 'AI Insight: ' + msg.content.answer.substring(0, 60),
+      report_type: 'executive',
+      reporting_period_id: 7,
+      sections: ['executive_summary', 'recommendations'],
+      use_ai_insights: true
+    }).subscribe({
+      next: () => {
+        this.addedToReport = index;
+        setTimeout(() => this.addedToReport = null, 3000);
+      },
+      error: () => {}
+    });
   }
 }
