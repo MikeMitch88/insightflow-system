@@ -57,4 +57,24 @@ export class ReportsComponent implements OnInit {
       default: return type;
     }
   }
+
+  downloadReport(reportId: number, format: string): void {
+    const token = localStorage.getItem('insightflow_token');
+    const url = `http://localhost:8000/api/reports/${reportId}/download?format=${format}`;
+    fetch(url, { headers: { 'Authorization': `Bearer ${token}` } })
+      .then(res => {
+        if (!res.ok) throw new Error('Download failed');
+        return res.blob();
+      })
+      .then(blob => {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `report.${format}`;
+        a.click();
+        URL.revokeObjectURL(a.href);
+      })
+      .catch(() => alert('Download failed. Make sure the report is completed.'));
+  }
+
+  refreshReports(): void { this.loadReports(); }
 }

@@ -1,1 +1,54 @@
 :host { display: block; }
+
+.permissions-row td {
+  padding: 0 !important;
+  background: #f8fafc;
+}
+
+.permissions-panel {
+  padding: 16px 24px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.permissions-header {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 12px;
+}
+
+.permissions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 6px;
+}
+
+.perm-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+}
+
+.perm-granted {
+  color: #16a34a;
+  background: #f0fdf4;
+}
+
+.perm-denied {
+  color: #dc2626;
+  background: #fef2f2;
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.perm-icon {
+  font-size: 16px;
+}
+
+.badge-admin {
+  background: #ede9fe;
+  color: #7c3aed;
+}

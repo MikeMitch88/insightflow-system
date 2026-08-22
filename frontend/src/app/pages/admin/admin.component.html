@@ -21,24 +21,48 @@
             <th>Email</th>
             <th>Role</th>
             <th>Status</th>
+            <th>Pages</th>
             <th>Last Active</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let user of users">
-            <td class="cell-strong">{{ user.name }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.role }}</td>
-            <td>
-              <span class="status-badge" [ngClass]="user.status === 'Active' ? 'badge-active' : 'badge-draft'">{{ user.status }}</span>
-            </td>
-            <td>{{ user.lastActive }}</td>
-            <td class="actions-cell">
-              <button class="btn btn-sm btn-secondary">Edit</button>
-              <button class="btn btn-sm btn-outline">Deactivate</button>
-            </td>
-          </tr>
+          <ng-container *ngFor="let user of users">
+            <tr>
+              <td class="cell-strong">{{ user.name }}</td>
+              <td>{{ user.email }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="{
+                  'badge-admin': user.roleKey === 'admin',
+                  'badge-active': user.status === 'Active' && user.roleKey !== 'admin',
+                  'badge-draft': user.status === 'Inactive'
+                }">{{ user.role }}</span>
+              </td>
+              <td>
+                <span class="status-badge" [ngClass]="user.status === 'Active' ? 'badge-active' : 'badge-draft'">{{ user.status }}</span>
+              </td>
+              <td>{{ getPermissionCount(user) }}</td>
+              <td>{{ user.lastActive }}</td>
+              <td class="actions-cell">
+                <button class="btn btn-sm btn-secondary" (click)="viewPermissions(user)">
+                  {{ selectedUser?.id === user.id ? 'Hide' : 'Permissions' }}
+                </button>
+              </td>
+            </tr>
+            <tr *ngIf="selectedUser?.id === user.id" class="permissions-row">
+              <td colspan="7">
+                <div class="permissions-panel">
+                  <div class="permissions-header">Page Access for {{ user.name }} ({{ user.role }})</div>
+                  <div class="permissions-grid">
+                    <div *ngFor="let page of getAllPages()" class="perm-item" [class.perm-granted]="getUserPermissions(user).includes(page)" [class.perm-denied]="!getUserPermissions(user).includes(page)">
+                      <span class="material-icons-outlined perm-icon">{{ getUserPermissions(user).includes(page) ? 'check_circle' : 'cancel' }}</span>
+                      <span>{{ getPageLabel(page) }}</span>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
         </tbody>
       </table>
     </div>

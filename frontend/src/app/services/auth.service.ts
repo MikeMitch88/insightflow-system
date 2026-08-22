@@ -7,6 +7,8 @@ export interface User {
   email: string;
   name: string;
   role: string;
+  role_label: string;
+  permissions: string[];
 }
 
 export interface LoginResponse {
@@ -49,6 +51,13 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     return !!this.getToken();
+  }
+
+  hasPermission(page: string): boolean {
+    const user = this.currentUser;
+    if (!user) return false;
+    if (user.role === 'admin') return true;
+    return user.permissions.includes(page);
   }
 
   get currentUser(): User | null {

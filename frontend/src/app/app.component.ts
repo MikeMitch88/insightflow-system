@@ -3,6 +3,17 @@ import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AuthService } from './services/auth.service';
 
+interface NavItem {
+  route: string;
+  icon: string;
+  label: string;
+}
+
+interface NavSection {
+  label: string;
+  items: NavItem[];
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -14,8 +25,10 @@ export class AppComponent implements OnInit {
   userName = '';
   userEmail = '';
   userInitials = '';
+  userRoleLabel = '';
+  filteredNavSections: NavSection[] = [];
 
-  navSections = [
+  private allNavSections: NavSection[] = [
     {
       label: 'Overview',
       items: [
@@ -60,14 +73,18 @@ export class AppComponent implements OnInit {
     }
   ];
 
-  constructor(private router: Router, private auth: AuthService) {}
+  constructor(private router: Router, public auth: AuthService) {}
 
   ngOnInit(): void {
     this.auth.currentUser$.subscribe(user => {
       if (user) {
         this.userName = user.name;
         this.userEmail = user.email;
+        this.userRoleLabel = user.role_label;
         this.userInitials = user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+        this.filteredNavSections = this.buildFilteredNav(user.permissions, user.role);
+      } else {
+        this.filteredNavSections = [];
       }
     });
     this.router.events.pipe(
@@ -76,6 +93,19 @@ export class AppComponent implements OnInit {
       this.currentRoute = event.urlAfterRedirects || event.url;
     });
     this.currentRoute = this.router.url;
+  }
+
+  private buildFilteredNav(permissions: string[], role: string): NavSection[] {
+    if (role === 'admin') return this.allNavSections;
+    return this.allNavSections
+      .map(section => ({
+        ...section,
+        items: section.items.filter(item => {
+          const page = item.route.replace('/', '');
+          return permissions.includes(page);
+        })
+      }))
+      .filter(section => section.items.length > 0);
   }
 
   isActive(route: string): boolean {

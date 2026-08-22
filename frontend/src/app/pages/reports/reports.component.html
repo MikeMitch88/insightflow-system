@@ -23,6 +23,10 @@
         <option value="monday_evidence">M&amp;E</option>
       </select>
     </div>
+    <button class="btn btn-secondary" (click)="refreshReports()" style="margin-right:8px">
+      <span class="material-icons-outlined" style="font-size:16px">refresh</span>
+      Refresh
+    </button>
     <button class="btn btn-primary" routerLink="/report-builder">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
       Generate Report
@@ -58,8 +62,14 @@
               </td>
               <td>{{ report.created_at | date:'mediumDate' }}</td>
               <td class="actions-cell">
-                <button class="btn btn-sm btn-secondary">View</button>
-                <button class="btn btn-sm btn-outline">Download</button>
+                <button class="btn btn-sm btn-secondary" (click)="downloadReport(report.id, 'xlsx')" *ngIf="report.status === 'completed'" title="Download Excel">
+                  <span class="material-icons-outlined" style="font-size:14px">download</span> Excel
+                </button>
+                <button class="btn btn-sm btn-secondary" (click)="downloadReport(report.id, 'csv')" *ngIf="report.status === 'completed'" title="Download CSV">
+                  <span class="material-icons-outlined" style="font-size:14px">download</span> CSV
+                </button>
+                <span *ngIf="report.status === 'generating'" class="badge badge-generating">Generating...</span>
+                <span *ngIf="report.status === 'failed'" class="badge badge-draft">Failed</span>
               </td>
             </tr>
           </tbody>

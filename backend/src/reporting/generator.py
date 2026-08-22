@@ -14,7 +14,11 @@ def generate_report_data(db: Session, report_id: int) -> dict:
     if not report:
         raise ValueError(f"Report {report_id} not found")
 
-    config = json.loads(report.config_json) if report.config_json else {}
+    raw_config = report.config_json
+    if isinstance(raw_config, str):
+        config = json.loads(raw_config) if raw_config else {}
+    else:
+        config = raw_config or {}
     sections = config.get("sections", ["executive_summary", "program_performance", "beneficiary_reach", "outcomes", "geographic_distribution"])
     period_id = report.reporting_period_id
 

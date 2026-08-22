@@ -97,4 +97,8 @@ export class ApiService {
   healthCheck(): Observable<any> {
     return this.http.get(`${this.baseUrl}/health`);
   }
+
+  syncDataSources(): Observable<any> {
+    return this.http.post(`${this.baseUrl}/pipeline/sync`, {});
+  }
 }

@@ -1,7 +1,17 @@
 <div class="page-container animate-in">
   <div class="page-header">
-    <h1>Data Sources Integration</h1>
-    <p>Monitor data ingestion from all program systems</p>
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <h1>Data Sources Integration</h1>
+        <p>Monitor data ingestion from all program systems</p>
+      </div>
+      <div>
+        <button class="btn btn-primary" (click)="triggerSync()" [disabled]="syncing">
+          <span class="material-icons-outlined" style="font-size:16px" [style.animation]="syncing ? 'spin 2s linear infinite' : 'none'">sync</span>
+          &nbsp;{{ syncing ? 'Syncing Data...' : 'Sync All Sources' }}
+        </button>
+      </div>
+    </div>
   </div>
 
   <div class="kpi-grid" *ngIf="sources.length">
@@ -23,9 +33,9 @@
           Last Sync
         </div>
       </div>
-      <button class="btn btn-sm btn-secondary" style="margin-top:12px;width:100%">
-        <span class="material-icons-outlined" style="font-size:14px">sync</span>
-        Sync Now
+      <button class="btn btn-sm btn-secondary" (click)="triggerSync()" [disabled]="syncing" style="margin-top:12px;width:100%">
+        <span class="material-icons-outlined" style="font-size:14px" [style.animation]="syncing ? 'spin 2s linear infinite' : 'none'">sync</span>
+        {{ syncing ? 'Syncing...' : 'Sync Now' }}
       </button>
     </div>
   </div>

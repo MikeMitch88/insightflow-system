@@ -51,7 +51,7 @@ def list_beneficiaries(
 
     if program:
         query = (
-            query.join(ProgramEnrollment, ProgramEnrollment.beneficiary_id == Beneficiary.id)
+            query.join(ProgramEnrollment, ProgramEnrollment.beneficiary_id == Beneficiary.beneficiary_id)
             .join(Program, ProgramEnrollment.program_id == Program.id)
             .filter(func.lower(Program.name) == program.strip().lower())
         )
@@ -59,7 +59,7 @@ def list_beneficiaries(
     if status:
         if not joined_enrollment:
             query = query.join(
-                ProgramEnrollment, ProgramEnrollment.beneficiary_id == Beneficiary.id
+                ProgramEnrollment, ProgramEnrollment.beneficiary_id == Beneficiary.beneficiary_id
             )
         query = query.filter(func.lower(func.coalesce(ProgramEnrollment.status, "")) == status.strip().lower())
     if county:

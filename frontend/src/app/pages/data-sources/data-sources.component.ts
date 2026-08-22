@@ -9,16 +9,41 @@ import { ApiService } from '../../services/api.service';
 export class DataSourcesComponent implements OnInit {
   sources: any[] = [];
   loading = true;
+  syncing = false;
 
   constructor(private api: ApiService) {}
 
   ngOnInit(): void {
+    this.loadData();
+  }
+
+  loadData(): void {
+    this.loading = true;
     this.api.getDataSources().subscribe({
       next: (data) => {
         this.sources = Array.isArray(data) ? data : (data?.sources || []);
         this.loading = false;
+        this.syncing = false;
       },
-      error: () => { this.loading = false; }
+      error: () => {
+        this.loading = false;
+        this.syncing = false;
+      }
+    });
+  }
+
+  triggerSync(): void {
+    this.syncing = true;
+    this.api.syncDataSources().subscribe({
+      next: () => {
+        // Wait 4 seconds for backend to run ETL, then reload
+        setTimeout(() => {
+          this.loadData();
+        }, 4000);
+      },
+      error: () => {
+        this.syncing = false;
+      }
     });
   }
 

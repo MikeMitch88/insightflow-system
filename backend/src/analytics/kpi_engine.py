@@ -124,7 +124,7 @@ def get_dashboard_summary(db: Session, period_id: int = None) -> dict:
 
     counties_query = (
         db.query(func.count(distinct(Beneficiary.county)))
-        .join(ProgramEnrollment, ProgramEnrollment.beneficiary_id == Beneficiary.id)
+        .join(ProgramEnrollment, ProgramEnrollment.beneficiary_id == Beneficiary.beneficiary_id)
         .filter(Beneficiary.county.isnot(None))
     )
     if period_id is not None:
@@ -330,7 +330,7 @@ def _beneficiary_query(
         query = query.filter(func.lower(Beneficiary.gender) == gender.strip().lower())
     if program:
         query = (
-            query.join(ProgramEnrollment, ProgramEnrollment.beneficiary_id == Beneficiary.id)
+            query.join(ProgramEnrollment, ProgramEnrollment.beneficiary_id == Beneficiary.beneficiary_id)
             .join(Program, ProgramEnrollment.program_id == Program.id)
             .filter(func.lower(Program.name) == program.strip().lower())
         )
@@ -409,7 +409,7 @@ def get_beneficiary_analytics(
     )
     if county or gender or program:
         program_rows_query = program_rows_query.join(
-            Beneficiary, Beneficiary.id == ProgramEnrollment.beneficiary_id
+            Beneficiary, Beneficiary.beneficiary_id == ProgramEnrollment.beneficiary_id
         )
     if county:
         program_rows_query = program_rows_query.filter(
@@ -489,7 +489,7 @@ def get_outcomes_summary(db: Session, period_id: int = None) -> dict:
                 case((_lower_status_match(Outcome.completion_status, COMPLETED_STATUS), 1))
             ).label("completed"),
         )
-        .join(Beneficiary, Outcome.beneficiary_id == Beneficiary.id)
+        .join(Beneficiary, Outcome.beneficiary_id == Beneficiary.beneficiary_id)
         .filter(*filters)
         .group_by(func.coalesce(Beneficiary.county, "Unknown"))
         .order_by(func.coalesce(Beneficiary.county, "Unknown"))

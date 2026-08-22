@@ -72,7 +72,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let row of outcomes.by_program">
-              <td class="cell-strong">{{ row.program || row.name }}</td>
+              <td class="cell-strong">{{ row.program_name || row.program || row.name }}</td>
               <td>{{ row.total ?? 0 }}</td>
               <td>{{ row.employed ?? 0 }}</td>
               <td>{{ row.completed ?? 0 }}</td>
