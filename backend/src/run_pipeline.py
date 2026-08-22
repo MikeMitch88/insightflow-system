@@ -1,5 +1,5 @@
 """
-KPC InsightFlow AI - Main Pipeline Orchestrator
+InsightFlow System - Main Pipeline Orchestrator
 
 Usage:
     python src/main.py --generate     # Generate synthetic data
@@ -250,7 +250,7 @@ def step_load(cleaned_data=None, unified=None, issues=None):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="KPC InsightFlow AI Pipeline")
+    parser = argparse.ArgumentParser(description="InsightFlow System Pipeline")
     parser.add_argument("--generate", action="store_true", help="Generate synthetic data")
     parser.add_argument("--etl", action="store_true", help="Run ETL pipeline")
     parser.add_argument("--load", action="store_true", help="Load into database")
