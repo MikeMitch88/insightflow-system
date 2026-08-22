@@ -43,7 +43,7 @@ export class ReportBuilderComponent implements OnInit {
 
   ngOnInit(): void {
     this.api.getPeriods().subscribe({
-      next: (data) => { this.periods = Array.isArray(data) ? data : []; }
+      next: (data: any) => { this.periods = data.items || (Array.isArray(data) ? data : []); }
     });
   }
 
