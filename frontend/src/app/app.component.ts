@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,9 @@ import { filter } from 'rxjs/operators';
 export class AppComponent implements OnInit {
   currentRoute = '';
   sidebarOpen = true;
+  userName = '';
+  userEmail = '';
+  userInitials = '';
 
   navSections = [
     {
@@ -56,9 +60,16 @@ export class AppComponent implements OnInit {
     }
   ];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private auth: AuthService) {}
 
   ngOnInit(): void {
+    this.auth.currentUser$.subscribe(user => {
+      if (user) {
+        this.userName = user.name;
+        this.userEmail = user.email;
+        this.userInitials = user.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+      }
+    });
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: any) => {
@@ -69,6 +80,15 @@ export class AppComponent implements OnInit {
 
   isActive(route: string): boolean {
     return this.currentRoute === route;
+  }
+
+  isLoggedIn(): boolean {
+    return this.auth.isLoggedIn();
+  }
+
+  logout(): void {
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 
   toggleSidebar(): void {
