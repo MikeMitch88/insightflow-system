@@ -14,6 +14,7 @@ from src.api.data_quality import router as data_quality_router
 from src.api.reports import router as reports_router
 from src.api.ai_routes import router as ai_router
 from src.api.periods import router as periods_router
+from src.auth.routes import router as auth_router
 
 
 @asynccontextmanager
@@ -45,8 +46,9 @@ app.include_router(data_quality_router)
 app.include_router(reports_router)
 app.include_router(ai_router)
 app.include_router(periods_router)
+app.include_router(auth_router)
 
 
 @app.get("/api/health")
 def health_check():
-    return {"status": "healthy", "service": "Insightflow system", "version": "1.0.0"}
+    return {"status": "healthy", "service": "InsightFlow System", "version": "1.0.0"}

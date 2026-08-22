@@ -73,4 +73,9 @@ export class ReportBuilderComponent implements OnInit {
     const p = this.periods.find((p: any) => p.id === id);
     return p ? p.name : '';
   }
+
+  getReportTypeLabel(value: string): string {
+    const type = this.reportTypes.find(t => t.value === value);
+    return type ? type.label : value;
+  }
 }

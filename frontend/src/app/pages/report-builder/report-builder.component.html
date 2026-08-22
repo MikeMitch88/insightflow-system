@@ -110,7 +110,7 @@
         </div>
         <div class="review-item">
           <span class="review-label">Report Type</span>
-          <span class="review-value">{{ reportTypes.find(t => t.value === config.report_type)?.label || config.report_type }}</span>
+          <span class="review-value">{{ getReportTypeLabel(config.report_type) }}</span>
         </div>
         <div class="review-item">
           <span class="review-label">Reporting Period</span>
@@ -156,7 +156,7 @@
           </div>
           <div class="review-item">
             <span class="review-label">Type</span>
-            <span class="review-value">{{ reportTypes.find(t => t.value === generatedReport.report_type)?.label || generatedReport.report_type || 'Executive Report' }}</span>
+            <span class="review-value">{{ getReportTypeLabel(generatedReport.report_type) || 'Executive Report' }}</span>
           </div>
           <div class="review-item">
             <span class="review-label">Status</span>

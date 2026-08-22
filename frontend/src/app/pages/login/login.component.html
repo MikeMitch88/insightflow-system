@@ -1,0 +1,59 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="logo-icon">
+        <span class="material-symbols-outlined">analytics</span>
+      </div>
+      <h1>InsightFlow System</h1>
+      <p>Program Intelligence Platform</p>
+    </div>
+
+    <form (ngSubmit)="login()" class="login-form">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <div class="input-wrapper">
+          <span class="material-symbols-outlined input-icon">mail</span>
+          <input
+            id="email"
+            type="email"
+            [(ngModel)]="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+            autocomplete="email"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="input-wrapper">
+          <span class="material-symbols-outlined input-icon">lock</span>
+          <input
+            id="password"
+            type="password"
+            [(ngModel)]="password"
+            name="password"
+            placeholder="Enter your password"
+            required
+            autocomplete="current-password"
+          />
+        </div>
+      </div>
+
+      <div class="error-message" *ngIf="error">
+        <span class="material-symbols-outlined">error</span>
+        {{ error }}
+      </div>
+
+      <button type="submit" class="login-btn" [disabled]="loading || !email || !password">
+        <span *ngIf="!loading">Sign In</span>
+        <span *ngIf="loading">Signing in...</span>
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <p>KPC Inuka Foundation</p>
+    </div>
+  </div>
+</div>

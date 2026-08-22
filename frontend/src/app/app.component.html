@@ -1,7 +1,7 @@
-<div class="app-layout">
+<div class="app-layout" *ngIf="isLoggedIn(); else loginTpl">
   <aside class="sidebar" [class.collapsed]="!sidebarOpen">
     <div class="sidebar-header">
-      <h1>Insightflow system</h1>
+      <h1>InsightFlow System</h1>
       <p>Program Intelligence Platform</p>
     </div>
     <nav class="sidebar-nav">
@@ -19,10 +19,10 @@
     <div class="sidebar-footer">
       <div><span class="status-dot"></span>System Status: All systems operational</div>
       <div class="user-info">
-        <div class="user-avatar">PA</div>
+        <div class="user-avatar">{{ userInitials }}</div>
         <div>
-          <div style="font-weight:600">Program Administrator</div>
-          <div style="color:rgba(255,255,255,0.4);font-size:10px">admin@inukafoundation.org</div>
+          <div style="font-weight:600">{{ userName }}</div>
+          <div style="color:rgba(255,255,255,0.4);font-size:10px">{{ userEmail }}</div>
         </div>
       </div>
     </div>
@@ -34,7 +34,7 @@
         <button class="btn btn-sm btn-secondary" (click)="toggleSidebar()" style="display:none">
           <span class="material-icons-outlined" style="font-size:18px">menu</span>
         </button>
-        <span class="topbar-title">Insightflow system</span>
+        <span class="topbar-title">InsightFlow System</span>
       </div>
       <div class="topbar-actions">
         <button class="btn btn-sm btn-secondary">
@@ -47,8 +47,15 @@
           <span class="material-icons-outlined" style="font-size:16px">smart_toy</span>
           AI Assistant
         </button>
+        <button class="btn btn-sm btn-secondary" (click)="logout()" title="Sign Out">
+          <span class="material-icons-outlined" style="font-size:16px">logout</span>
+        </button>
       </div>
     </header>
     <router-outlet></router-outlet>
   </div>
 </div>
+
+<ng-template #loginTpl>
+  <router-outlet></router-outlet>
+</ng-template>
