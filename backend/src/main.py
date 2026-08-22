@@ -23,7 +23,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="InsightFlow System",
+    title="KPC InsightFlow AI",
     description="Program Intelligence Platform for KPC Inuka Foundation",
     version="1.0.0",
     lifespan=lifespan,
@@ -49,4 +49,4 @@ app.include_router(periods_router)
 
 @app.get("/api/health")
 def health_check():
-    return {"status": "healthy", "service": "InsightFlow System", "version": "1.0.0"}
+    return {"status": "healthy", "service": "KPC InsightFlow AI", "version": "1.0.0"}

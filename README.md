@@ -8,11 +8,11 @@ Enterprise program intelligence and automated reporting platform for **KPC Inuka
 
 ## Overview
 
-InsightFlow System transforms fragmented operational data across four program pillars into unified analytics, AI-powered insights, and automated donor reports.
+KPC InsightFlow AI transforms fragmented operational data across four program pillars into unified analytics, AI-powered insights, and automated donor reports.
 
-| Data Flow | |
-|---|---|
-| Fragmented Data | Trusted Data | Unified Intelligence | Automated Reporting | Better Decisions |
+| Data Flow       |              |
+| --------------- | ------------ |
+| Fragmented Data | Trusted Data |
 
 ### Programs
 
@@ -26,33 +26,40 @@ InsightFlow System transforms fragmented operational data across four program pi
 ## Features
 
 ### Executive Dashboard
+
 - Real-time KPIs computed from the database (beneficiaries, completion rates, attendance, outcomes)
 - Beneficiary growth trends, program performance, and distribution charts
 - Quarter-over-quarter comparisons
 
 ### Program Intelligence
+
 - Per-program performance metrics with completion, attendance, and participation rates
 - Filterable by period, program, county, and gender
 
 ### Beneficiary Analytics
+
 - Demographic breakdowns by age, gender, county, and program
 - Geographic distribution across 15 Kenyan counties
 
 ### Outcomes & Impact
+
 - Employment rates, completion rates, and program efficacy metrics
 - Executive-friendly impact summaries
 
 ### Automated Reporting
+
 - Generate Executive, Program Performance, Donor, and M&E reports
 - 4-step report builder with reusable templates
 - Export to CSV and Excel
 
 ### AI Intelligence
+
 - AI Assistant answering questions using verified organizational metrics
 - Automated insights detecting significant trends, anomalies, and performance gaps
 - Template-based responses (no external API required) or LLM-powered via API key
 
 ### Data Pipeline
+
 - Full ETL pipeline: Extract, Transform, Validate, Unify, Load
 - Data quality scoring and issue tracking
 - Stage 1 (raw data) to Stage 2 (unified intelligence) visualization
@@ -84,16 +91,16 @@ REPORTING operates on the same analytics layer.
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | Angular 17, TypeScript, CSS |
-| Backend | Python, FastAPI, Pydantic, SQLAlchemy |
-| Database | PostgreSQL 17 |
-| Data Engineering | Pandas, NumPy, Faker |
-| AI | OpenAI-compatible API (optional) |
-| Reporting | CSV/Excel export via Pandas + OpenPyXL |
-| DevOps | Docker, Docker Compose |
-| Testing | Pytest |
+| Layer            | Technology                             |
+| ---------------- | -------------------------------------- |
+| Frontend         | Angular 17, TypeScript, CSS            |
+| Backend          | Python, FastAPI, Pydantic, SQLAlchemy  |
+| Database         | PostgreSQL 17                          |
+| Data Engineering | Pandas, NumPy, Faker                   |
+| AI               | OpenAI-compatible API (optional)       |
+| Reporting        | CSV/Excel export via Pandas + OpenPyXL |
+| DevOps           | Docker, Docker Compose                 |
+| Testing          | Pytest                                 |
 
 ---
 
@@ -161,24 +168,24 @@ ng serve
 
 ## API Endpoints
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/health` | GET | Health check |
-| `/api/dashboard/summary` | GET | Executive dashboard KPIs |
-| `/api/dashboard/trends` | GET | Quarter-over-quarter trends |
-| `/api/programs/performance` | GET | Per-program metrics |
-| `/api/beneficiaries` | GET | Paginated beneficiary list |
-| `/api/beneficiaries/analytics` | GET | Demographic distributions |
-| `/api/outcomes` | GET | Outcomes and impact summary |
-| `/api/data-quality` | GET | Data quality score and issues |
-| `/api/data-sources` | GET | Data source status |
-| `/api/pipeline/status` | GET | Pipeline status |
-| `/api/reports` | GET | List reports |
-| `/api/reports/generate` | POST | Generate a report |
-| `/api/reports/{id}` | GET | Get report details |
-| `/api/ai/chat` | POST | AI Assistant chat |
-| `/api/ai/insights` | GET | Automated AI insights |
-| `/api/periods` | GET | Reporting periods |
+| Endpoint                         | Method | Description                   |
+| -------------------------------- | ------ | ----------------------------- |
+| `/api/health`                  | GET    | Health check                  |
+| `/api/dashboard/summary`       | GET    | Executive dashboard KPIs      |
+| `/api/dashboard/trends`        | GET    | Quarter-over-quarter trends   |
+| `/api/programs/performance`    | GET    | Per-program metrics           |
+| `/api/beneficiaries`           | GET    | Paginated beneficiary list    |
+| `/api/beneficiaries/analytics` | GET    | Demographic distributions     |
+| `/api/outcomes`                | GET    | Outcomes and impact summary   |
+| `/api/data-quality`            | GET    | Data quality score and issues |
+| `/api/data-sources`            | GET    | Data source status            |
+| `/api/pipeline/status`         | GET    | Pipeline status               |
+| `/api/reports`                 | GET    | List reports                  |
+| `/api/reports/generate`        | POST   | Generate a report             |
+| `/api/reports/{id}`            | GET    | Get report details            |
+| `/api/ai/chat`                 | POST   | AI Assistant chat             |
+| `/api/ai/insights`             | GET    | Automated AI insights         |
+| `/api/periods`                 | GET    | Reporting periods             |
 
 ---
 
@@ -224,13 +231,13 @@ insightflow-ai/
 
 ## Environment Variables
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `DATABASE_URL` | `postgresql://insightflow:insightflow_secret@localhost:5432/insightflow_db` | PostgreSQL connection |
-| `AI_API_KEY` | (empty) | OpenAI API key (optional) |
-| `AI_MODEL` | `gpt-4` | LLM model name |
-| `AI_BASE_URL` | `https://api.openai.com/v1` | LLM API base URL |
-| `JWT_SECRET` | `change-this-in-production` | JWT signing secret |
+| Variable         | Default                                                                       | Description               |
+| ---------------- | ----------------------------------------------------------------------------- | ------------------------- |
+| `DATABASE_URL` | `postgresql://insightflow:insightflow_secret@localhost:5432/insightflow_db` | PostgreSQL connection     |
+| `AI_API_KEY`   | (empty)                                                                       | OpenAI API key (optional) |
+| `AI_MODEL`     | `gpt-4`                                                                     | LLM model name            |
+| `AI_BASE_URL`  | `https://api.openai.com/v1`                                                 | LLM API base URL          |
+| `JWT_SECRET`   | `change-this-in-production`                                                 | JWT signing secret        |
 
 ---
 
