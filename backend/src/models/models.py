@@ -1,4 +1,3 @@
-import uuid
 from datetime import date, datetime
 from typing import Optional
 
@@ -16,7 +15,6 @@ from sqlalchemy import (
     UniqueConstraint,
     func,
 )
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.database import Base
@@ -51,9 +49,7 @@ class Beneficiary(Base):
         Index("ix_beneficiaries_county_gender", "county", "gender"),
     )
 
-    id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
-    )
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     beneficiary_id: Mapped[str] = mapped_column(String(20), nullable=False, unique=True, index=True)
     first_name: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
     last_name: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
@@ -95,10 +91,10 @@ class ProgramEnrollment(Base):
         Index("ix_enrollments_period_status", "reporting_period_id", "status"),
     )
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    beneficiary_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("beneficiaries.id", ondelete="CASCADE"),
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    beneficiary_id: Mapped[str] = mapped_column(
+        String(20),
+        ForeignKey("beneficiaries.beneficiary_id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
@@ -140,9 +136,9 @@ class Attendance(Base):
     )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    beneficiary_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("beneficiaries.id", ondelete="CASCADE"),
+    beneficiary_id: Mapped[str] = mapped_column(
+        String(20),
+        ForeignKey("beneficiaries.beneficiary_id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )
@@ -170,9 +166,9 @@ class Outcome(Base):
     )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    beneficiary_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("beneficiaries.id", ondelete="CASCADE"),
+    beneficiary_id: Mapped[str] = mapped_column(
+        String(20),
+        ForeignKey("beneficiaries.beneficiary_id", ondelete="CASCADE"),
         nullable=False,
         index=True,
     )

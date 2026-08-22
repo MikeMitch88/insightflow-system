@@ -171,7 +171,7 @@ def _build_prompt(message: str, verified_data: dict) -> str:
         for p in programs
     )
 
-    return f"""You are InsightFlow AI, the intelligence layer for KPC Inuka Foundation's program management platform.
+    return f"""You are InsightFlow, the intelligence layer for KPC Inuka Foundation's program management platform.
 
 VERIFIED ORGANIZATIONAL METRICS (from database):
 - Total Beneficiaries: {summary.get('total_beneficiaries', 0)}
@@ -325,7 +325,7 @@ async def _call_llm(prompt: str) -> dict:
                 json={
                     "model": AI_MODEL,
                     "messages": [
-                        {"role": "system", "content": "You are InsightFlow AI, an expert program intelligence assistant for KPC Inuka Foundation. Use only verified data provided in the context."},
+                        {"role": "system", "content": "You are InsightFlow, an expert program intelligence assistant for KPC Inuka Foundation. Use only verified data provided in the context."},
                         {"role": "user", "content": prompt}
                     ],
                     "temperature": 0.3,

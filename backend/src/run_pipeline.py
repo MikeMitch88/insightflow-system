@@ -1,5 +1,5 @@
 """
-KPC InsightFlow AI - Main Pipeline Orchestrator
+Insightflow system - Main Pipeline Orchestrator
 
 Usage:
     python src/main.py --generate     # Generate synthetic data
@@ -76,6 +76,8 @@ def step_load(cleaned_data=None, unified=None, issues=None):
 
     engine = create_engine(DATABASE_URL)
 
+    print("Clearing existing database tables...")
+    Base.metadata.drop_all(bind=engine)
     print("Creating database tables...")
     init_db()
     print("  Tables created.")
@@ -111,23 +113,30 @@ def step_load(cleaned_data=None, unified=None, issues=None):
         print(f"  Inserted {len(periods)} reporting periods.")
 
         programs_data = [
-            ("Scholarship", "Educational scholarship program"),
-            ("Plus", "Life skills and personal development"),
-            ("Vocational", "Vocational training and skills"),
-            ("Tech", "Technology and digital skills"),
+            (1, "Scholarship", "Educational scholarship program"),
+            (2, "Plus", "Life skills and personal development"),
+            (3, "Vocational", "Vocational training and skills"),
+            (4, "Tech", "Technology and digital skills"),
         ]
-        for name, desc in programs_data:
-            p = Program(name=name, description=desc)
+        for pid, name, desc in programs_data:
+            p = Program(id=pid, name=name, description=desc)
             session.merge(p)
         session.commit()
         print("  Inserted 4 programs.")
 
         if unified and "beneficiaries" in unified:
             ben_df = unified["beneficiaries"]
+            seen_ids = set()
             count = 0
+            skipped = 0
             for _, row in ben_df.iterrows():
+                bid = str(row.get("beneficiary_id", ""))
+                if bid in seen_ids:
+                    skipped += 1
+                    continue
+                seen_ids.add(bid)
                 b = Beneficiary(
-                    beneficiary_id=str(row.get("beneficiary_id", "")),
+                    beneficiary_id=bid,
                     first_name=str(row.get("first_name", "")),
                     last_name=str(row.get("last_name", "")),
                     gender=str(row.get("gender", "Unknown")),
@@ -138,12 +147,12 @@ def step_load(cleaned_data=None, unified=None, issues=None):
                     county=str(row.get("county", "")),
                     sub_county=str(row.get("sub_county", "")) if pd.notna(row.get("sub_county")) else None,
                 )
-                session.merge(b)
+                session.add(b)
                 count += 1
                 if count % 1000 == 0:
                     session.commit()
             session.commit()
-            print(f"  Inserted {count} beneficiaries.")
+            print(f"  Inserted {count} beneficiaries (skipped {skipped} duplicates).")
 
         if unified and "program_enrollments" in unified:
             enroll_df = unified["program_enrollments"]
@@ -250,7 +259,7 @@ def step_load(cleaned_data=None, unified=None, issues=None):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="KPC InsightFlow AI Pipeline")
+    parser = argparse.ArgumentParser(description="Insightflow system Pipeline")
     parser.add_argument("--generate", action="store_true", help="Generate synthetic data")
     parser.add_argument("--etl", action="store_true", help="Run ETL pipeline")
     parser.add_argument("--load", action="store_true", help="Load into database")

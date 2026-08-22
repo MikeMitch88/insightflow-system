@@ -1,7 +1,7 @@
 {
   "name": "kpc-insightflow",
   "version": "1.0.0",
-  "description": "KPC InsightFlow AI - Program Intelligence Platform for KPC Inuka Foundation",
+  "description": "InsightFlow System - Program Intelligence Platform for KPC Inuka Foundation",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

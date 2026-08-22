@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
       ]
     },
     {
-      label: 'Program Intelligence',
+      label: 'Programs',
       items: [
         { route: '/program-performance', icon: 'analytics', label: 'Program Performance' },
         { route: '/beneficiary-analytics', icon: 'groups', label: 'Beneficiary Analytics' },
@@ -42,7 +42,7 @@ export class AppComponent implements OnInit {
       ]
     },
     {
-      label: 'Intelligence',
+      label: 'Insights',
       items: [
         { route: '/ai-assistant', icon: 'psychology', label: 'AI Assistant' },
         { route: '/ai-insights', icon: 'auto_awesome', label: 'AI Insights' }

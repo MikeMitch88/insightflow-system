@@ -2,13 +2,13 @@
 
 > **Automating Reporting. Turning Data Into Actionable Intelligence.**
 
-Enterprise program intelligence and automated reporting platform for **KPC Inuka Foundation**, reducing manual data compilation time by over 50%.
+Program intelligence and automated reporting platform for **KPC Inuka Foundation**, reducing manual data compilation time by over 50%.
 
 ---
 
 ## Overview
 
-KPC InsightFlow AI transforms fragmented operational data across four program pillars into unified analytics, AI-powered insights, and automated donor reports.
+InsightFlow System transforms fragmented operational data across four program pillars into unified analytics, AI-powered insights, and automated donor reports.
 
 | Data Flow       |              |
 | --------------- | ------------ |

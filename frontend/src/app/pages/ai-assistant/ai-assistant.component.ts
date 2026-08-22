@@ -29,7 +29,7 @@ export class AiAssistantComponent implements OnInit {
     this.messages.push({
       role: 'assistant',
       content: {
-        answer: "I'm InsightFlow AI, your program intelligence assistant. I can answer questions about KPC Inuka Foundation's programs using verified organizational data. Ask me anything about performance, trends, or outcomes.",
+        answer: "I'm InsightFlow, your program intelligence assistant. I can answer questions about KPC Inuka Foundation's programs using verified organizational data. Ask me anything about performance, trends, or outcomes.",
         recommendation: 'Try one of the quick questions below to get started.'
       }
     });

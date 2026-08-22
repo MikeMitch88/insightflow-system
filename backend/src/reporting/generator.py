@@ -196,3 +196,50 @@ def _generate_recommendations(summary: dict, db: Session, period_id: int) -> lis
         recommendations.append("Continue current trajectory. Monitor key metrics weekly.")
 
     return recommendations
+
+
+def complete_report_generation(db: Session, report_id: int) -> None:
+    """Generate the report data, export to Excel, and finalize the database status."""
+    report = db.query(Report).filter(Report.id == report_id).first()
+    if not report:
+        raise ValueError(f"Report {report_id} not found")
+
+    run = ReportRun(
+        report_id=report_id,
+        status="running",
+        started_at=datetime.utcnow()
+    )
+    db.add(run)
+    db.commit()
+    db.refresh(run)
+
+    try:
+        report_data = generate_report_data(db, report_id)
+        excel_path = export_to_excel(report_data)
+
+        run.status = "completed"
+        run.completed_at = datetime.utcnow()
+        if excel_path.exists():
+            run.file_size_bytes = excel_path.stat().st_size
+
+        summary = report_data.get("dashboard_summary", {})
+        run.records_processed = summary.get("total_beneficiaries", 0)
+
+        report.status = "completed"
+        report.file_path = str(excel_path)
+        report.completed_at = datetime.utcnow()
+
+        db.commit()
+    except Exception as e:
+        db.rollback()
+        report = db.query(Report).filter(Report.id == report_id).first()
+        if report:
+            report.status = "failed"
+            report.completed_at = datetime.utcnow()
+
+        run.status = "failed"
+        run.error_message = str(e)
+        run.completed_at = datetime.utcnow()
+
+        db.commit()
+        raise e

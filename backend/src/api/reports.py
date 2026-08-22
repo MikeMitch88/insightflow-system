@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from ..database import SessionLocal, get_db
 from ..models.models import Report, ReportingPeriod
-from ..reporting.generator import complete_report_generation
+from ..reporting.generator import generate_report_data, export_to_csv, export_to_excel
 
 router = APIRouter(prefix="/api", tags=["reports"])
 
