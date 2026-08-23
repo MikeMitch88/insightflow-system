@@ -7,6 +7,7 @@ import { ApiService } from '../../services/api.service';
   styleUrls: ['./program-performance.component.css']
 })
 export class ProgramPerformanceComponent implements OnInit {
+  allPrograms: any[] = [];
   programs: any[] = [];
   periods: any[] = [];
   selectedPeriod: number | null = null;
@@ -22,8 +23,8 @@ export class ProgramPerformanceComponent implements OnInit {
 
   ngOnInit(): void {
     this.api.getPeriods().subscribe({
-      next: (data) => {
-        this.periods = Array.isArray(data) ? data : [];
+      next: (data: any) => {
+        this.periods = data.items || (Array.isArray(data) ? data : []);
         this.loadData();
       },
       error: () => this.loadData()
@@ -34,12 +35,21 @@ export class ProgramPerformanceComponent implements OnInit {
     this.loading = true;
     this.api.getProgramPerformance(this.selectedPeriod || undefined).subscribe({
       next: (data) => {
-        this.programs = Array.isArray(data) ? data : [];
-        this.computeTotals();
+        this.allPrograms = Array.isArray(data) ? data : [];
+        this.applyFilters();
         this.loading = false;
       },
       error: () => { this.loading = false; }
     });
+  }
+
+  applyFilters(): void {
+    if (this.selectedProgram) {
+      this.programs = this.allPrograms.filter(p => p.program_name === this.selectedProgram);
+    } else {
+      this.programs = [...this.allPrograms];
+    }
+    this.computeTotals();
   }
 
   computeTotals(): void {
@@ -50,7 +60,11 @@ export class ProgramPerformanceComponent implements OnInit {
   }
 
   onFilterChange(): void {
-    this.loadData();
+    if (this.selectedPeriod) {
+      this.loadData();
+    } else {
+      this.applyFilters();
+    }
   }
 
   getMax(): number {

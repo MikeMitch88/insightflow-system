@@ -22,6 +22,7 @@ UNIFIED_PROGRAM_COLUMNS = [
     "beneficiary_id",
     "program",
     "enrollment_date",
+    "reporting_period",
     "status",
     "education_level",
     "academic_year",
