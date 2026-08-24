@@ -18,7 +18,7 @@ async def chat_with_ai(message: str, context_page: str | None, db: Session) -> d
     return response
 
 
-async def generate_insights(db: Session, period_id: int | None = None) -> list[dict]:
+def generate_insights(db: Session, period_id: int | None = None) -> list[dict]:
     """Generate automated insights by comparing verified data across periods."""
     summary = kpi_engine.get_dashboard_summary(db, period_id)
     trends = kpi_engine.get_trends(db)
