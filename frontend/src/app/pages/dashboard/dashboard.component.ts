@@ -15,10 +15,10 @@ export class DashboardComponent implements OnInit {
   loading = true;
 
   programColors: Record<string, string> = {
-    'Scholarship': '#1565c0',
-    'Plus': '#7c3aed',
-    'Vocational': '#059669',
-    'Tech': '#d97706'
+    'Scholarship': '#e92134',
+    'Plus': '#1f1f1f',
+    'Vocational': '#7d7d7d',
+    'Tech': '#bd1020'
   };
 
   constructor(private api: ApiService) {}
