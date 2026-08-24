@@ -39,7 +39,7 @@ a { text-decoration: none; color: inherit; }
 }
 .sidebar-link:hover { background: rgba(255,255,255,0.08); color: #fff; }
 .sidebar-link.active { color: #fff; background: rgba(233,33,52,0.22); border-left-color: var(--primary-light); font-weight: 600; }
-.sidebar-link .material-icons-outlined { font-size: 18px; }
+.sidebar-link .material-icons-outlined { display: inline-grid; place-items: center; width: 18px; height: 18px; flex: 0 0 18px; font-size: 18px; line-height: 1; }
 .sidebar-footer { padding: 16px 20px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 11px; }
 .sidebar-footer .status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--success); margin-right: 6px; }
 .sidebar-footer .user-info { margin-top: 12px; display: flex; align-items: center; gap: 8px; }
