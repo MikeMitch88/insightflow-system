@@ -275,7 +275,22 @@ def _generate_template_response(message: str, verified_data: dict) -> dict:
             kpis = {}
             recommendation = "Run beneficiary analytics."
 
-    elif "recommend" in message_lower or "action" in message_lower:
+    elif "dropout" in message_lower or "drop out" in message_lower:
+        answer = (f"The overall dropout rate across all programs is {summary.get('dropout_rate', 0):.1f}%. "
+                  f"Out of the total {summary.get('total_beneficiaries', 0)} beneficiaries, "
+                  f"about {int(summary.get('total_beneficiaries', 0) * summary.get('dropout_rate', 0) / 100)} did not complete their programs.")
+        kpis = {"dropout_rate": summary.get("dropout_rate", 0)}
+        recommendation = ("Establish an early warning system to identify beneficiaries with declining attendance "
+                          "(below 75%) and implement targeted support protocols.")
+
+    elif "quality" in message_lower or "score" in message_lower:
+        answer = (f"The current Data Quality Score is {summary.get('data_quality_score', 0):.0f}/100. "
+                  f"This score reflects the integrity, completeness, and consistency of the tracked beneficiary and program data.")
+        kpis = {"data_quality_score": summary.get("data_quality_score", 0)}
+        recommendation = ("Run the automated data cleansing pipeline to resolve missing records and duplicates. "
+                          "Assign a dedicated data steward to monitor program logs.")
+
+    elif any(kw in message_lower for kw in ["recommend", "reommend", "action", "recom"]):
         if programs:
             low_attendance = [p for p in programs if p.get("avg_attendance_rate", 100) < 70]
             low_completion = [p for p in programs if p.get("completion_rate", 100) < 75]
