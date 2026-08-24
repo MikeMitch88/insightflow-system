@@ -11,11 +11,7 @@ export class AiAssistantComponent implements OnInit {
   userInput = '';
   loading = false;
   contextPage = 'dashboard';
-  reports: any[] = [];
-  reportsLoading = false;
-  selectedReportId: number | null = null;
-  selectedReport: any = null;
-  reportError = '';
+  addedToReport: number | null = null;
 
   quickQuestions = [
     'What changed this quarter?',
@@ -40,34 +36,6 @@ export class AiAssistantComponent implements OnInit {
     });
     this.api.getDashboardSummary().subscribe({
       next: (data) => { this.contextMetrics = data || {}; }
-    });
-    this.loadReports();
-  }
-
-  loadReports(): void {
-    this.reportsLoading = true;
-    this.api.getReports({ page: 1, page_size: 100, status: 'completed' }).subscribe({
-      next: (data: any) => {
-        this.reports = data.items || [];
-        this.reportsLoading = false;
-      },
-      error: () => {
-        this.reports = [];
-        this.reportsLoading = false;
-        this.reportError = 'Reports could not be loaded.';
-      }
-    });
-  }
-
-  selectReport(reportId: string): void {
-    this.selectedReportId = reportId ? Number(reportId) : null;
-    this.selectedReport = null;
-    this.reportError = '';
-    if (!this.selectedReportId) return;
-
-    this.api.getReportInsights(this.selectedReportId).subscribe({
-      next: (data: any) => { this.selectedReport = data; },
-      error: () => { this.reportError = 'Insights could not be loaded for this report.'; }
     });
   }
 
@@ -98,7 +66,6 @@ export class AiAssistantComponent implements OnInit {
     this.sendMessage();
   }
 
-<<<<<<< HEAD
   addToReport(msg: any, index: number): void {
     if (!msg.content?.answer) return;
     this.api.generateReport({
@@ -145,6 +112,4 @@ export class AiAssistantComponent implements OnInit {
     });
     return lines.join('\n');
   }
-=======
->>>>>>> 992c6da (ai assistatnce)
 }

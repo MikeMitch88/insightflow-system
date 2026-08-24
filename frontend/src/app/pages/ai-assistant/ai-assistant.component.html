@@ -14,71 +14,7 @@
       [disabled]="loading">
       {{ question }}
     </button>
-    <button class="faq-toggle" type="button" (click)="toggleFAQs()" [attr.aria-expanded]="showFAQs">
-      <span class="material-icons-outlined" aria-hidden="true">help_outline</span>
-      {{ showFAQs ? 'Hide FAQs' : 'FAQs' }}
-    </button>
   </div>
-
-  <section class="faq-panel" *ngIf="showFAQs" aria-labelledby="faq-title">
-    <div class="faq-heading">
-      <div><h2 id="faq-title">Frequently asked questions</h2><p>Approved answers about KPC InsightFlow AI.</p></div>
-      <span class="material-icons-outlined" aria-hidden="true">help</span>
-    </div>
-    <div *ngIf="faqsLoading" class="faq-loading">Loading FAQs...</div>
-    <div class="faq-list" *ngIf="!faqsLoading">
-      <article class="faq-item" *ngFor="let faq of faqs">
-        <h3>{{ faq.question }}</h3>
-        <p>{{ faq.answer }}</p>
-        <button type="button" class="faq-ask" (click)="askFAQ(faq)">Ask this in chat <span class="material-icons-outlined" aria-hidden="true">arrow_forward</span></button>
-      </article>
-    </div>
-  </section>
-
-  <section class="report-picker" aria-labelledby="report-picker-title">
-    <div>
-      <h2 id="report-picker-title">Report insights</h2>
-      <p>Select a completed report generated in the database to review its insights.</p>
-    </div>
-    <select aria-label="Select a generated report" [disabled]="reportsLoading" (change)="selectReport($any($event.target).value)">
-      <option value="">{{ reportsLoading ? 'Loading reports...' : 'Select a completed report' }}</option>
-      <option *ngFor="let report of reports" [value]="report.id">
-        {{ report.title }}<ng-container *ngIf="report.period_name"> · {{ report.period_name }}</ng-container>
-      </option>
-    </select>
-    <p class="report-error" *ngIf="reportError">{{ reportError }}</p>
-  </section>
-
-  <section class="selected-report" *ngIf="selectedReport" aria-live="polite">
-    <div class="selected-report-header">
-      <div>
-        <p class="report-label">Selected report</p>
-        <h2>{{ selectedReport.title }}</h2>
-        <p>{{ selectedReport.period_name || 'Reporting period unavailable' }}</p>
-      </div>
-      <span class="report-type">{{ selectedReport.report_type }}</span>
-    </div>
-
-    <div class="report-insight-grid" *ngIf="selectedReport.sections.executive_summary as summary">
-      <div><span>Beneficiaries</span><strong>{{ summary.total_beneficiaries }}</strong></div>
-      <div><span>Completion</span><strong>{{ summary.completion_rate | number:'1.1-1' }}%</strong></div>
-      <div><span>Attendance</span><strong>{{ summary.attendance_rate | number:'1.1-1' }}%</strong></div>
-      <div><span>Outcome rate</span><strong>{{ summary.outcome_rate | number:'1.1-1' }}%</strong></div>
-    </div>
-
-    <div class="report-detail-grid">
-      <div class="report-detail" *ngIf="selectedReport.sections.program_performance as performance">
-        <h3>{{ performance.title }}</h3>
-        <div class="report-row" *ngFor="let program of performance.programs">
-          <span>{{ program.program_name }}</span><strong>{{ program.completion_rate | number:'1.1-1' }}% complete</strong>
-        </div>
-      </div>
-      <div class="report-detail" *ngIf="selectedReport.sections.recommendations as recommendations">
-        <h3>{{ recommendations.title }}</h3>
-        <ul><li *ngFor="let item of recommendations.items">{{ item }}</li></ul>
-      </div>
-    </div>
-  </section>
 
   <div class="chat-layout">
     <div class="chat-area">
@@ -105,6 +41,19 @@
                 <p class="recommendation">{{ msg.content.recommendation }}</p>
               </ng-container>
 
+              <div class="ai-actions">
+                <button class="add-to-report" type="button" (click)="addToReport(msg, i)" *ngIf="addedToReport !== i">
+                  <span class="material-icons-outlined" style="font-size:14px">add_chart</span>
+                  Add to Report
+                </button>
+                <span *ngIf="addedToReport === i" class="add-success">
+                  <span class="material-icons-outlined" style="font-size:14px">check_circle</span>
+                  Added to report
+                </span>
+                <button class="btn btn-sm btn-secondary" routerLink="/reports" *ngIf="addedToReport === i">
+                  View Reports
+                </button>
+              </div>
             </ng-template>
           </div>
         </div>
