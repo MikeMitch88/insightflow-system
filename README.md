@@ -221,7 +221,7 @@ insightflow-ai/
 │   └── package.json
 ├── data/
 │   ├── raw/                    # Generated CSVs
-│   └── processed/              # Unified datasets
+│   └── processed/              # Unified dataset
 ├── docker-compose.yml
 ├── .env
 └── .env.example

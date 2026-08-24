@@ -14,7 +14,7 @@ class AIChatRequest(BaseModel):
     context_page: Optional[str] = None
 
 
-@router.post("/ai/chat")
+@router.post("/chat")
 async def ai_chat(request: AIChatRequest, db: Session = Depends(get_db)):
     """Chat endpoint grounded in verified backend metrics."""
     return await chat_with_ai(
@@ -24,7 +24,7 @@ async def ai_chat(request: AIChatRequest, db: Session = Depends(get_db)):
     )
 
 
-@router.get("/ai/insights")
+@router.get("/insights")
 def ai_insights(
     period: int = Query(None, description="Reporting period ID"),
     db: Session = Depends(get_db),
