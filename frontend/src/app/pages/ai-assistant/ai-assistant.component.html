@@ -104,6 +104,18 @@
         <div class="context-metric-label">Active Programs</div>
         <div class="context-metric-value">{{ contextMetrics.program_count || '—' }}</div>
       </div>
+
+      <div style="margin-top:20px; padding-top:16px; border-top:1px solid var(--border);">
+        <h3 style="margin-bottom:10px;">Export Chat</h3>
+        <button class="export-btn export-csv" type="button" (click)="exportChat('csv')" [disabled]="!messages.length">
+          <span class="material-icons-outlined" style="font-size:16px">description</span>
+          Download CSV
+        </button>
+        <button class="export-btn export-xlsx" type="button" (click)="exportChat('xlsx')" [disabled]="!messages.length" style="margin-top:6px;">
+          <span class="material-icons-outlined" style="font-size:16px">table_chart</span>
+          Download Excel
+        </button>
+      </div>
     </aside>
   </div>
 </div>
