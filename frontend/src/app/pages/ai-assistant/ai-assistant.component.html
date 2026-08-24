@@ -26,7 +26,7 @@
               {{ msg.content }}
             </ng-container>
             <ng-template #assistantContent>
-              <p>{{ msg.content.answer }}</p>
+              <div class="md-body" [innerHTML]="msg.content.answer | markdown"></div>
 
               <div *ngIf="msg.content.kpis && msg.content.kpis.length" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px;">
                 <span
