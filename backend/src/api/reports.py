@@ -33,6 +33,12 @@ class ReportCreate(BaseModel):
     use_ai_insights: bool = False
 
 
+class AddInsightToReport(BaseModel):
+    insight_text: str
+    kpis: list[dict] = []
+    recommendation: str = ""
+
+
 def _serialize_report(report: Report) -> dict:
     period_name = report.reporting_period.name if report.reporting_period else None
     return {
@@ -123,6 +129,28 @@ def get_report(report_id: int, db: Session = Depends(get_db)):
     report = db.query(Report).filter(Report.id == report_id).first()
     if report is None:
         raise HTTPException(status_code=404, detail=f"Report {report_id} not found")
+    return _serialize_report(report)
+
+
+@router.post("/reports/{report_id}/add-insight")
+def add_insight_to_report(report_id: int, body: AddInsightToReport, db: Session = Depends(get_db)):
+    report = db.query(Report).filter(Report.id == report_id).first()
+    if report is None:
+        raise HTTPException(status_code=404, detail=f"Report {report_id} not found")
+
+    config = dict(report.config_json or {})
+    insights = config.get("ai_insights", [])
+    insights.append({
+        "text": body.insight_text,
+        "kpis": body.kpis,
+        "recommendation": body.recommendation,
+        "added_at": datetime.utcnow().isoformat(),
+    })
+    config["ai_insights"] = insights
+    config["use_ai_insights"] = True
+    report.config_json = config
+    db.commit()
+    db.refresh(report)
     return _serialize_report(report)
 
 

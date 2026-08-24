@@ -18,7 +18,7 @@ export class AiInsightsComponent implements OnInit {
   loadInsights(): void {
     this.loading = true;
     this.api.getAIInsights().subscribe({
-      next: (data) => { this.insights = Array.isArray(data) ? data : []; this.loading = false; },
+      next: (data) => { this.insights = data.insights || (Array.isArray(data) ? data : []); this.loading = false; },
       error: () => { this.loading = false; }
     });
   }

@@ -82,4 +82,34 @@ export class AiAssistantComponent implements OnInit {
       error: () => {}
     });
   }
+
+  exportChat(format: 'csv' | 'xlsx'): void {
+    if (!this.messages.length) return;
+    const rows: any[] = [];
+    this.messages.forEach((msg, i) => {
+      if (msg.role === 'user') {
+        rows.push({ '#': i + 1, Role: 'You', Question: msg.content, Answer: '', KPIs: '', Recommendation: '' });
+      } else if (msg.content?.answer) {
+        const kpis = (msg.content.kpis || []).map((k: any) => k.label + ': ' + k.value).join('; ');
+        rows.push({ '#': i + 1, Role: 'AI', Question: '', Answer: msg.content.answer, KPIs: kpis, Recommendation: msg.content.recommendation || '' });
+      }
+    });
+    const blob = new Blob([this.toCSV(rows)], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'insightflow-ai-chat.' + format;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  private toCSV(data: any[]): string {
+    if (!data.length) return '';
+    const headers = Object.keys(data[0]);
+    const lines = [headers.join(',')];
+    data.forEach(row => {
+      lines.push(headers.map(h => '"' + String(row[h] || '').replace(/"/g, '""') + '"').join(','));
+    });
+    return lines.join('\n');
+  }
 }
