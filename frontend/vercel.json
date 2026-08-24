@@ -1,8 +1,13 @@
 {
-  "buildCommand": "npx ng build --configuration production",
-  "outputPath": "dist/kpc-insightflow/browser",
-  "framework": null,
+  "outputDirectory": "dist/kpc-insightflow/browser",
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/api/:path*",
+      "destination": "https://insightful-system.onrender.com/api/:path*"
+    },
+    {
+      "source": "/((?!api|assets|.*\\.).*)",
+      "destination": "/index.html"
+    }
   ]
 }
