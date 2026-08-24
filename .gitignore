@@ -9,3 +9,5 @@ data/processed/*.csv
 *.egg-info/
 .venv/
 venv/
+.angular/
+

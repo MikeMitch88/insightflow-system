@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { MarkdownPipe } from './pipes/markdown.pipe';
 
 import { LoginComponent } from './pages/login/login.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
@@ -26,6 +27,7 @@ import { AdminComponent } from './pages/admin/admin.component';
 @NgModule({
   declarations: [
     AppComponent,
+    MarkdownPipe,
     LoginComponent,
     DashboardComponent,
     ProgramPerformanceComponent,
