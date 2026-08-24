@@ -53,7 +53,7 @@ export class AppComponent implements OnInit {
     {
       label: 'Data',
       items: [
-        { route: '/data-sources', icon: 'database', label: 'Data Sources' },
+        { route: '/data-sources', icon: 'storage', label: 'Data Sources' },
         { route: '/data-quality', icon: 'verified', label: 'Data Quality' },
         { route: '/data-pipeline', icon: 'alt_route', label: 'Data Pipeline' }
       ]
