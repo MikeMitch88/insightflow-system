@@ -79,6 +79,14 @@ def test_ai_insights():
     assert response.status_code == 200
 
 
+def test_ai_faqs():
+    response = client.get("/api/ai/faqs")
+    assert response.status_code == 200
+    faqs = response.json()["faqs"]
+    assert len(faqs) == 4
+    assert faqs[0]["question"] == "What is KPC InsightFlow AI?"
+
+
 def test_periods():
     response = client.get("/api/periods")
     assert response.status_code == 200

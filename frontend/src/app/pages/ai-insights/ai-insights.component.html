@@ -11,6 +11,29 @@
     <div class="overview-stat"><strong>{{ insights.length }}</strong><span>Insights detected</span></div>
   </div>
 
+  <section class="management-dashboard" *ngIf="!loading && insights.length">
+    <article class="management-card happened-card">
+      <div class="management-card-heading"><span class="management-icon">trending_up</span><span>What happened?</span></div>
+      <h3>{{ trendInsights[0]?.title || insights[0]?.title }}</h3>
+      <p>{{ trendInsights[0]?.evidence || insights[0]?.evidence }}</p>
+    </article>
+    <article class="management-card matters-card">
+      <div class="management-card-heading"><span class="management-icon">priority_high</span><span>Why does it matter?</span></div>
+      <h3>{{ attentionInsight?.title || 'No immediate concern detected' }}</h3>
+      <p>{{ attentionInsight?.explanation || 'Continue monitoring programme performance and data quality.' }}</p>
+    </article>
+    <article class="management-card attention-card">
+      <div class="management-card-heading"><span class="management-icon">visibility</span><span>What needs attention?</span></div>
+      <h3>{{ attentionInsight?.program || attentionInsight?.title || 'Review current programme indicators' }}</h3>
+      <p>{{ attentionInsight?.evidence || 'Review the evidence in the insight cards below.' }}</p>
+    </article>
+    <article class="management-card action-card">
+      <div class="management-card-heading"><span class="management-icon">task_alt</span><span>What should we do next?</span></div>
+      <h3>{{ recommendationInsights[0]?.title || 'Continue monitoring' }}</h3>
+      <p>{{ recommendationInsights[0]?.recommended_action || recommendationInsights[0]?.recommendation || 'Review high-severity insights and assign owners for follow-up.' }}</p>
+    </article>
+  </section>
+
   <div class="filter-bar">
     <select class="form-input" [(ngModel)]="filterSeverity" aria-label="Filter by severity">
       <option value="">All severities</option>

@@ -14,7 +14,26 @@
       [disabled]="loading">
       {{ question }}
     </button>
+    <button class="faq-toggle" type="button" (click)="toggleFAQs()" [attr.aria-expanded]="showFAQs">
+      <span class="material-icons-outlined" aria-hidden="true">help_outline</span>
+      {{ showFAQs ? 'Hide FAQs' : 'FAQs' }}
+    </button>
   </div>
+
+  <section class="faq-panel" *ngIf="showFAQs" aria-labelledby="faq-title">
+    <div class="faq-heading">
+      <div><h2 id="faq-title">Frequently asked questions</h2><p>Approved answers about KPC InsightFlow AI.</p></div>
+      <span class="material-icons-outlined" aria-hidden="true">help</span>
+    </div>
+    <div *ngIf="faqsLoading" class="faq-loading">Loading FAQs...</div>
+    <div class="faq-list" *ngIf="!faqsLoading">
+      <article class="faq-item" *ngFor="let faq of faqs">
+        <h3>{{ faq.question }}</h3>
+        <p>{{ faq.answer }}</p>
+        <button type="button" class="faq-ask" (click)="askFAQ(faq)">Ask this in chat <span class="material-icons-outlined" aria-hidden="true">arrow_forward</span></button>
+      </article>
+    </div>
+  </section>
 
   <section class="report-picker" aria-labelledby="report-picker-title">
     <div>
