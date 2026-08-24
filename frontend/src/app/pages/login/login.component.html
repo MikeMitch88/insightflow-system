@@ -1,59 +1,43 @@
-<div class="login-container">
-  <div class="login-card">
-    <div class="login-header">
-      <div class="logo-icon">
-        <span class="material-symbols-outlined">analytics</span>
-      </div>
-      <h1>InsightFlow System</h1>
-      <p>Program Intelligence Platform</p>
+<main class="login-page">
+  <section class="brand-panel" aria-label="InsightFlow">
+    <div class="brand-content">
+      <div class="brand-mark" aria-hidden="true"><span class="material-icons-outlined">insights</span></div>
+      <p class="eyebrow">KPC Inuka Foundation</p>
+      <h1>Better insights.<br />Stronger programmes.</h1>
+      <p class="brand-copy">Bring your programme data, outcomes, and decisions together in one trusted workspace.</p>
+      <div class="brand-feature"><span class="material-icons-outlined">verified</span> Secure programme intelligence</div>
     </div>
-
-    <form (ngSubmit)="login()" class="login-form">
-      <div class="form-group">
-        <label for="email">Email</label>
-        <div class="input-wrapper">
-          <span class="material-symbols-outlined input-icon">mail</span>
-          <input
-            id="email"
-            type="email"
-            [(ngModel)]="email"
-            name="email"
-            placeholder="Enter your email"
-            required
-            autocomplete="email"
-          />
+  </section>
+  <section class="login-panel" aria-labelledby="login-title">
+    <div class="login-card">
+      <div class="mobile-brand-mark" aria-hidden="true"><span class="material-icons-outlined">insights</span></div>
+      <p class="eyebrow">Welcome back</p>
+      <h2 id="login-title">Sign in to InsightFlow</h2>
+      <p class="login-intro">Enter your details to access your programme workspace.</p>
+      <form #loginForm="ngForm" (ngSubmit)="login(loginForm)" class="login-form" novalidate>
+        <div class="form-group">
+          <label for="email">Work email</label>
+          <div class="input-wrapper" [class.has-error]="emailInput.invalid && (emailInput.touched || submitted)">
+            <span class="material-icons-outlined input-icon" aria-hidden="true">mail</span>
+            <input #emailInput="ngModel" id="email" type="email" [(ngModel)]="email" name="email" placeholder="you@organisation.org" required email autocomplete="email" />
+          </div>
+          <p class="field-error" *ngIf="emailInput.invalid && (emailInput.touched || submitted)"><span class="material-icons-outlined" aria-hidden="true">error</span><ng-container *ngIf="emailInput.errors?.['required']; else emailFormatError">Enter your email address.</ng-container><ng-template #emailFormatError>Enter a valid email address.</ng-template></p>
         </div>
-      </div>
-
-      <div class="form-group">
-        <label for="password">Password</label>
-        <div class="input-wrapper">
-          <span class="material-symbols-outlined input-icon">lock</span>
-          <input
-            id="password"
-            type="password"
-            [(ngModel)]="password"
-            name="password"
-            placeholder="Enter your password"
-            required
-            autocomplete="current-password"
-          />
+        <div class="form-group">
+          <div class="label-row"><label for="password">Password</label><button type="button" class="text-button" (click)="showPasswordHelp()">Forgot password?</button></div>
+          <div class="input-wrapper" [class.has-error]="passwordInput.invalid && (passwordInput.touched || submitted)">
+            <span class="material-icons-outlined input-icon" aria-hidden="true">lock</span>
+            <input #passwordInput="ngModel" id="password" [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" name="password" placeholder="Enter your password" required minlength="8" autocomplete="current-password" />
+            <button type="button" class="password-toggle" (click)="togglePasswordVisibility()" [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'" [attr.aria-pressed]="showPassword"><span class="material-icons-outlined" aria-hidden="true">{{ showPassword ? 'visibility_off' : 'visibility' }}</span></button>
+          </div>
+          <p class="field-error" *ngIf="passwordInput.invalid && (passwordInput.touched || submitted)"><span class="material-icons-outlined" aria-hidden="true">error</span><ng-container *ngIf="passwordInput.errors?.['required']; else passwordLengthError">Enter your password.</ng-container><ng-template #passwordLengthError>Password must be at least 8 characters.</ng-template></p>
         </div>
-      </div>
-
-      <div class="error-message" *ngIf="error">
-        <span class="material-symbols-outlined">error</span>
-        {{ error }}
-      </div>
-
-      <button type="submit" class="login-btn" [disabled]="loading || !email || !password">
-        <span *ngIf="!loading">Sign In</span>
-        <span *ngIf="loading">Signing in...</span>
-      </button>
-    </form>
-
-    <div class="login-footer">
-      <p>KPC Inuka Foundation</p>
+        <label class="remember-choice"><input type="checkbox" [(ngModel)]="rememberEmail" name="rememberEmail" (change)="saveRememberedEmail()" /><span class="checkmark" aria-hidden="true"><span class="material-icons-outlined">check</span></span>Remember my email on this device</label>
+        <div class="message error-message" *ngIf="error" role="alert"><span class="material-icons-outlined" aria-hidden="true">error</span>{{ error }}</div>
+        <div class="message info-message" *ngIf="info" role="status"><span class="material-icons-outlined" aria-hidden="true">info</span>{{ info }}</div>
+        <button type="submit" class="login-btn" [disabled]="loading"><span *ngIf="!loading">Sign in securely <span class="material-icons-outlined" aria-hidden="true">arrow_forward</span></span><span *ngIf="loading">Signing you in…</span></button>
+      </form>
+      <p class="privacy-note"><span class="material-icons-outlined" aria-hidden="true">lock</span>Your connection is secure and encrypted.</p>
     </div>
-  </div>
-</div>
+  </section>
+</main>
