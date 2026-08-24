@@ -6,15 +6,19 @@
     </div>
   </div>
 
+  <div class="insight-overview">
+    <div><span class="overview-label">Programme intelligence</span><h2>What needs management attention?</h2><p>Verified patterns, unusual changes, and recommended actions from the latest programme data.</p></div>
+    <div class="overview-stat"><strong>{{ insights.length }}</strong><span>Insights detected</span></div>
+  </div>
+
   <div class="filter-bar">
-    <div class="filter-group">
-      <select class="form-input" [(ngModel)]="filterSeverity">
-        <option value="">All Severities</option>
-        <option value="high">High</option>
-        <option value="warning">Warning</option>
-        <option value="info">Info</option>
-      </select>
-    </div>
+    <select class="form-input" [(ngModel)]="filterSeverity" aria-label="Filter by severity">
+      <option value="">All severities</option>
+      <option value="high">High</option>
+      <option value="warning">Warning</option>
+      <option value="low">Low</option>
+      <option value="info">Info</option>
+    </select>
     <span style="font-size: 12px; color: var(--text-secondary);">
       {{ filteredInsights.length }} insight{{ filteredInsights.length === 1 ? '' : 's' }}
     </span>
@@ -30,9 +34,7 @@
       <div class="insight-card animate-in" *ngFor="let insight of filteredInsights">
         <div class="insight-header">
           <div>
-            <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 4px;">
-              {{ insight.category || 'General' }}
-            </div>
+            <div class="insight-type">{{ getTypeLabel(getInsightType(insight)) }}<span *ngIf="insight.program"> · {{ insight.program }}</span></div>
             <div class="insight-title">{{ insight.title }}</div>
           </div>
           <span class="badge {{ getSeverityClass(insight.severity) }}">{{ insight.severity }}</span>
@@ -47,6 +49,8 @@
           <h4 style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent); margin-bottom: 4px;">Explanation</h4>
           <p>{{ insight.explanation }}</p>
         </div>
+
+        <div class="insight-impact" *ngIf="insight.impact"><strong>Impact:</strong> {{ insight.impact }}</div>
 
         <div class="insight-action" *ngIf="insight.recommended_action || insight.recommendation">
           <strong>Recommended Action:</strong>

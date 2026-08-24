@@ -36,6 +36,7 @@ def generate_insights(db: Session, period_id: int | None = None) -> list[dict]:
             diff = comp_rates[highest] - comp_rates[lowest]
             if diff > 10:
                 insights.append({
+                    "type": "warning",
                     "title": f"{lowest} has the lowest completion rate at {comp_rates[lowest]:.1f}%",
                     "severity": "high",
                     "evidence": f"{lowest}: {comp_rates[lowest]:.1f}%, {highest}: {comp_rates[highest]:.1f}%",
@@ -52,6 +53,7 @@ def generate_insights(db: Session, period_id: int | None = None) -> list[dict]:
                       / previous.get("beneficiary_count", 1)) * 100
             if growth > 15:
                 insights.append({
+                    "type": "trend",
                     "title": f"Strong enrollment growth of {growth:.1f}% quarter-over-quarter",
                     "severity": "info",
                     "evidence": f"Previous: {previous.get('beneficiary_count', 0)}, Current: {latest.get('beneficiary_count', 0)}",
@@ -61,6 +63,7 @@ def generate_insights(db: Session, period_id: int | None = None) -> list[dict]:
                 })
             elif growth < -10:
                 insights.append({
+                    "type": "warning",
                     "title": f"Enrollment declined by {abs(growth):.1f}% quarter-over-quarter",
                     "severity": "warning",
                     "evidence": f"Previous: {previous.get('beneficiary_count', 0)}, Current: {latest.get('beneficiary_count', 0)}",
@@ -69,12 +72,27 @@ def generate_insights(db: Session, period_id: int | None = None) -> list[dict]:
                     "category": "growth"
                 })
 
+        if len(trends) >= 2 and not any(i.get("type") == "trend" for i in insights):
+            first = trends[0]
+            latest = trends[-1]
+            insights.append({
+                "type": "trend",
+                "title": "Enrollment trend is being monitored",
+                "severity": "info",
+                "evidence": f"{first.get('period', 'Earlier period')}: {first.get('beneficiary_count', 0)} beneficiaries; {latest.get('period', 'Latest period')}: {latest.get('beneficiary_count', 0)}.",
+                "explanation": "The system compares reporting periods to identify meaningful changes in reach and engagement.",
+                "recommended_action": "Review this trend alongside attendance and completion before changing outreach plans.",
+                "category": "trend",
+                "impact": "Monitor",
+            })
+
         prev_att = previous.get("attendance_rate", 0)
         curr_att = latest.get("attendance_rate", 0)
         if prev_att > 0:
             att_change = curr_att - prev_att
             if att_change < -5:
                 insights.append({
+                    "type": "warning",
                     "title": f"Attendance rate dropped by {abs(att_change):.1f} percentage points",
                     "severity": "warning",
                     "evidence": f"Previous: {prev_att:.1f}%, Current: {curr_att:.1f}%",
@@ -85,8 +103,9 @@ def generate_insights(db: Session, period_id: int | None = None) -> list[dict]:
 
     if quality:
         score = quality.get("score", 100)
-        if score < 80:
+        if score < 85 or quality.get("total_issues", 0) > 0:
             insights.append({
+                "type": "data_quality",
                 "title": f"Data quality score is below threshold at {score:.0f}/100",
                 "severity": "high",
                 "evidence": f"Total issues: {quality.get('total_issues', 0)}, Missing: {quality.get('missing_values', 0)}, Duplicates: {quality.get('duplicates', 0)}",
@@ -96,10 +115,28 @@ def generate_insights(db: Session, period_id: int | None = None) -> list[dict]:
             })
 
     if programs:
+        lowest = min(programs, key=lambda p: p.get("completion_rate", 100))
+        actual = lowest.get("completion_rate", 0)
+        target = 75
+        gap = actual - target
+        insights.append({
+            "type": "kpi",
+            "title": f"{lowest['program_name']} completion is below the monitoring target",
+            "severity": "high" if gap < -10 else "warning" if gap < 0 else "info",
+            "evidence": f"Actual: {actual:.1f}%; monitoring target: {target:.1f}%; gap: {gap:+.1f} percentage points.",
+            "explanation": "The target is the platform's management monitoring threshold, not an externally supplied programme target.",
+            "recommended_action": f"Review attendance, dropout records, and support coverage in {lowest['program_name']}.",
+            "category": "kpi_performance",
+            "program": lowest["program_name"],
+            "impact": "Requires attention" if gap < 0 else "On track",
+        })
+
+    if programs:
         for p in programs:
             att = p.get("avg_attendance_rate", 0)
             if att > 0 and att < 60:
                 insights.append({
+                    "type": "warning",
                     "title": f"{p['program_name']} average attendance is critically low at {att:.1f}%",
                     "severity": "high",
                     "evidence": f"Attendance rate: {att:.1f}% across {p['total_enrolled']} enrolled beneficiaries",
@@ -112,6 +149,7 @@ def generate_insights(db: Session, period_id: int | None = None) -> list[dict]:
         er = outcomes.get("employment_rate", 0)
         if er < 40:
             insights.append({
+            "type": "warning",
                 "title": f"Employment/outcome rate is only {er:.1f}%",
                 "severity": "warning",
                 "evidence": f"Employment rate: {er:.1f}% across all programs",
@@ -120,8 +158,23 @@ def generate_insights(db: Session, period_id: int | None = None) -> list[dict]:
                 "category": "outcomes"
             })
 
+    if summary.get("dropout_rate", 0) > 0 or programs:
+        highest_dropout = max(programs, key=lambda p: p.get("dropped_out", 0)) if programs else None
+        focus = f" in {highest_dropout['program_name']}" if highest_dropout else ""
+        insights.append({
+            "type": "recommendation",
+            "title": "Prioritize retention follow-up",
+            "severity": "warning" if summary.get("dropout_rate", 0) >= 10 else "info",
+            "evidence": f"Current dropout rate: {summary.get('dropout_rate', 0):.1f}%; attendance rate: {summary.get('attendance_rate', 0):.1f}%.",
+            "explanation": "Attendance and dropout records identify where follow-up should start, but they do not prove why a participant leaves.",
+            "recommended_action": f"Create a weekly early-warning list and assign follow-up owners{focus}. Record the reason and outcome of each intervention.",
+            "category": "recommendation",
+            "impact": "Reduce avoidable dropout and improve the evidence available for future decisions.",
+        })
+
     if not insights:
         insights.append({
+            "type": "trend",
             "title": "All metrics within expected ranges",
             "severity": "info",
             "evidence": f"Completion: {summary.get('completion_rate', 0):.1f}%, Attendance: {summary.get('attendance_rate', 0):.1f}%",
@@ -150,6 +203,7 @@ def _gather_verified_metrics(context_page: str | None, db: Session) -> dict:
 
     quality = kpi_engine.get_data_quality_summary(db)
     data["data_quality"] = quality
+    data["_db"] = db
 
     if context_page:
         data["context_page"] = context_page
@@ -200,10 +254,104 @@ def _generate_template_response(message: str, verified_data: dict) -> dict:
     """Generate a structured response using verified data when no LLM is available."""
     summary = verified_data.get("dashboard_summary", {})
     programs = verified_data.get("program_performance", [])
+    quality = verified_data.get("data_quality", {})
 
     message_lower = message.lower()
 
-    if "attention" in message_lower or "lowest" in message_lower or "worst" in message_lower:
+    if any(word in message_lower for word in ["data quality", "missing", "duplicate", "invalid", "clean"]):
+        score = quality.get("score", summary.get("data_quality_score", 0))
+        issue_count = quality.get("total_issues", 0)
+        answer = (
+            f"The current data quality score is {score:.1f}/100 with {issue_count} recorded issues. "
+            "Before using the data for official reporting, review missing IDs, duplicate records, "
+            "invalid values, and inconsistent locations. Uncertain matches should be flagged for "
+            "human review rather than changed automatically."
+        )
+        kpis = {
+            "data_quality_score": score,
+            "total_issues": issue_count,
+            "missing_values": quality.get("missing_values", 0),
+            "duplicates": quality.get("duplicates", 0),
+        }
+        recommendation = (
+            "Assign a data steward to resolve high-severity issues, rerun validation after each "
+            "correction, and approve the cleaned dataset before report generation."
+        )
+
+    elif any(word in message_lower for word in ["predict", "at risk", "risk of", "likely to"]):
+        risk_programs = [
+            p for p in programs
+            if p.get("avg_attendance_rate", 100) < 70 or p.get("completion_rate", 100) < 75
+        ]
+        if risk_programs:
+            names = ", ".join(p["program_name"] for p in risk_programs)
+            answer = (
+                f"A predictive model is not configured, but the current rule-based screen flags "
+                f"{names} for closer review because attendance or completion is below the monitoring "
+                "threshold. This is an early-warning signal, not a prediction of an individual outcome."
+            )
+            kpis = {p["program_name"]: {
+                "attendance_rate": p.get("avg_attendance_rate", 0),
+                "completion_rate": p.get("completion_rate", 0),
+            } for p in risk_programs}
+        else:
+            answer = "No program currently crosses the early-warning thresholds for attendance or completion."
+            kpis = {}
+        recommendation = (
+            "Build a historical risk model only after collecting consistent attendance, enrollment, "
+            "and outcome records. Until then, review low-attendance participants with staff and do not "
+            "label individuals as certain dropouts."
+        )
+
+    elif any(word in message_lower for word in ["why", "cause", "driver", "reason"]):
+        lowest = min(programs, key=lambda p: p.get("completion_rate", 100)) if programs else None
+        if lowest:
+            answer = (
+                f"The data shows {lowest['program_name']} has the lowest completion rate at "
+                f"{lowest.get('completion_rate', 0):.1f}% and an average attendance rate of "
+                f"{lowest.get('avg_attendance_rate', 0):.1f}%. These are associated indicators, "
+                "not proof of the underlying cause. The available dataset does not establish why "
+                "participants leave; interviews and follow-up records are needed."
+            )
+            kpis = {"program_name": lowest["program_name"], "completion_rate": lowest.get("completion_rate", 0), "attendance_rate": lowest.get("avg_attendance_rate", 0)}
+        else:
+            answer = "The available data is insufficient to identify a likely driver."
+            kpis = {}
+        recommendation = "Collect structured dropout reasons, participant feedback, and follow-up outcomes by program and county."
+
+    elif "dropout" in message_lower or "drop out" in message_lower:
+        priority_programs = sorted(
+            programs,
+            key=lambda p: p.get("dropped_out", 0),
+            reverse=True,
+        )
+        program_focus = ""
+        if priority_programs:
+            focus = priority_programs[0]
+            program_focus = (
+                f" Prioritize {focus['program_name']}, which has "
+                f"{focus.get('dropped_out', 0)} recorded dropouts and an "
+                f"average attendance rate of {focus.get('avg_attendance_rate', 0):.1f}%."
+            )
+        answer = (
+            f"The current dropout rate is {summary.get('dropout_rate', 0):.1f}%. "
+            "To reduce dropout, identify participants with falling attendance early, "
+            "contact them quickly to understand barriers, and provide targeted support "
+            "such as schedule changes, transport assistance, mentoring, or catch-up sessions."
+            + program_focus
+        )
+        kpis = {
+            "dropout_rate": summary.get("dropout_rate", 0),
+            "attendance_rate": summary.get("attendance_rate", 0),
+            "completion_rate": summary.get("completion_rate", 0),
+        }
+        recommendation = (
+            "Create a weekly early-warning list from attendance records, assign a staff "
+            "owner to follow up with each at-risk participant, and review dropout reasons "
+            "by program and county every reporting period."
+        )
+
+    elif "attention" in message_lower or "lowest" in message_lower or "worst" in message_lower:
         if programs:
             lowest = min(programs, key=lambda p: p.get("completion_rate", 100))
             answer = (f"{lowest['program_name']} currently has the lowest completion rate at "

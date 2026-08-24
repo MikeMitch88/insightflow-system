@@ -132,6 +132,7 @@ def get_report(report_id: int, db: Session = Depends(get_db)):
     return _serialize_report(report)
 
 
+<<<<<<< HEAD
 @router.post("/reports/{report_id}/add-insight")
 def add_insight_to_report(report_id: int, body: AddInsightToReport, db: Session = Depends(get_db)):
     report = db.query(Report).filter(Report.id == report_id).first()
@@ -152,6 +153,24 @@ def add_insight_to_report(report_id: int, body: AddInsightToReport, db: Session 
     db.commit()
     db.refresh(report)
     return _serialize_report(report)
+=======
+@router.get("/reports/{report_id}/insights")
+def get_report_insights(report_id: int, db: Session = Depends(get_db)):
+    report = db.query(Report).filter(Report.id == report_id).first()
+    if report is None:
+        raise HTTPException(status_code=404, detail=f"Report {report_id} not found")
+    if report.status != "completed":
+        raise HTTPException(status_code=400, detail="Report has not completed yet")
+
+    report_data = generate_report_data(db, report_id)
+    return {
+        "id": report.id,
+        "title": report.title,
+        "report_type": report.report_type,
+        "period_name": report.reporting_period.name if report.reporting_period else None,
+        "sections": report_data.get("sections", {}),
+    }
+>>>>>>> 992c6da (ai assistatnce)
 
 
 @router.get("/reports/{report_id}/download")

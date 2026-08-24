@@ -79,8 +79,13 @@ export class ApiService {
     return this.http.get(`${this.baseUrl}/reports/${id}`);
   }
 
+<<<<<<< HEAD
   addInsightToReport(reportId: number, insight: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/reports/${reportId}/add-insight`, insight);
+=======
+  getReportInsights(id: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/reports/${id}/insights`);
+>>>>>>> 992c6da (ai assistatnce)
   }
 
   chatWithAI(message: string, context?: string): Observable<any> {

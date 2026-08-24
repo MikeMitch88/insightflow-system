@@ -48,6 +48,32 @@ def test_ai_chat():
     assert "answer" in data
 
 
+def test_ai_chat_dropout_recommendation():
+    response = client.post(
+        "/api/ai/chat",
+        json={"message": "WHAT can be done to reduce dropout?"},
+    )
+    assert response.status_code == 200
+    data = response.json()
+    assert "dropout" in data["answer"].lower()
+    assert "attendance" in data["answer"].lower()
+    assert data["relevant_kpis"]["dropout_rate"] >= 0
+
+
+@pytest.mark.parametrize(
+    "question, expected_text",
+    [
+        ("How is the data quality?", "data quality"),
+        ("Why is dropout increasing?", "does not establish why"),
+        ("Which programs are at risk?", "early-warning"),
+    ],
+)
+def test_ai_management_question_intents(question, expected_text):
+    response = client.post("/api/ai/chat", json={"message": question})
+    assert response.status_code == 200
+    assert expected_text in response.json()["answer"].lower()
+
+
 def test_ai_insights():
     response = client.get("/api/ai/insights")
     assert response.status_code == 200
