@@ -1,0 +1,8 @@
+{
+  "buildCommand": "npx ng build --configuration production",
+  "outputPath": "dist/kpc-insightflow/browser",
+  "framework": null,
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
