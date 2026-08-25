@@ -25,13 +25,9 @@ async def ai_chat(request: AIChatRequest, db: Session = Depends(get_db)):
 
 
 @router.get("/insights")
-<<<<<<< HEAD
 def ai_insights(
-=======
-async def ai_insights(
->>>>>>> 992c6da (ai assistatnce)
     period: int = Query(None, description="Reporting period ID"),
     db: Session = Depends(get_db),
 ):
     """Automated insights generated from verified data."""
-    return {"insights": await generate_insights(db, period_id=period)}
+    return {"insights": generate_insights(db, period_id=period)}
