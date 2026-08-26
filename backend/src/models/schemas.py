@@ -72,9 +72,64 @@ class DataQualitySummary(BaseModel):
 class ReportCreate(BaseModel):
     title: str = Field(min_length=1, max_length=255)
     report_type: str
+    reporting_period: Optional[str] = None
     reporting_period_id: Optional[int] = None
     sections: List[str] = []
     use_ai_insights: bool = True
+
+
+class ReportPreviewRequest(BaseModel):
+    reporting_period: str = "August 2026"
+    reporting_period_id: Optional[int] = None
+    report_type: str = "Monthly Donor Report"
+    sections: List[str] = []
+    use_ai_insights: bool = True
+
+
+class ReportValidateRequest(BaseModel):
+    reporting_period: str = "August 2026"
+    reporting_period_id: Optional[int] = None
+    report_type: str = "Monthly Donor Report"
+    sections: List[str] = []
+
+
+class ReportGenerateRequest(BaseModel):
+    title: str = Field(min_length=1, max_length=255)
+    report_type: str = "Monthly Donor Report"
+    reporting_period: str = "August 2026"
+    reporting_period_id: Optional[int] = None
+    sections: List[str] = []
+    use_ai_insights: bool = True
+    confirmed_reviewed: bool = True
+    confirmed_kpis: bool = True
+    confirmed_warnings: bool = True
+    confirmed_ready: bool = True
+
+
+class ReportApproveRequest(BaseModel):
+    comment: Optional[str] = "Verified and authorized for official reporting."
+
+
+class ReportRejectRequest(BaseModel):
+    reason: str = Field(min_length=3, description="Mandatory rejection reason")
+    feedback: Optional[str] = None
+
+
+class ReportReviseRequest(BaseModel):
+    notes: Optional[str] = None
+
+
+class NotificationResponse(BaseModel):
+    id: int
+    recipient_role: str
+    recipient_user_id: Optional[int] = None
+    type: str
+    title: str
+    message: str
+    report_id: Optional[int] = None
+    is_read: bool
+    created_at: datetime
+    read_at: Optional[datetime] = None
 
 
 class AIChatRequest(BaseModel):

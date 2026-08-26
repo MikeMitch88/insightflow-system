@@ -102,22 +102,36 @@ def _save_notifications(notifications: list[dict]) -> None:
     NOTIFICATIONS_FILE.write_text(json.dumps(notifications, indent=2), encoding="utf-8")
 
 
-def create_notification(recipient_role: str, title: str, message: str, report_id: Optional[int] = None, notif_type: str = "general") -> dict:
+def create_notification(
+    recipient_role: str,
+    title: str,
+    message: str,
+    report_id: Optional[int] = None,
+    notif_type: str = "NEW_REPORT_FOR_REVIEW",
+    link: Optional[str] = None
+) -> dict:
     """Create a persistent notification for target role(s)."""
     notifications = _load_notifications()
+    now_iso = datetime.now(timezone.utc).isoformat()
     new_notif = {
         "id": len(notifications) + 1,
         "recipient_role": recipient_role,
+        "recipient": recipient_role.replace("_", " ").title(),
         "title": title,
         "message": message,
         "report_id": report_id,
         "type": notif_type,
-        "created_at": datetime.now(timezone.utc).isoformat(),
-        "read": False
+        "link": link or (f"/reports" if report_id else "/dashboard"),
+        "created_at": now_iso,
+        "timestamp": now_iso,
+        "read": False,
+        "is_read": False,
+        "read_at": None,
     }
     notifications.insert(0, new_notif)
     _save_notifications(notifications[:100])
     return new_notif
+
 
 
 class SettingsUpdate(BaseModel):

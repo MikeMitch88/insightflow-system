@@ -102,3 +102,7 @@ def decode_token(token: str) -> Optional[dict]:
 
 def get_permissions(role: str) -> list[str]:
     return ROLE_PERMISSIONS.get(role, [])
+
+
+create_access_token = create_token
+

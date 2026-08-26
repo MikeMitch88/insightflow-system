@@ -1,0 +1,966 @@
+[
+  {
+    "id": 97,
+    "timestamp": "2026-08-26 08:43",
+    "user": "Program Administrator",
+    "action": "Report Sent To Manager",
+    "details": "Submitted report 'AI Insight: I'm InsightFlow, your program intelligence assistant. I can ' to Program Manager for review.",
+    "category": "Workflow",
+    "report_id": 2,
+    "report_version": 1
+  },
+  {
+    "id": 96,
+    "timestamp": "2026-08-26 08:43",
+    "user": "Program Administrator",
+    "action": "Report Generated",
+    "details": "Generated immutable snapshot v1 for 'AI Insight: I'm InsightFlow, your program intelligence assistant. I can ' (August 2026)",
+    "category": "Report",
+    "report_id": 2,
+    "report_version": 1
+  },
+  {
+    "id": 95,
+    "timestamp": "2026-08-26 08:41",
+    "user": "Staff",
+    "action": "Report Downloaded",
+    "details": "Downloaded PDF document for 'August 2025 Executive Summary'",
+    "category": "Report",
+    "report_id": 1,
+    "report_version": 1
+  },
+  {
+    "id": 94,
+    "timestamp": "2026-08-26 08:41",
+    "user": "Program Administrator",
+    "action": "Report Sent To Manager",
+    "details": "Submitted report 'August 2025 Executive Summary' to Program Manager for review.",
+    "category": "Workflow",
+    "report_id": 1,
+    "report_version": 1
+  },
+  {
+    "id": 93,
+    "timestamp": "2026-08-26 08:41",
+    "user": "Program Administrator",
+    "action": "Report Generated",
+    "details": "Generated immutable snapshot v1 for 'August 2025 Executive Summary' (August 2025)",
+    "category": "Report",
+    "report_id": 1,
+    "report_version": 1
+  },
+  {
+    "id": 92,
+    "timestamp": "2026-08-26 08:39",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2025' (Executive Summary)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 91,
+    "timestamp": "2026-08-26 08:27",
+    "user": "Staff",
+    "action": "Report Viewed",
+    "details": "Viewed report details for 'Q3 2026 Inuka Cross-Pillar Donor Impact Report'",
+    "category": "Report",
+    "report_id": 1,
+    "report_version": 1
+  },
+  {
+    "id": 90,
+    "timestamp": "2026-08-26 08:27",
+    "user": "Staff",
+    "action": "Report Downloaded",
+    "details": "Downloaded XLSX for 'August 2026 Donor Impact Report'",
+    "category": "Report",
+    "report_id": 11,
+    "report_version": 1
+  },
+  {
+    "id": 89,
+    "timestamp": "2026-08-26 08:27",
+    "user": "Program Administrator",
+    "action": "Report Sent To Manager",
+    "details": "Submitted report 'August 2026 Donor Impact Report' to Program Manager for review.",
+    "category": "Workflow",
+    "report_id": 11,
+    "report_version": 1
+  },
+  {
+    "id": 88,
+    "timestamp": "2026-08-26 08:27",
+    "user": "Program Administrator",
+    "action": "Report Generated",
+    "details": "Generated immutable snapshot v1 for 'August 2026 Donor Impact Report' (August 2026)",
+    "category": "Report",
+    "report_id": 11,
+    "report_version": 1
+  },
+  {
+    "id": 87,
+    "timestamp": "2026-08-26 08:27",
+    "user": "Grace Wanjiku",
+    "action": "Report Approved",
+    "details": "Official sign-off granted by Grace Wanjiku. Comment: Verified and approved for donor submission.",
+    "category": "Governance",
+    "report_id": 10,
+    "report_version": 2
+  },
+  {
+    "id": 86,
+    "timestamp": "2026-08-26 08:27",
+    "user": "Program Administrator",
+    "action": "Report Resubmitted",
+    "details": "Admin created and resubmitted Version 2 for review. Notes: Verified Nakuru vocational assessment data.",
+    "category": "Workflow",
+    "report_id": 10,
+    "report_version": 2
+  },
+  {
+    "id": 85,
+    "timestamp": "2026-08-26 08:27",
+    "user": "Grace Wanjiku",
+    "action": "Report Revision Required",
+    "details": "Returned for revision by Grace Wanjiku. Reason: Vocational completion rate needs verification with Nakuru center.",
+    "category": "Governance",
+    "report_id": 9,
+    "report_version": 1
+  },
+  {
+    "id": 84,
+    "timestamp": "2026-08-26 08:27",
+    "user": "Program Administrator",
+    "action": "Report Sent To Manager",
+    "details": "Submitted report 'August 2026 Monthly Donor Report' to Program Manager for review.",
+    "category": "Workflow",
+    "report_id": 9,
+    "report_version": 1
+  },
+  {
+    "id": 83,
+    "timestamp": "2026-08-26 08:27",
+    "user": "Program Administrator",
+    "action": "Report Generated",
+    "details": "Generated immutable snapshot v1 for 'August 2026 Monthly Donor Report' (August 2026)",
+    "category": "Report",
+    "report_id": 9,
+    "report_version": 1
+  },
+  {
+    "id": 82,
+    "timestamp": "2026-08-26 08:27",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2026' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 81,
+    "timestamp": "2026-08-25 21:38",
+    "user": "Program Administrator",
+    "action": "Report Sent To Manager",
+    "details": "Submitted report 'AI Insight: I'm InsightFlow, your program intelligence assistant. I can ' to Program Manager for review.",
+    "category": "Workflow",
+    "report_id": 8,
+    "report_version": 1
+  },
+  {
+    "id": 80,
+    "timestamp": "2026-08-25 21:38",
+    "user": "Program Administrator",
+    "action": "Report Generated",
+    "details": "Generated immutable snapshot v1 for 'AI Insight: I'm InsightFlow, your program intelligence assistant. I can ' (August 2026)",
+    "category": "Report",
+    "report_id": 8,
+    "report_version": 1
+  },
+  {
+    "id": 79,
+    "timestamp": "2026-08-25 21:38",
+    "user": "Program Administrator",
+    "action": "Report Sent To Manager",
+    "details": "Submitted report 'AI Insight: I'm InsightFlow, your program intelligence assistant. I can ' to Program Manager for review.",
+    "category": "Workflow",
+    "report_id": 7,
+    "report_version": 1
+  },
+  {
+    "id": 78,
+    "timestamp": "2026-08-25 21:38",
+    "user": "Program Administrator",
+    "action": "Report Generated",
+    "details": "Generated immutable snapshot v1 for 'AI Insight: I'm InsightFlow, your program intelligence assistant. I can ' (August 2026)",
+    "category": "Report",
+    "report_id": 7,
+    "report_version": 1
+  },
+  {
+    "id": 77,
+    "timestamp": "2026-08-25 21:37",
+    "user": "Program Administrator",
+    "action": "Report Resubmitted",
+    "details": "Admin created and resubmitted Version 2 for review. Notes: Addressed feedback: Discrepancy in beneficiary enrollment numbers vs digital registers",
+    "category": "Workflow",
+    "report_id": 6,
+    "report_version": 2
+  },
+  {
+    "id": 76,
+    "timestamp": "2026-08-25 21:35",
+    "user": "Grace Wanjiku",
+    "action": "Report Revision Required",
+    "details": "Returned for revision by Grace Wanjiku. Reason: Discrepancy in beneficiary enrollment numbers vs digital registers",
+    "category": "Governance",
+    "report_id": 5,
+    "report_version": 1
+  },
+  {
+    "id": 75,
+    "timestamp": "2026-08-25 21:33",
+    "user": "Program Administrator",
+    "action": "Report Sent To Manager",
+    "details": "Submitted report 'November 2025 Monthly Donor Report' to Program Manager for review.",
+    "category": "Workflow",
+    "report_id": 5,
+    "report_version": 1
+  },
+  {
+    "id": 74,
+    "timestamp": "2026-08-25 21:33",
+    "user": "Program Administrator",
+    "action": "Report Generated",
+    "details": "Generated immutable snapshot v1 for 'November 2025 Monthly Donor Report' (November 2025)",
+    "category": "Report",
+    "report_id": 5,
+    "report_version": 1
+  },
+  {
+    "id": 73,
+    "timestamp": "2026-08-25 21:32",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'November 2025' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 72,
+    "timestamp": "2026-08-25 21:30",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'May 2026' (Inuka Cross-Pillar Impact Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 71,
+    "timestamp": "2026-08-25 21:30",
+    "user": "Program Administrator",
+    "action": "Report Validated",
+    "details": "Automated validation executed: WARNING (7 passed, 2 warnings, 0 errors)",
+    "category": "Data Quality",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 70,
+    "timestamp": "2026-08-25 21:29",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'May 2026' (Program Performance Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 69,
+    "timestamp": "2026-08-25 21:29",
+    "user": "Program Administrator",
+    "action": "Report Sent To Manager",
+    "details": "Submitted report 'May 2026 Executive Summary' to Program Manager for review.",
+    "category": "Workflow",
+    "report_id": 4,
+    "report_version": 1
+  },
+  {
+    "id": 68,
+    "timestamp": "2026-08-25 21:29",
+    "user": "Program Administrator",
+    "action": "Report Generated",
+    "details": "Generated immutable snapshot v1 for 'May 2026 Executive Summary' (May 2026)",
+    "category": "Report",
+    "report_id": 4,
+    "report_version": 1
+  },
+  {
+    "id": 67,
+    "timestamp": "2026-08-25 21:25",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'May 2026' (Executive Summary)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 66,
+    "timestamp": "2026-08-25 21:24",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2026' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 65,
+    "timestamp": "2026-08-25 21:24",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2026' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 64,
+    "timestamp": "2026-08-25 21:24",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2026' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 63,
+    "timestamp": "2026-08-25 21:24",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2026' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 62,
+    "timestamp": "2026-08-25 21:24",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2026' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 61,
+    "timestamp": "2026-08-25 21:24",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2026' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 60,
+    "timestamp": "2026-08-25 21:24",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2026' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 59,
+    "timestamp": "2026-08-25 21:24",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2026' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 58,
+    "timestamp": "2026-08-25 21:24",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2026' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 57,
+    "timestamp": "2026-08-25 21:24",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2026' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 56,
+    "timestamp": "2026-08-25 21:21",
+    "user": "Staff",
+    "action": "Report Downloaded",
+    "details": "Downloaded PDF document for 'Q4 2025 Inuka Cross-Pillar Donor Impact Report'",
+    "category": "Report",
+    "report_id": 3,
+    "report_version": 1
+  },
+  {
+    "id": 55,
+    "timestamp": "2026-08-25 21:19",
+    "user": "Grace Wanjiku",
+    "action": "Report Approved",
+    "details": "Official sign-off granted by Grace Wanjiku. Comment: Verified against field registers and approved for official donor submission.",
+    "category": "Governance",
+    "report_id": 3,
+    "report_version": 1
+  },
+  {
+    "id": 54,
+    "timestamp": "2026-08-25 21:16",
+    "user": "Program Administrator",
+    "action": "Report Validated",
+    "details": "Automated validation executed: WARNING (6 passed, 3 warnings, 0 errors)",
+    "category": "Data Quality",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 53,
+    "timestamp": "2026-08-25 21:16",
+    "user": "Program Administrator",
+    "action": "Report Validated",
+    "details": "Automated validation executed: WARNING (6 passed, 3 warnings, 0 errors)",
+    "category": "Data Quality",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 52,
+    "timestamp": "2026-08-25 21:16",
+    "user": "Program Administrator",
+    "action": "Report Validated",
+    "details": "Automated validation executed: WARNING (6 passed, 3 warnings, 0 errors)",
+    "category": "Data Quality",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 51,
+    "timestamp": "2026-08-25 21:16",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2026' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 53,
+    "timestamp": "2026-08-25 21:14",
+    "user": "Amina Hassan (Reporting)",
+    "action": "Generated Report",
+    "details": "Generated Q4 2025 Inuka Cross-Pillar Donor Impact Report (executive)",
+    "category": "Report"
+  },
+  {
+    "id": 52,
+    "timestamp": "2026-08-25 21:14",
+    "user": "Program Administrator",
+    "action": "Report Sent To Manager",
+    "details": "Submitted report 'Q4 2025 Inuka Cross-Pillar Donor Impact Report' to Program Manager for review.",
+    "category": "Workflow",
+    "report_id": 3,
+    "report_version": 1
+  },
+  {
+    "id": 51,
+    "timestamp": "2026-08-25 21:14",
+    "user": "Program Administrator",
+    "action": "Report Generated",
+    "details": "Generated immutable snapshot v1 for 'Q4 2025 Inuka Cross-Pillar Donor Impact Report' (August 2026)",
+    "category": "Report",
+    "report_id": 3,
+    "report_version": 1
+  },
+  {
+    "id": 62,
+    "timestamp": "2026-08-25 21:09",
+    "user": "Amina Hassan (Reporting)",
+    "action": "Generated Report",
+    "details": "Generated Q3 2026 Inuka Cross-Pillar Donor Impact Report (donor)",
+    "category": "Report"
+  },
+  {
+    "id": 61,
+    "timestamp": "2026-08-25 21:09",
+    "user": "Program Administrator",
+    "action": "Report Sent To Manager",
+    "details": "Submitted report 'Q3 2026 Inuka Cross-Pillar Donor Impact Report' to Program Manager for review.",
+    "category": "Workflow",
+    "report_id": 2,
+    "report_version": 1
+  },
+  {
+    "id": 60,
+    "timestamp": "2026-08-25 21:09",
+    "user": "Program Administrator",
+    "action": "Report Generated",
+    "details": "Generated immutable snapshot v1 for 'Q3 2026 Inuka Cross-Pillar Donor Impact Report' (August 2026)",
+    "category": "Report",
+    "report_id": 2,
+    "report_version": 1
+  },
+  {
+    "id": 59,
+    "timestamp": "2026-08-25 21:08",
+    "user": "Program Administrator",
+    "action": "Report Validated",
+    "details": "Automated validation executed: WARNING (8 passed, 1 warnings, 0 errors)",
+    "category": "Data Quality",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 58,
+    "timestamp": "2026-08-25 21:08",
+    "user": "Program Administrator",
+    "action": "Report Validated",
+    "details": "Automated validation executed: WARNING (8 passed, 1 warnings, 0 errors)",
+    "category": "Data Quality",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 57,
+    "timestamp": "2026-08-25 21:08",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'February 2025' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 56,
+    "timestamp": "2026-08-25 21:08",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'February 2025' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 55,
+    "timestamp": "2026-08-25 21:08",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2026' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 54,
+    "timestamp": "2026-08-25 21:06",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2026' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 53,
+    "timestamp": "2026-08-25 21:06",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2026' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 52,
+    "timestamp": "2026-08-25 21:06",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2026' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 51,
+    "timestamp": "2026-08-25 21:06",
+    "user": "Program Administrator",
+    "action": "Report Validated",
+    "details": "Automated validation executed: WARNING (6 passed, 3 warnings, 0 errors)",
+    "category": "Data Quality",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 50,
+    "timestamp": "2026-08-25 21:06",
+    "user": "Program Administrator",
+    "action": "Report Validated",
+    "details": "Automated validation executed: WARNING (6 passed, 3 warnings, 0 errors)",
+    "category": "Data Quality",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 49,
+    "timestamp": "2026-08-25 21:06",
+    "user": "Program Administrator",
+    "action": "Report Validated",
+    "details": "Automated validation executed: WARNING (6 passed, 3 warnings, 0 errors)",
+    "category": "Data Quality",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 48,
+    "timestamp": "2026-08-25 21:06",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2026' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 47,
+    "timestamp": "2026-08-25 21:06",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2026' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 46,
+    "timestamp": "2026-08-25 21:05",
+    "user": "Amina Hassan (Reporting)",
+    "action": "Generated Report",
+    "details": "Generated Q3 2026 Inuka Cross-Pillar Donor Impact Report (executive)",
+    "category": "Report"
+  },
+  {
+    "id": 45,
+    "timestamp": "2026-08-25 21:05",
+    "user": "Program Administrator",
+    "action": "Report Sent To Manager",
+    "details": "Submitted report 'Q3 2026 Inuka Cross-Pillar Donor Impact Report' to Program Manager for review.",
+    "category": "Workflow",
+    "report_id": 1,
+    "report_version": 1
+  },
+  {
+    "id": 44,
+    "timestamp": "2026-08-25 21:05",
+    "user": "Program Administrator",
+    "action": "Report Generated",
+    "details": "Generated immutable snapshot v1 for 'Q3 2026 Inuka Cross-Pillar Donor Impact Report' (August 2026)",
+    "category": "Report",
+    "report_id": 1,
+    "report_version": 1
+  },
+  {
+    "id": 43,
+    "timestamp": "2026-08-25 19:01",
+    "user": "Staff",
+    "action": "Report Viewed",
+    "details": "Viewed report details for 'August 2026 Monthly Donor Report'",
+    "category": "Report",
+    "report_id": 1,
+    "report_version": 1
+  },
+  {
+    "id": 42,
+    "timestamp": "2026-08-25 19:01",
+    "user": "Staff",
+    "action": "Report Downloaded",
+    "details": "Downloaded XLSX for 'August 2026 Donor Impact Report'",
+    "category": "Report",
+    "report_id": 7,
+    "report_version": 1
+  },
+  {
+    "id": 41,
+    "timestamp": "2026-08-25 19:01",
+    "user": "Program Administrator",
+    "action": "Report Sent To Manager",
+    "details": "Submitted report 'August 2026 Donor Impact Report' to Program Manager for review.",
+    "category": "Workflow",
+    "report_id": 7,
+    "report_version": 1
+  },
+  {
+    "id": 40,
+    "timestamp": "2026-08-25 19:01",
+    "user": "Program Administrator",
+    "action": "Report Generated",
+    "details": "Generated immutable snapshot v1 for 'August 2026 Donor Impact Report' (August 2026)",
+    "category": "Report",
+    "report_id": 7,
+    "report_version": 1
+  },
+  {
+    "id": 39,
+    "timestamp": "2026-08-25 19:01",
+    "user": "Grace Wanjiku",
+    "action": "Report Approved",
+    "details": "Official sign-off granted by Grace Wanjiku. Comment: Verified and approved for donor submission.",
+    "category": "Governance",
+    "report_id": 6,
+    "report_version": 2
+  },
+  {
+    "id": 38,
+    "timestamp": "2026-08-25 19:01",
+    "user": "Program Administrator",
+    "action": "Report Resubmitted",
+    "details": "Admin created and resubmitted Version 2 for review. Notes: Verified Nakuru vocational assessment data.",
+    "category": "Workflow",
+    "report_id": 6,
+    "report_version": 2
+  },
+  {
+    "id": 37,
+    "timestamp": "2026-08-25 19:01",
+    "user": "Grace Wanjiku",
+    "action": "Report Revision Required",
+    "details": "Returned for revision by Grace Wanjiku. Reason: Vocational completion rate needs verification with Nakuru center.",
+    "category": "Governance",
+    "report_id": 5,
+    "report_version": 1
+  },
+  {
+    "id": 36,
+    "timestamp": "2026-08-25 19:01",
+    "user": "Program Administrator",
+    "action": "Report Sent To Manager",
+    "details": "Submitted report 'August 2026 Monthly Donor Report' to Program Manager for review.",
+    "category": "Workflow",
+    "report_id": 5,
+    "report_version": 1
+  },
+  {
+    "id": 35,
+    "timestamp": "2026-08-25 19:01",
+    "user": "Program Administrator",
+    "action": "Report Generated",
+    "details": "Generated immutable snapshot v1 for 'August 2026 Monthly Donor Report' (August 2026)",
+    "category": "Report",
+    "report_id": 5,
+    "report_version": 1
+  },
+  {
+    "id": 34,
+    "timestamp": "2026-08-25 19:01",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2026' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 33,
+    "timestamp": "2026-08-25 19:00",
+    "user": "Staff",
+    "action": "Report Viewed",
+    "details": "Viewed report details for 'August 2026 Monthly Donor Report'",
+    "category": "Report",
+    "report_id": 1,
+    "report_version": 1
+  },
+  {
+    "id": 32,
+    "timestamp": "2026-08-25 19:00",
+    "user": "Staff",
+    "action": "Report Downloaded",
+    "details": "Downloaded XLSX for 'August 2026 Donor Impact Report'",
+    "category": "Report",
+    "report_id": 4,
+    "report_version": 1
+  },
+  {
+    "id": 31,
+    "timestamp": "2026-08-25 19:00",
+    "user": "Program Administrator",
+    "action": "Report Sent To Manager",
+    "details": "Submitted report 'August 2026 Donor Impact Report' to Program Manager for review.",
+    "category": "Workflow",
+    "report_id": 4,
+    "report_version": 1
+  },
+  {
+    "id": 30,
+    "timestamp": "2026-08-25 19:00",
+    "user": "Program Administrator",
+    "action": "Report Generated",
+    "details": "Generated immutable snapshot v1 for 'August 2026 Donor Impact Report' (August 2026)",
+    "category": "Report",
+    "report_id": 4,
+    "report_version": 1
+  },
+  {
+    "id": 29,
+    "timestamp": "2026-08-25 19:00",
+    "user": "Program Administrator",
+    "action": "Report Sent To Manager",
+    "details": "Submitted report 'August 2026 Monthly Donor Report' to Program Manager for review.",
+    "category": "Workflow",
+    "report_id": 3,
+    "report_version": 1
+  },
+  {
+    "id": 28,
+    "timestamp": "2026-08-25 19:00",
+    "user": "Program Administrator",
+    "action": "Report Generated",
+    "details": "Generated immutable snapshot v1 for 'August 2026 Monthly Donor Report' (August 2026)",
+    "category": "Report",
+    "report_id": 3,
+    "report_version": 1
+  },
+  {
+    "id": 27,
+    "timestamp": "2026-08-25 19:00",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2026' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 26,
+    "timestamp": "2026-08-25 18:59",
+    "user": "Staff",
+    "action": "Report Viewed",
+    "details": "Viewed report details for 'August 2026 Monthly Donor Report'",
+    "category": "Report",
+    "report_id": 1,
+    "report_version": 1
+  },
+  {
+    "id": 25,
+    "timestamp": "2026-08-25 18:59",
+    "user": "Staff",
+    "action": "Report Downloaded",
+    "details": "Downloaded XLSX for 'August 2026 Donor Impact Report'",
+    "category": "Report",
+    "report_id": 2,
+    "report_version": 1
+  },
+  {
+    "id": 24,
+    "timestamp": "2026-08-25 18:59",
+    "user": "Program Administrator",
+    "action": "Report Sent To Manager",
+    "details": "Submitted report 'August 2026 Donor Impact Report' to Program Manager for review.",
+    "category": "Workflow",
+    "report_id": 2,
+    "report_version": 1
+  },
+  {
+    "id": 23,
+    "timestamp": "2026-08-25 18:59",
+    "user": "Program Administrator",
+    "action": "Report Generated",
+    "details": "Generated immutable snapshot v1 for 'August 2026 Donor Impact Report' (August 2026)",
+    "category": "Report",
+    "report_id": 2,
+    "report_version": 1
+  },
+  {
+    "id": 22,
+    "timestamp": "2026-08-25 18:59",
+    "user": "Program Administrator",
+    "action": "Report Sent To Manager",
+    "details": "Submitted report 'August 2026 Monthly Donor Report' to Program Manager for review.",
+    "category": "Workflow",
+    "report_id": 1,
+    "report_version": 1
+  },
+  {
+    "id": 21,
+    "timestamp": "2026-08-25 18:59",
+    "user": "Program Administrator",
+    "action": "Report Generated",
+    "details": "Generated immutable snapshot v1 for 'August 2026 Monthly Donor Report' (August 2026)",
+    "category": "Report",
+    "report_id": 1,
+    "report_version": 1
+  },
+  {
+    "id": 20,
+    "timestamp": "2026-08-25 18:59",
+    "user": "Program Administrator",
+    "action": "Report Previewed",
+    "details": "Admin previewed report for 'August 2026' (Monthly Donor Report)",
+    "category": "Report",
+    "report_id": null,
+    "report_version": null
+  },
+  {
+    "id": 19,
+    "timestamp": "2026-08-25 18:58",
+    "user": "Staff",
+    "action": "Report Viewed",
+    "details": "Viewed report details for 'Q3 2026 Inuka Cross-Pillar Donor Impact Report'",
+    "category": "Report",
+    "report_id": 1,
+    "report_version": 1
+  },
+  {
+    "id": 18,
+    "timestamp": "2026-08-25 18:58",
+    "user": "Staff",
+    "action": "Report Downloaded",
+    "details": "Downloaded XLSX for 'August 2026 Donor Impact Report'",
+    "category": "Report",
+    "report_id": 4,
+    "report_version": 1
+  },
+  {
+    "id": 17,
+    "timestamp": "2026-08-25 18:58",
+    "user": "Program Administrator",
+    "action": "Report Sent To Manager",
+    "details": "Submitted report 'August 2026 Donor Impact Report' to Program Manager for review.",
+    "category": "Workflow",
+    "report_id": 4,
+    "report_version": 1
+  },
+  {
+    "id": 16,
+    "timestamp": "2026-08-25 18:58",
+    "user": "Program Administrator",
+    "action": "Report Generated",
+    "details": "Generated immutable snapshot v1 for 'August 2026 Donor Impact Report' (August 2026)",
+    "category": "Report",
+    "report_id": 4,
+    "report_version": 1
+  }
+]

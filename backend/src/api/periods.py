@@ -8,9 +8,14 @@ router = APIRouter(prefix="/api", tags=["periods"])
 
 
 def _serialize_period(period: ReportingPeriod) -> dict:
+    month_map = {1: "February", 2: "May", 3: "August", 4: "November"}
+    month_name = month_map.get(period.quarter, "Quarter")
+    display_name = f"{month_name} {period.year} ({period.name})"
     return {
         "id": period.id,
         "name": period.name,
+        "display_name": display_name,
+        "month_name": f"{month_name} {period.year}",
         "year": period.year,
         "quarter": period.quarter,
         "start_date": period.start_date.isoformat() if period.start_date else None,

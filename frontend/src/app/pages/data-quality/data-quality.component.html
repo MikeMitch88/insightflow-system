@@ -1,7 +1,20 @@
 <div class="page-container animate-in">
-  <div class="page-header">
-    <h1>Data Quality</h1>
-    <p>Monitor and resolve data quality issues across all sources</p>
+  <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+    <div>
+      <h1>Data Quality &amp; Validation Engine</h1>
+      <p>Monitor, auto-standardize, and resolve data quality issues across all 4 pillars</p>
+    </div>
+    <button class="btn btn-primary" (click)="batchResolve()" [disabled]="resolving" style="display:flex;align-items:center;gap:8px">
+      <span class="material-icons-outlined">auto_fix_high</span>
+      {{ resolving ? 'Auto-Standardizing...' : 'Auto-Resolve & Standardize All Anomalies' }}
+    </button>
+  </div>
+
+  <div *ngIf="resolveMessage" class="card" style="margin-bottom:16px;background:rgba(22, 163, 74, 0.1);border-left:4px solid #16a34a;padding:12px 16px;">
+    <div style="display:flex;align-items:center;gap:8px;color:#16a34a;font-weight:600">
+      <span class="material-icons-outlined">check_circle</span>
+      {{ resolveMessage }}
+    </div>
   </div>
 
   <div class="kpi-grid">
@@ -14,51 +27,75 @@
     <div class="kpi-card">
       <div class="kpi-label">Missing Records</div>
       <div class="kpi-value" style="color:#d97706">{{ quality.missing_values | number }}</div>
-      <div class="kpi-trend down">Required fields are empty</div>
+      <div class="kpi-trend down">Auto-Imputed on ingest</div>
     </div>
     <div class="kpi-card">
       <div class="kpi-label">Duplicate Records</div>
       <div class="kpi-value" style="color:#dc2626">{{ quality.duplicates | number }}</div>
-      <div class="kpi-trend down">Exact duplicate entries</div>
+      <div class="kpi-trend down">Deduplicated in Data Fabric</div>
     </div>
     <div class="kpi-card">
-      <div class="kpi-label">Invalid Values</div>
+      <div class="kpi-label">Invalid Formats</div>
       <div class="kpi-value" style="color:#7c3aed">{{ quality.invalid_values | number }}</div>
-      <div class="kpi-trend neutral">Inconsistent or malformed data</div>
+      <div class="kpi-trend neutral">Standardized to snake_case</div>
     </div>
   </div>
 
   <div class="card">
-    <div class="card-header">
-      <div class="card-title">Data Quality Issues ({{ quality.issues?.length || 0 }})</div>
+    <div class="card-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+      <div class="card-title">Data Quality Issues Audit ({{ filteredIssues.length }})</div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <button class="btn btn-sm" [ngClass]="selectedFilter === 'all' ? 'btn-primary' : 'btn-secondary'" (click)="selectedFilter = 'all'">All</button>
+        <button class="btn btn-sm" [ngClass]="selectedFilter === 'critical' ? 'btn-primary' : 'btn-secondary'" (click)="selectedFilter = 'critical'">Critical / High</button>
+        <button class="btn btn-sm" [ngClass]="selectedFilter === 'pending' ? 'btn-primary' : 'btn-secondary'" (click)="selectedFilter = 'pending'">Pending</button>
+        <button class="btn btn-sm" [ngClass]="selectedFilter === 'resolved' ? 'btn-primary' : 'btn-secondary'" (click)="selectedFilter = 'resolved'">Resolved</button>
+      </div>
     </div>
-    <table class="data-table" *ngIf="quality.issues?.length">
+    <table class="data-table" *ngIf="filteredIssues.length">
       <thead>
         <tr>
-          <th>Source</th>
+          <th>Source Pillar</th>
           <th>Record ID</th>
           <th>Field</th>
           <th>Issue Type</th>
           <th>Original Value</th>
           <th>Severity</th>
           <th>Status</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let issue of quality.issues">
+        <tr *ngFor="let issue of filteredIssues">
           <td>{{ issue.source_file }}</td>
           <td style="font-family:monospace;font-size:12px">{{ issue.record_id }}</td>
           <td>{{ issue.field_name }}</td>
           <td>{{ issue.issue_type }}</td>
           <td style="font-size:12px;color:var(--text-secondary)">{{ issue.original_value || 'N/A' }}</td>
           <td><span class="status-badge" [ngClass]="getSeverityClass(issue.severity)">{{ issue.severity }}</span></td>
-          <td><span class="status-badge badge-draft">{{ issue.status }}</span></td>
+          <td>
+            <span class="status-badge" [ngClass]="issue.status === 'resolved' ? 'badge-active' : 'badge-draft'">
+              {{ issue.status === 'resolved' ? 'Resolved' : 'Detected' }}
+            </span>
+          </td>
+          <td>
+            <button
+              class="btn btn-sm btn-secondary"
+              *ngIf="issue.status !== 'resolved'"
+              (click)="resolveIssue(issue)"
+              title="Standardize and Mark Resolved">
+              <span class="material-icons-outlined" style="font-size:13px">check</span> Fix
+            </button>
+            <span *ngIf="issue.status === 'resolved'" style="color:#16a34a;font-size:12px;font-weight:600;">
+              ✓ Auto-Fixed
+            </span>
+          </td>
         </tr>
       </tbody>
     </table>
-    <div class="empty-state" *ngIf="!quality.issues?.length && !loading">
+    <div class="empty-state" *ngIf="!filteredIssues.length && !loading">
       <span class="material-icons-outlined">verified</span>
-      <p>No data quality issues detected</p>
+      <p>No data quality issues matching filter</p>
     </div>
   </div>
 </div>
+

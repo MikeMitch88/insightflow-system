@@ -28,6 +28,28 @@ export class AiInsightsComponent implements OnInit {
     return this.insights.filter(i => i.severity === this.filterSeverity);
   }
 
+  get insightCount(): number { return this.insights.length; }
+
+  get trendInsight(): any { return this.insights.find(i => i.type === 'trend') || this.insights[0]; }
+
+  get attentionInsight(): any { return this.insights.find(i => i.severity === 'high') || this.insights[0]; }
+
+  get recommendationInsight(): any {
+    return this.insights.find(i => i.type === 'recommendation') || this.insights.find(i => i.recommended_action);
+  }
+
+  getInsightType(insight: any): string {
+    return insight.type || (insight.category === 'data_quality' ? 'data_quality' : 'warning');
+  }
+
+  getTypeLabel(type: string): string {
+    const labels: Record<string, string> = {
+      warning: 'Warning / Anomaly', trend: 'Trend', kpi: 'KPI Performance',
+      data_quality: 'Data Quality', recommendation: 'Recommendation'
+    };
+    return labels[type] || 'Insight';
+  }
+
   getSeverityClass(severity: string): string {
     switch (severity) {
       case 'high': return 'badge-high';

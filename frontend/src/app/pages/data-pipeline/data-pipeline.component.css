@@ -24,4 +24,11 @@
   padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600;
   color: #fff; text-transform: uppercase; letter-spacing: 0.05em;
 }
+.pipeline-node.node-complete { border-color: #16a34a; background: rgba(22, 163, 74, 0.08); }
+.pipeline-node.node-complete .pipeline-node-icon { color: #16a34a; }
+.pipeline-node.node-active { border-color: #3b82f6; background: rgba(59, 130, 246, 0.15); box-shadow: 0 0 15px rgba(59, 130, 246, 0.4); transform: scale(1.05); }
+.pipeline-node.node-active .pipeline-node-icon { color: #3b82f6; }
+.spin-icon { animation: spin 1s linear infinite; }
+@keyframes spin { 100% { transform: rotate(360deg); } }
 .flow-arrow { font-size: 18px; color: var(--text-secondary); }
+

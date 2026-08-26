@@ -153,7 +153,7 @@ python src/run_pipeline.py --all
 **4. Start the backend:**
 
 ```bash
-uvicorn src.main:app --reload --port 8000
+
 ```
 
 **5. Install and start the frontend:**

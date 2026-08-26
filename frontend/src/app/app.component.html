@@ -13,6 +13,12 @@
            [routerLink]="item.route">
           <span class="material-icons-outlined">{{ item.icon }}</span>
           <span>{{ item.label }}</span>
+          <span *ngIf="item.route === '/reports' && pendingReportsCount > 0" class="badge badge-danger" style="margin-left:auto;border-radius:10px;padding:2px 6px;font-size:10px;">
+            🔴 {{ pendingReportsCount }}
+          </span>
+          <span *ngIf="item.route === '/admin' && unreadNotifCount > 0" class="badge badge-danger" style="margin-left:auto;border-radius:10px;padding:2px 6px;font-size:10px;">
+            🔴 {{ unreadNotifCount }}
+          </span>
         </a>
       </ng-container>
     </nav>
@@ -35,11 +41,36 @@
         <button class="btn btn-sm btn-secondary" (click)="toggleSidebar()" style="display:none">
           <span class="material-icons-outlined" style="font-size:18px">menu</span>
         </button>
-        <span class="topbar-title">InsightFlow System</span>
+        <span class="topbar-title">KPC InsightFlow AI</span>
       </div>
+
+      <!-- Fast Role Switcher for Hackathon Testing -->
+      <div class="role-switcher" style="display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.04);padding:4px 8px;border-radius:8px;font-size:12px;">
+        <span style="font-weight:600;color:var(--text-secondary);">Test Role:</span>
+        <button
+          class="btn btn-sm"
+          [ngClass]="auth.currentUser?.role === 'admin' ? 'btn-primary' : 'btn-secondary'"
+          (click)="switchRole('admin')"
+          style="padding:2px 8px;font-size:11px;"
+          title="Switch to Administrator (Generates reports)"
+        >
+          Admin
+        </button>
+        <button
+          class="btn btn-sm"
+          [ngClass]="auth.currentUser?.role === 'program_manager' ? 'btn-primary' : 'btn-secondary'"
+          (click)="switchRole('program_manager')"
+          style="padding:2px 8px;font-size:11px;"
+          title="Switch to Program Manager (Reviews & approves reports)"
+        >
+          Manager (Grace W.)
+        </button>
+      </div>
+
       <div class="topbar-actions">
-        <button class="btn btn-sm btn-secondary">
+        <button class="btn btn-sm btn-secondary" routerLink="/admin" title="Notifications">
           <span class="material-icons-outlined" style="font-size:16px">notifications</span>
+          <span *ngIf="unreadNotifCount > 0" class="badge badge-danger" style="font-size:9px;padding:2px 4px;margin-left:4px;">{{ unreadNotifCount }}</span>
         </button>
         <button class="btn btn-sm btn-secondary">
           <span class="material-icons-outlined" style="font-size:16px">help</span>

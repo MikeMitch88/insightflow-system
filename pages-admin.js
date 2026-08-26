@@ -1,32 +1,135 @@
 registerPage('admin', () => `
 <div class="p-xl bg-background max-w-container-max mx-auto space-y-xl">
-  <div><h1 class="font-headline-lg text-headline-lg text-on-surface">Administration Settings</h1><p class="text-on-surface-variant mt-2 font-body-md text-body-md">Manage users, roles, system configurations, and view audit logs.</p></div>
-  <div class="grid grid-cols-12 gap-md">
-    <div class="col-span-12 lg:col-span-8 bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-[0px_4px_6px_-1px_rgba(15,23,42,0.05)] p-lg flex flex-col h-[500px]">
-      <div class="flex justify-between items-center mb-md pb-md border-b border-surface-container-highest"><div><h2 class="font-title-lg text-title-lg text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-secondary">group</span> Users & Roles</h2></div><button class="bg-secondary text-on-secondary px-4 py-2 rounded font-label-md text-label-md hover:bg-secondary/90 transition-colors">Add User</button></div>
-      <div class="flex-1 overflow-auto"><table class="w-full text-left"><thead class="bg-surface-container-low font-label-sm text-label-sm text-on-surface-variant uppercase sticky top-0"><tr><th class="py-2 px-4">User</th><th class="py-2 px-4">Role</th><th class="py-2 px-4">Status</th><th class="py-2 px-4 text-right">Actions</th></tr></thead>
-        <tbody>
-          <tr class="border-b border-surface-container-highest hover:bg-secondary-fixed/30 transition-colors"><td class="py-3 px-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center font-bold">AJ</div><div><div class="font-title-md text-title-md text-on-surface">Alice Johnson</div><div class="font-body-md text-body-md text-on-surface-variant text-xs">alice.j@kpc.com</div></div></div></td><td class="py-3 px-4">System Admin</td><td class="py-3 px-4"><span class="px-2 py-1 bg-secondary-fixed text-on-secondary-fixed rounded-full text-xs font-medium">Active</span></td><td class="py-3 px-4 text-right"><button class="text-on-surface-variant hover:text-secondary"><span class="material-symbols-outlined">more_vert</span></button></td></tr>
-          <tr class="border-b border-surface-container-highest hover:bg-secondary-fixed/30 transition-colors"><td class="py-3 px-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center font-bold">BS</div><div><div class="font-title-md text-title-md text-on-surface">Bob Smith</div><div class="font-body-md text-body-md text-on-surface-variant text-xs">bob.s@kpc.com</div></div></div></td><td class="py-3 px-4">Data Analyst</td><td class="py-3 px-4"><span class="px-2 py-1 bg-surface-container-high text-on-surface-variant rounded-full text-xs font-medium">Inactive</span></td><td class="py-3 px-4 text-right"><button class="text-on-surface-variant hover:text-secondary"><span class="material-symbols-outlined">more_vert</span></button></td></tr>
-        </tbody></table></div>
-    </div>
-    <div class="col-span-12 lg:col-span-4 bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-[0px_4px_6px_-1px_rgba(15,23,42,0.05)] p-lg flex flex-col h-[500px]">
-      <div class="mb-md pb-md border-b border-surface-container-highest"><h2 class="font-title-lg text-title-lg text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-secondary">tune</span> General Settings</h2></div>
-      <div class="flex-1 overflow-auto space-y-6">
-        <div><label class="block font-label-md text-label-md text-on-surface mb-2">Organization Name</label><input class="w-full h-10 px-3 bg-surface border border-outline-variant/50 rounded text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary/50 outline-none transition-all" type="text" value="KPC Corporation"/></div>
-        <div><label class="block font-label-md text-label-md text-on-surface mb-2">Data Retention Policy (Days)</label><select class="w-full h-10 px-3 bg-surface border border-outline-variant/50 rounded text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary/50 outline-none transition-all"><option>30 Days</option><option>90 Days</option><option selected>365 Days</option></select></div>
-        <div class="pt-4"><label class="flex items-center gap-3 cursor-pointer"><div class="relative"><input checked type="checkbox" class="sr-only"/><div class="w-10 h-6 bg-secondary rounded-full shadow-inner"></div><div class="absolute w-4 h-4 bg-on-secondary rounded-full shadow right-1 top-1 transition"></div></div><span class="font-body-md text-body-md text-on-surface">Enable AI Insights Auto-generation</span></label></div>
+  <div>
+    <h1 class="font-headline-lg text-headline-lg text-on-surface">Administration & Governance Control</h1>
+    <p class="text-on-surface-variant mt-2 font-body-md text-body-md">Manage user permissions, review workflow notifications, configure organization settings, and inspect audit logs.</p>
+  </div>
+
+  <!-- Real-time Admin Notification Center Card -->
+  <div class="bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-sm p-6 space-y-4">
+    <div class="flex justify-between items-center pb-3 border-b border-surface-container-highest">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-secondary text-2xl">notifications_active</span>
+        <h2 class="font-title-lg text-title-lg text-on-surface font-bold">Admin Notification Center</h2>
+        <span class="px-2 py-0.5 bg-red-100 text-red-700 text-xs font-bold rounded-full">2 Active</span>
       </div>
-      <div class="pt-md mt-auto"><button class="w-full bg-surface-container text-on-surface border border-outline-variant/50 px-4 py-2 rounded font-label-md text-label-md hover:bg-surface-variant transition-colors">Save Settings</button></div>
+      <button onclick="alert('All notifications marked as read');" class="text-xs text-on-surface-variant hover:text-secondary font-medium">Mark All Read</button>
     </div>
+
+    <div class="space-y-3">
+      <!-- Notification Item 1 -->
+      <div class="p-4 rounded-lg border-l-4 border-green-600 bg-surface-container/40 flex justify-between items-start gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-green-700 font-bold text-xs">✅ REPORT APPROVED</span>
+            <span class="text-[11px] text-on-surface-variant">25 August 2026, 14:30</span>
+          </div>
+          <p class="text-xs font-medium text-on-surface mt-1">'Q2 2026 Executive Summary' has been approved by Grace Wanjiku (Program Manager).</p>
+          <a href="#reports" class="text-xs text-secondary font-bold hover:underline inline-block mt-2">[ VIEW REPORT ]</a>
+        </div>
+        <button onclick="this.parentElement.remove()" class="text-on-surface-variant hover:text-secondary text-sm">✕</button>
+      </div>
+
+      <!-- Notification Item 2 -->
+      <div class="p-4 rounded-lg border-l-4 border-red-600 bg-surface-container/40 flex justify-between items-start gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-red-700 font-bold text-xs">🔴 REPORT REQUIRES REVISION</span>
+            <span class="text-[11px] text-on-surface-variant">25 August 2026, 11:15</span>
+          </div>
+          <p class="text-xs font-medium text-on-surface mt-1">'July 2026 Vocational Milestone' returned for revision. Reason: Vocational completion figures require verification with Nakuru training center.</p>
+          <a href="#reports" class="text-xs text-secondary font-bold hover:underline inline-block mt-2">[ REVISE REPORT ]</a>
+        </div>
+        <button onclick="this.parentElement.remove()" class="text-on-surface-variant hover:text-secondary text-sm">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-12 gap-md">
+    <!-- Users & Roles -->
+    <div class="col-span-12 lg:col-span-8 bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-[0px_4px_6px_-1px_rgba(15,23,42,0.05)] p-lg flex flex-col h-[500px]">
+      <div class="flex justify-between items-center mb-md pb-md border-b border-surface-container-highest">
+        <div>
+          <h2 class="font-title-lg text-title-lg text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary">group</span> Users &amp; Role-Based Access Control
+          </h2>
+        </div>
+      </div>
+      <div class="flex-1 overflow-auto">
+        <table class="w-full text-left">
+          <thead class="bg-surface-container-low font-label-sm text-label-sm text-on-surface-variant uppercase sticky top-0">
+            <tr><th class="py-2 px-4">User</th><th class="py-2 px-4">Role</th><th class="py-2 px-4">Approval Rights</th><th class="py-2 px-4">Status</th></tr>
+          </thead>
+          <tbody>
+            <tr class="border-b border-surface-container-highest hover:bg-secondary-fixed/30 transition-colors">
+              <td class="py-3 px-4 font-bold">Program Administrator</td>
+              <td class="py-3 px-4">Administrator</td>
+              <td class="py-3 px-4 text-xs text-on-surface-variant">Generates / Submits Only</td>
+              <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold">Active</span></td>
+            </tr>
+            <tr class="border-b border-surface-container-highest hover:bg-secondary-fixed/30 transition-colors">
+              <td class="py-3 px-4 font-bold">Grace Wanjiku</td>
+              <td class="py-3 px-4">Program Manager</td>
+              <td class="py-3 px-4 text-xs font-bold text-secondary">Manager Approver &amp; Rejecter</td>
+              <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold">Active</span></td>
+            </tr>
+            <tr class="border-b border-surface-container-highest hover:bg-secondary-fixed/30 transition-colors">
+              <td class="py-3 px-4 font-bold">David Mwangi</td>
+              <td class="py-3 px-4">Leadership / Viewer</td>
+              <td class="py-3 px-4 text-xs text-on-surface-variant">Read-only Access</td>
+              <td class="py-3 px-4"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold">Active</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- General Settings -->
+    <div class="col-span-12 lg:col-span-4 bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-[0px_4px_6px_-1px_rgba(15,23,42,0.05)] p-lg flex flex-col h-[500px]">
+      <div class="mb-md pb-md border-b border-surface-container-highest">
+        <h2 class="font-title-lg text-title-lg text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary">tune</span> Governance Policies
+        </h2>
+      </div>
+      <div class="flex-1 overflow-auto space-y-4 text-xs">
+        <div>
+          <label class="block font-bold text-on-surface mb-1">Organization</label>
+          <input class="w-full h-9 px-3 bg-surface border border-outline-variant rounded" type="text" value="KPC Inuka Foundation" readonly/>
+        </div>
+        <div>
+          <label class="block font-bold text-on-surface mb-1">Approval Protocol</label>
+          <p class="text-on-surface-variant bg-surface-container p-2.5 rounded border border-outline-variant">
+            Strict Two-Tier Governance: Administrator generates verified snapshots. Program Manager reviews and signs off.
+          </p>
+        </div>
+        <div>
+          <label class="block font-bold text-on-surface mb-1">Audit Trail Policy</label>
+          <p class="text-on-surface-variant bg-surface-container p-2.5 rounded border border-outline-variant">
+            Immutable timestamps, user identity logging, and snapshot versioning enabled.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audit Logs -->
     <div class="col-span-12 bg-surface-container-lowest rounded-xl border border-outline-variant/30 shadow-[0px_4px_6px_-1px_rgba(15,23,42,0.05)] p-lg flex flex-col h-[400px]">
-      <div class="flex justify-between items-center mb-md pb-md border-b border-surface-container-highest"><h2 class="font-title-lg text-title-lg text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-secondary">history</span> Audit Logs</h2><div class="flex gap-2"><input class="h-8 px-2 bg-surface border border-outline-variant/50 rounded text-sm" type="date"/><button class="h-8 px-3 bg-surface-container text-on-surface border border-outline-variant/50 rounded flex items-center gap-1 hover:bg-surface-variant text-sm"><span class="material-symbols-outlined" style="font-size:16px">download</span> Export</button></div></div>
-      <div class="flex-1 overflow-auto"><table class="w-full text-left"><thead class="bg-surface-container-low font-label-sm text-label-sm text-on-surface-variant uppercase sticky top-0"><tr><th class="py-2 px-4">Timestamp</th><th class="py-2 px-4">User</th><th class="py-2 px-4">Action</th><th class="py-2 px-4">Resource</th><th class="py-2 px-4">Status</th></tr></thead>
-        <tbody>
-          <tr class="border-b border-surface-container-highest hover:bg-secondary-fixed/30 transition-colors"><td class="py-2 px-4 text-sm text-on-surface-variant">2023-10-27 14:32:01</td><td class="py-2 px-4 text-sm">Alice Johnson</td><td class="py-2 px-4 text-sm">Updated Permission</td><td class="py-2 px-4 text-sm font-mono text-xs">Role: Data Analyst</td><td class="py-2 px-4 text-sm"><span class="text-secondary font-medium">Success</span></td></tr>
-          <tr class="border-b border-surface-container-highest hover:bg-secondary-fixed/30 transition-colors"><td class="py-2 px-4 text-sm text-on-surface-variant">2023-10-27 10:15:45</td><td class="py-2 px-4 text-sm">System</td><td class="py-2 px-4 text-sm">Nightly Sync</td><td class="py-2 px-4 text-sm font-mono text-xs">DB_Cluster_01</td><td class="py-2 px-4 text-sm"><span class="text-secondary font-medium">Success</span></td></tr>
-          <tr class="border-b border-surface-container-highest hover:bg-secondary-fixed/30 transition-colors"><td class="py-2 px-4 text-sm text-on-surface-variant">2023-10-26 16:45:12</td><td class="py-2 px-4 text-sm">Bob Smith</td><td class="py-2 px-4 text-sm">Failed Login</td><td class="py-2 px-4 text-sm font-mono text-xs">IP: 192.168.1.105</td><td class="py-2 px-4 text-sm"><span class="text-error font-medium">Failed</span></td></tr>
-        </tbody></table></div>
+      <div class="flex justify-between items-center mb-md pb-md border-b border-surface-container-highest">
+        <h2 class="font-title-lg text-title-lg text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-secondary">history</span> System Audit Trail
+        </h2>
+      </div>
+      <div class="flex-1 overflow-auto">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-surface-container-low text-on-surface-variant uppercase sticky top-0">
+            <tr><th class="py-2 px-4">Timestamp</th><th class="py-2 px-4">User</th><th class="py-2 px-4">Action</th><th class="py-2 px-4">Details</th></tr>
+          </thead>
+          <tbody class="divide-y divide-surface-container">
+            <tr><td class="py-2 px-4">2026-08-25 15:40</td><td class="py-2 px-4 font-bold">Grace Wanjiku</td><td class="py-2 px-4 font-bold text-green-700">REPORT_APPROVED</td><td class="py-2 px-4">Approved 'Q2 2026 Executive Summary'</td></tr>
+            <tr><td class="py-2 px-4">2026-08-25 15:30</td><td class="py-2 px-4 font-bold">Program Administrator</td><td class="py-2 px-4 font-bold text-secondary">REPORT_SENT_TO_MANAGER</td><td class="py-2 px-4">Submitted 'August 2026 Monthly Donor Report' to Manager</td></tr>
+            <tr><td class="py-2 px-4">2026-08-25 15:28</td><td class="py-2 px-4 font-bold">Program Administrator</td><td class="py-2 px-4 font-bold text-secondary">REPORT_GENERATED</td><td class="py-2 px-4">Created snapshot v1 with 96% completeness</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </div>
