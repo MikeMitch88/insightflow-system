@@ -6,6 +6,9 @@ __pycache__/
 .pytest_cache/
 data/raw/*.csv
 data/processed/*.csv
+data/processed/*.xlsx
+data/reports/*.pdf
+data/faiss_index/
 *.egg-info/
 .venv/
 venv/

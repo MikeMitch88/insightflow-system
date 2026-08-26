@@ -1,0 +1,126 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Approval Workflow Dashboard</h1>
+      <p>Track and manage donor report approval workflows across all tiers</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-primary" routerLink="/donor-report-builder">
+        <span class="material-icons-outlined">add</span>
+        New Donor Report
+      </button>
+    </div>
+  </div>
+
+  <!-- Workflow State Pipeline -->
+  <div class="workflow-pipeline" *ngIf="workflowStates.length">
+    <div class="pipeline-stage" *ngFor="let state of workflowStates; let last = last"
+         [class.active]="selectedReport?.current_state === state.state">
+      <div class="stage-icon" [style.background]="getStatusColor(state.state)">
+        <span class="material-icons-outlined" *ngIf="state.state === 'drafting'">edit</span>
+        <span class="material-icons-outlined" *ngIf="state.state === 'tier_2_verification'">fact_check</span>
+        <span class="material-icons-outlined" *ngIf="state.state === 'tier_3_assembly'">auto_awesome</span>
+        <span class="material-icons-outlined" *ngIf="state.state === 'tier_4_final_sign_off'">verified</span>
+        <span class="material-icons-outlined" *ngIf="state.state === 'exported_sent'">send</span>
+      </div>
+      <div class="stage-label">{{ state.label }}</div>
+      <div class="stage-desc">{{ state.description }}</div>
+      <div class="stage-arrow" *ngIf="!last">&#8594;</div>
+    </div>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="filter-tabs">
+    <button *ngFor="let status of ['all', 'drafting', 'tier_2_verification', 'tier_3_assembly', 'tier_4_final_sign_off', 'exported_sent']"
+            class="tab-btn" [class.active]="activeFilter === status"
+            (click)="activeFilter = status">
+      {{ getStatusLabel(status) }}
+      <span class="badge">{{ getStatusCounts()[status] || 0 }}</span>
+    </button>
+  </div>
+
+  <!-- Reports List -->
+  <div class="reports-grid" *ngIf="!loading">
+    <div class="report-card" *ngFor="let report of filteredReports"
+         [class.selected]="selectedReport?.report_id === report.id"
+         (click)="selectReport(report)">
+      <div class="report-header">
+        <h3>{{ report.title }}</h3>
+        <span class="status-badge" [style.background]="getStatusColor(report.workflow_status)">
+          {{ getStatusLabel(report.workflow_status) }}
+        </span>
+      </div>
+      <div class="report-meta">
+        <span *ngIf="report.donor_name">Donor: {{ report.donor_name }}</span>
+        <span>Tier: {{ report.current_tier }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    <span class="material-icons-outlined spinning">refresh</span>
+    Loading workflow data...
+  </div>
+
+  <!-- Report Detail Panel -->
+  <div class="detail-panel" *ngIf="selectedReport">
+    <div class="detail-header">
+      <h2>{{ selectedReport.current_label }}</h2>
+      <button class="btn btn-sm btn-secondary" (click)="selectedReport = null">&times;</button>
+    </div>
+
+    <div class="detail-body">
+      <div class="info-row">
+        <label>Report:</label>
+        <span>{{ selectedReport.title }}</span>
+      </div>
+      <div class="info-row">
+        <label>Current State:</label>
+        <span class="status-badge" [style.background]="getStatusColor(selectedReport.current_state)">
+          {{ selectedReport.current_label }}
+        </span>
+      </div>
+      <div class="info-row">
+        <label>Next State:</label>
+        <span>{{ selectedReport.next_state || 'Final' }}</span>
+      </div>
+
+      <h3>Approval History</h3>
+      <div class="approval-history">
+        <div class="approval-entry" *ngFor="let entry of selectedReport.approval_history">
+          <div class="entry-action">{{ entry.action }}</div>
+          <div class="entry-meta">
+            Tier {{ entry.tier }} | {{ entry.actioned_at | date:'medium' }}
+          </div>
+          <div class="entry-comments" *ngIf="entry.comments">{{ entry.comments }}</div>
+        </div>
+        <div *ngIf="!selectedReport.approval_history?.length" class="no-history">
+          No approval records yet.
+        </div>
+      </div>
+
+      <div class="action-buttons" *ngIf="selectedReport.can_transition">
+        <button class="btn btn-success" *ngIf="canPerformAction('approve')"
+                (click)="transitionReport('approve')">
+          <span class="material-icons-outlined">check</span> Approve
+        </button>
+        <button class="btn btn-danger" *ngIf="canPerformAction('reject')"
+                (click)="transitionReport('reject')">
+          <span class="material-icons-outlined">close</span> Reject
+        </button>
+        <button class="btn btn-warning" *ngIf="canPerformAction('request_changes')"
+                (click)="transitionReport('request_changes')">
+          <span class="material-icons-outlined">edit</span> Request Changes
+        </button>
+        <button class="btn btn-primary" *ngIf="canPerformAction('submit_for_review')"
+                (click)="transitionReport('submit_for_review')">
+          <span class="material-icons-outlined">send</span> Submit for Review
+        </button>
+        <button class="btn btn-primary" *ngIf="canPerformAction('assemble_report')"
+                (click)="transitionReport('assemble_report')">
+          <span class="material-icons-outlined">auto_awesome</span> Assemble Report
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

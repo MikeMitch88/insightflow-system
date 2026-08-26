@@ -1,0 +1,60 @@
+.page-container { padding: 24px; max-width: 1400px; margin: 0 auto; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.page-header h1 { font-size: 24px; color: #0f172a; margin: 0; }
+.page-header p { color: #64748b; margin: 4px 0 0; font-size: 14px; }
+
+.tabs { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+.tab { padding: 12px 20px; border: 1px solid #e2e8f0; border-radius: 10px; background: #fff; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px; transition: all 0.2s; }
+.tab.active { background: #6366f1; color: #fff; border-color: #6366f1; }
+.tab:hover:not(.active) { background: #f1f5f9; }
+
+.form-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 24px; border-left: 4px solid #6366f1; }
+.form-card h3 { margin: 0 0 16px; color: #1e293b; }
+.form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 4px; }
+.form-group.full-width { grid-column: 1 / -1; }
+.form-group label { font-size: 13px; font-weight: 600; color: #475569; }
+.form-group input, .form-group select, .form-group textarea { padding: 10px 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; transition: border-color 0.2s; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+.form-actions { margin-top: 16px; }
+
+.table-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 24px; }
+.table-card h3 { margin: 0 0 16px; color: #1e293b; font-size: 18px; }
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th { text-align: left; padding: 12px; background: #f8fafc; color: #475569; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #e2e8f0; }
+.data-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; font-size: 14px; color: #1e293b; }
+.data-table tr:hover td { background: #f8fafc; }
+
+.attainment { padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 12px; }
+.attainment.good { background: #dcfce7; color: #166534; }
+.attainment.warn { background: #fef3c7; color: #92400e; }
+.attainment.bad { background: #fee2e2; color: #991b1b; }
+
+.badge { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; background: #fef3c7; color: #92400e; }
+.badge.verified { background: #dcfce7; color: #166534; }
+.badge.open { background: #fee2e2; color: #991b1b; }
+
+.severity { padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+.severity-low { background: #dcfce7; color: #166534; }
+.severity-medium { background: #fef3c7; color: #92400e; }
+.severity-high { background: #fed7aa; color: #9a3412; }
+.severity-critical { background: #fee2e2; color: #991b1b; }
+
+.mitigation-cell { max-width: 300px; font-size: 13px; color: #475569; }
+
+.notes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 16px; }
+.note-card { background: #f8fafc; border-radius: 10px; padding: 20px; border: 1px solid #e2e8f0; }
+.note-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.note-header h4 { margin: 0; font-size: 15px; color: #1e293b; }
+.note-type { padding: 2px 8px; border-radius: 4px; font-size: 10px; background: #e0e7ff; color: #4338ca; font-weight: 600; }
+.note-content { font-size: 13px; color: #475569; line-height: 1.5; margin: 8px 0; }
+.beneficiary-quote { margin: 12px 0; padding: 12px 16px; background: #fff; border-left: 3px solid #6366f1; border-radius: 0 8px 8px 0; font-style: italic; color: #475569; font-size: 13px; }
+.note-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 12px; color: #94a3b8; }
+.vectorized-badge { padding: 2px 6px; border-radius: 4px; background: #dbeafe; color: #1d4ed8; font-size: 10px; }
+
+.btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
+.btn-primary { background: #6366f1; color: #fff; }
+.btn-primary:hover { background: #4f46e5; }
+.btn-primary:disabled { background: #a5b4fc; cursor: not-allowed; }
+.btn-secondary { background: #e2e8f0; color: #475569; }
+.btn-sm { padding: 6px 12px; font-size: 12px; }

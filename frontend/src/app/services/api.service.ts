@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private baseUrl = 'http://localhost:8000/api';
+  private baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
+
+  // ============================================================
+  // EXISTING ENDPOINTS
+  // ============================================================
 
   getDashboardSummary(period?: number): Observable<any> {
     let params = new HttpParams();
@@ -112,5 +117,194 @@ export class ApiService {
 
   updateSettings(settings: any): Observable<any> {
     return this.http.put(`${this.baseUrl}/admin/settings`, settings);
+  }
+
+  // ============================================================
+  // NEW: RBAC & AUTH ENDPOINTS
+  // ============================================================
+
+  getRoles(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/auth/roles`);
+  }
+
+  getDepartments(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/auth/departments`);
+  }
+
+  getUsers(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/auth/users`);
+  }
+
+  // ============================================================
+  // NEW: CROSS-PILLAR DATA COLLECTION
+  // ============================================================
+
+  getProjects(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/cross-pillar/projects`);
+  }
+
+  createProject(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/cross-pillar/projects`, data);
+  }
+
+  getKpiMetrics(filters: any = {}): Observable<any> {
+    let httpParams = new HttpParams();
+    Object.keys(filters).forEach(key => {
+      if (filters[key] !== null && filters[key] !== undefined) {
+        httpParams = httpParams.set(key, filters[key].toString());
+      }
+    });
+    return this.http.get(`${this.baseUrl}/cross-pillar/kpi-metrics`, { params: httpParams });
+  }
+
+  createKpiMetric(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/cross-pillar/kpi-metrics`, data);
+  }
+
+  verifyKpiMetric(id: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/cross-pillar/kpi-metrics/${id}/verify`, {});
+  }
+
+  getFinancialItems(filters: any = {}): Observable<any> {
+    let httpParams = new HttpParams();
+    Object.keys(filters).forEach(key => {
+      if (filters[key] !== null && filters[key] !== undefined) {
+        httpParams = httpParams.set(key, filters[key].toString());
+      }
+    });
+    return this.http.get(`${this.baseUrl}/cross-pillar/financial-items`, { params: httpParams });
+  }
+
+  createFinancialItem(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/cross-pillar/financial-items`, data);
+  }
+
+  verifyFinancialItem(id: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/cross-pillar/financial-items/${id}/verify`, {});
+  }
+
+  getRisks(filters: any = {}): Observable<any> {
+    let httpParams = new HttpParams();
+    Object.keys(filters).forEach(key => {
+      if (filters[key] !== null && filters[key] !== undefined) {
+        httpParams = httpParams.set(key, filters[key].toString());
+      }
+    });
+    return this.http.get(`${this.baseUrl}/cross-pillar/risks`, { params: httpParams });
+  }
+
+  createRisk(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/cross-pillar/risks`, data);
+  }
+
+  getFieldNotes(filters: any = {}): Observable<any> {
+    let httpParams = new HttpParams();
+    Object.keys(filters).forEach(key => {
+      if (filters[key] !== null && filters[key] !== undefined) {
+        httpParams = httpParams.set(key, filters[key].toString());
+      }
+    });
+    return this.http.get(`${this.baseUrl}/cross-pillar/field-notes`, { params: httpParams });
+  }
+
+  createFieldNote(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/cross-pillar/field-notes`, data);
+  }
+
+  // ============================================================
+  // NEW: WORKFLOW & APPROVAL
+  // ============================================================
+
+  getWorkflowStates(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/workflow/states`);
+  }
+
+  getDonorReports(filters: any = {}): Observable<any> {
+    let httpParams = new HttpParams();
+    Object.keys(filters).forEach(key => {
+      if (filters[key] !== null && filters[key] !== undefined) {
+        httpParams = httpParams.set(key, filters[key].toString());
+      }
+    });
+    return this.http.get(`${this.baseUrl}/workflow/reports`, { params: httpParams });
+  }
+
+  createDonorReport(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/workflow/reports`, data);
+  }
+
+  getDonorReport(id: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/workflow/reports/${id}`);
+  }
+
+  transitionReport(reportId: number, action: string, comments?: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/workflow/reports/${reportId}/transition`, {
+      action,
+      comments,
+    });
+  }
+
+  approveReport(reportId: number, comments?: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/workflow/reports/${reportId}/approve`, null, {
+      params: comments ? { comments } : {},
+    });
+  }
+
+  rejectReport(reportId: number, comments?: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/workflow/reports/${reportId}/reject`, null, {
+      params: comments ? { comments } : {},
+    });
+  }
+
+  submitForReview(reportId: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/workflow/reports/${reportId}/submit`, {});
+  }
+
+  getAuditLogs(filters: any = {}): Observable<any> {
+    let httpParams = new HttpParams();
+    Object.keys(filters).forEach(key => {
+      if (filters[key] !== null && filters[key] !== undefined) {
+        httpParams = httpParams.set(key, filters[key].toString());
+      }
+    });
+    return this.http.get(`${this.baseUrl}/workflow/audit-logs`, { params: httpParams });
+  }
+
+  // ============================================================
+  // NEW: AI REPORT GENERATION
+  // ============================================================
+
+  getReportSections(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/report-gen/sections`);
+  }
+
+  getDonorReportList(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/report-gen/donor-reports`);
+  }
+
+  createDonorReportGen(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/report-gen/donor-reports`, null, {
+      params: data,
+    });
+  }
+
+  generateReportSection(reportId: number, sectionId: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/report-gen/donor-reports/${reportId}/generate-section/${sectionId}`, {});
+  }
+
+  generateAllSections(reportId: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/report-gen/donor-reports/${reportId}/generate-all`, {});
+  }
+
+  ingestDataToVectorStore(reportId: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/report-gen/donor-reports/${reportId}/ingest-data`, {});
+  }
+
+  getReportContent(reportId: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/report-gen/donor-reports/${reportId}/content`);
+  }
+
+  getVectorStoreStats(reportId: number): Observable<any> {
+    return this.http.get(`${this.baseUrl}/report-gen/donor-reports/${reportId}/stats`);
   }
 }

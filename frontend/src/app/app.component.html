@@ -1,8 +1,8 @@
 <div class="app-layout" *ngIf="isLoggedIn(); else loginTpl">
   <aside class="sidebar" [class.collapsed]="!sidebarOpen">
     <div class="sidebar-header">
-      <h1>InsightFlow System</h1>
-      <p>Program Intelligence Platform</p>
+      <h1>Insightful System</h1>
+      <p>Intelligent Automated Reporting</p>
     </div>
     <nav class="sidebar-nav">
       <ng-container *ngFor="let section of filteredNavSections">
@@ -23,6 +23,7 @@
         <div>
           <div style="font-weight:600">{{ userName }}</div>
           <div style="color:rgba(255,255,255,0.5);font-size:10px">{{ userRoleLabel }}</div>
+          <div style="color:rgba(255,255,255,0.35);font-size:10px">{{ userTierLabel }}</div>
           <div style="color:rgba(255,255,255,0.35);font-size:10px">{{ userEmail }}</div>
         </div>
       </div>
@@ -35,7 +36,7 @@
         <button class="btn btn-sm btn-secondary" (click)="toggleSidebar()" style="display:none">
           <span class="material-icons-outlined" style="font-size:18px">menu</span>
         </button>
-        <span class="topbar-title">InsightFlow System</span>
+        <span class="topbar-title">Insightful System</span>
       </div>
       <div class="topbar-actions">
         <button class="btn btn-sm btn-secondary">

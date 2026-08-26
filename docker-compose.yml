@@ -1,33 +1,55 @@
-version: "3.8"
 services:
+  # ============================================================
+  # PostgreSQL Database (Supabase-compatible)
+  # ============================================================
   postgres:
     image: postgres:16-alpine
-    environment:
-      POSTGRES_USER: insightflow
-      POSTGRES_PASSWORD: insightflow_secret
-      POSTGRES_DB: insightflow_db
     ports:
-      - "5432:5432"
+      - "6543:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-insightful_system}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres_password}
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U insightflow -d insightflow_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-insightful_system}"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
+    restart: unless-stopped
 
+  # ============================================================
+  # Backend API (FastAPI + SQLAlchemy)
+  # ============================================================
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "8000:8000"
+      - "8001:8000"
+    env_file:
+      - .env
     environment:
-      DATABASE_URL: postgresql://insightflow:insightflow_secret@postgres:5432/insightflow_db
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres_password}@postgres:5432/${POSTGRES_DB:-insightful_system}
+      ALLOWED_ORIGINS: "http://localhost:4200,http://127.0.0.1:4200,http://localhost:4201,http://localhost:3000,http://localhost:8001,http://localhost:4200,http://localhost:80"
       AI_API_KEY: ${AI_API_KEY:-}
       AI_MODEL: ${AI_MODEL:-gpt-4}
       AI_BASE_URL: ${AI_BASE_URL:-https://api.openai.com/v1}
-      JWT_SECRET: ${JWT_SECRET:-dev-secret}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GROQ_MODEL: ${GROQ_MODEL:-openai/gpt-oss-120b}
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-change-in-production}
+      SHARED_PASSWORD: ${SHARED_PASSWORD:-Admin@123}
+      FAISS_INDEX_PATH: /app/data/faiss_index
+      SMTP_HOST: ${SMTP_HOST:-smtp.gmail.com}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      EMAIL_FROM: ${EMAIL_FROM:-insightful-system@inukafoundation.org}
+      EMAIL_ENABLED: ${EMAIL_ENABLED:-false}
+    volumes:
+      - ./data:/app/data
+      - faiss_data:/app/data/faiss_index
     depends_on:
       postgres:
         condition: service_healthy
@@ -35,16 +57,50 @@ services:
       test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/api/health')"]
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 5
+    restart: unless-stopped
 
+  # ============================================================
+  # AI Worker Service (Background vector ingestion + RAG)
+  # ============================================================
+  ai-worker:
+    build:
+      context: .
+      dockerfile: ai_services/Dockerfile
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres_password}@postgres:5432/${POSTGRES_DB:-insightful_system}
+      AI_API_KEY: ${AI_API_KEY:-}
+      AI_MODEL: ${AI_MODEL:-gpt-4}
+      AI_BASE_URL: ${AI_BASE_URL:-https://api.openai.com/v1}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GROQ_MODEL: ${GROQ_MODEL:-openai/gpt-oss-120b}
+      FAISS_INDEX_PATH: /app/data/faiss_index
+    volumes:
+      - ./data:/app/data
+      - faiss_data:/app/data/faiss_index
+    depends_on:
+      postgres:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ============================================================
+  # Frontend (Angular + Nginx)
+  # ============================================================
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      args:
+        API_URL: http://localhost:8001/api
     ports:
-      - "4200:80"
+      - "4201:80"
     depends_on:
       - backend
+    restart: unless-stopped
 
 volumes:
-  pgdata:
+  postgres_data:
+  faiss_data:

@@ -1,13 +1,27 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
+
+export interface UserRole {
+  id: number;
+  name: string;
+  tier: number;
+  description: string;
+}
+
+export interface UserDepartment {
+  id: number;
+  name: string;
+  code: string;
+}
 
 export interface User {
   id: number;
   email: string;
   name: string;
-  role: string;
-  role_label: string;
+  role: UserRole | null;
+  department: UserDepartment | null;
   permissions: string[];
 }
 
@@ -18,14 +32,18 @@ export interface LoginResponse {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private baseUrl = 'http://localhost:8000/api/auth';
+  private baseUrl = `${environment.apiUrl}/auth`;
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private http: HttpClient) {
     const stored = localStorage.getItem('insightflow_user');
     if (stored) {
-      this.currentUserSubject.next(JSON.parse(stored));
+      try {
+        this.currentUserSubject.next(JSON.parse(stored));
+      } catch {
+        localStorage.removeItem('insightflow_user');
+      }
     }
   }
 
@@ -53,14 +71,60 @@ export class AuthService {
     return !!this.getToken();
   }
 
-  hasPermission(page: string): boolean {
-    const user = this.currentUser;
-    if (!user) return false;
-    if (user.role === 'admin') return true;
-    return user.permissions.includes(page);
-  }
-
   get currentUser(): User | null {
     return this.currentUserSubject.value;
+  }
+
+  get userTier(): number {
+    return this.currentUser?.role?.tier || 0;
+  }
+
+  get userRoleName(): string {
+    return this.currentUser?.role?.name || '';
+  }
+
+  get userDepartment(): string {
+    return this.currentUser?.department?.code || '';
+  }
+
+  hasPermission(permission: string): boolean {
+    const user = this.currentUser;
+    if (!user) return false;
+    if (user.role && user.role.tier >= 3) return true;
+    return user.permissions.includes(permission);
+  }
+
+  hasMinTier(minTier: number): boolean {
+    return this.userTier >= minTier;
+  }
+
+  canCreateData(): boolean {
+    return this.userTier >= 1;
+  }
+
+  canVerifyData(): boolean {
+    return this.userTier >= 2;
+  }
+
+  canGenerateReports(): boolean {
+    return this.userTier >= 3;
+  }
+
+  canFinalApprove(): boolean {
+    return this.userTier >= 4;
+  }
+
+  canAccessWorkflowAction(action: string, currentStatus: string): boolean {
+    const tier = this.userTier;
+    const workflowPermissions: Record<string, Record<string, number[]>> = {
+      drafting: { edit: [1, 3], submit_for_review: [1, 3] },
+      tier_2_verification: { approve: [2, 3], reject: [2, 3], request_changes: [2, 3] },
+      tier_3_assembly: { assemble_report: [3], edit_content: [3], submit_for_final_approval: [3] },
+      tier_4_final_sign_off: { approve: [4], reject: [4], request_changes: [4] },
+      exported_sent: {},
+    };
+
+    const allowedTiers = workflowPermissions[currentStatus]?.[action] || [];
+    return allowedTiers.includes(tier);
   }
 }

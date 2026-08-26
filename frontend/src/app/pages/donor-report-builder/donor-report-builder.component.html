@@ -1,0 +1,108 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>AI Donor Report Builder</h1>
+      <p>Generate 6-section donor reports using RAG-powered AI synthesis</p>
+    </div>
+    <button class="btn btn-primary" (click)="showNewForm = !showNewForm">
+      <span class="material-icons-outlined">add</span>
+      New Donor Report
+    </button>
+  </div>
+
+  <!-- New Report Form -->
+  <div class="form-card" *ngIf="showNewForm">
+    <h3>Create New Donor Report</h3>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Report Title *</label>
+        <input type="text" [(ngModel)]="newReportTitle" placeholder="e.g., Q3 2026 USAID Progress Report">
+      </div>
+      <div class="form-group">
+        <label>Donor Name</label>
+        <input type="text" [(ngModel)]="newReportDonor" placeholder="e.g., USAID, EU, DFID">
+      </div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" (click)="createReport()" [disabled]="!newReportTitle">Create Report</button>
+      <button class="btn btn-secondary" (click)="showNewForm = false">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Reports List -->
+  <div class="reports-section" *ngIf="!loading">
+    <h2>Donor Reports</h2>
+    <div class="reports-grid">
+      <div class="report-card" *ngFor="let report of reports"
+           [class.selected]="selectedReport?.id === report.id"
+           (click)="selectReport(report)">
+        <div class="report-title">{{ report.title }}</div>
+        <div class="report-meta">
+          <span *ngIf="report.donor_name">{{ report.donor_name }}</span>
+          <span class="status-badge" [attr.data-status]="report.workflow_status">{{ report.workflow_status }}</span>
+        </div>
+        <div class="report-stats">{{ report.sections_generated }}/6 sections generated</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Report Editor -->
+  <div class="report-editor" *ngIf="selectedReport">
+    <div class="editor-header">
+      <h2>{{ selectedReport.title || 'Untitled Report' }}</h2>
+      <div class="editor-actions">
+        <button class="btn btn-secondary" (click)="ingestData()" [disabled]="ingesting">
+          <span class="material-icons-outlined">database</span>
+          {{ ingesting ? 'Ingesting...' : 'Ingest Data to Vector Store' }}
+        </button>
+        <button class="btn btn-primary" (click)="generateAllSections()" [disabled]="generating">
+          <span class="material-icons-outlined">auto_awesome</span>
+          {{ generating ? 'Generating...' : 'Generate All Sections' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Vector Store Stats -->
+    <div class="vector-stats" *ngIf="vectorStats">
+      <span class="material-icons-outlined">storage</span>
+      Vector Store: {{ vectorStats.total_vectors }} vectors | {{ vectorStats.total_documents }} documents
+      <span *ngFor="let source of vectorStats.source_breakdown | keyvalue"> | {{ source.key }}: {{ source.value }}</span>
+    </div>
+
+    <!-- 6 Report Sections -->
+    <div class="sections-container">
+      <div class="section-card" *ngFor="let section of sections">
+        <div class="section-header">
+          <div class="section-info">
+            <span class="section-number">{{ section.order }}</span>
+            <div>
+              <h3>{{ section.title }}</h3>
+              <p>{{ section.description }}</p>
+            </div>
+          </div>
+          <button class="btn btn-sm btn-primary" (click)="generateSection(section.id)" [disabled]="generating">
+            <span class="material-icons-outlined" style="font-size:16px">auto_awesome</span>
+            Generate
+          </button>
+        </div>
+        <div class="section-content">
+          <div class="content-text">{{ getSectionContent(section.id) }}</div>
+          <div class="section-meta" *ngIf="getSectionGeneratedAt(section.id)">
+            Generated: {{ getSectionGeneratedAt(section.id) | date:'medium' }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" *ngIf="!loading && !selectedReport && !showNewForm">
+    <span class="material-icons-outlined" style="font-size:64px;color:#cbd5e1">description</span>
+    <h3>Select a Report</h3>
+    <p>Choose an existing donor report or create a new one to get started.</p>
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    <span class="material-icons-outlined spinning">refresh</span>
+    Loading...
+  </div>
+</div>

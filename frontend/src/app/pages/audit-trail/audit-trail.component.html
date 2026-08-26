@@ -1,0 +1,52 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Audit Trail</h1>
+      <p>Immutable log of all system actions, modifications, and approvals</p>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <select [(ngModel)]="filterEntityType" (change)="loadAuditLogs()">
+      <option value="">All Entity Types</option>
+      <option *ngFor="let type of entityTypes" [value]="type">{{ type }}</option>
+    </select>
+    <input type="text" [(ngModel)]="filterAction" placeholder="Filter by action..." (keyup.enter)="loadAuditLogs()">
+    <button class="btn btn-primary btn-sm" (click)="loadAuditLogs()">Apply Filters</button>
+  </div>
+
+  <!-- Audit Log Table -->
+  <div class="table-card" *ngIf="!loading">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>User ID</th>
+          <th>Action</th>
+          <th>Entity Type</th>
+          <th>Entity ID</th>
+          <th>Changes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let log of auditLogs">
+          <td>{{ log.timestamp | date:'medium' }}</td>
+          <td>{{ log.user_id }}</td>
+          <td><span class="action-badge">{{ formatAction(log.action) }}</span></td>
+          <td>{{ log.entity_type }}</td>
+          <td>{{ log.entity_id || '-' }}</td>
+          <td class="changes-cell">{{ formatChanges(log.changes_json) }}</td>
+        </tr>
+        <tr *ngIf="auditLogs.length === 0">
+          <td colspan="6" class="no-data">No audit records found.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    <span class="material-icons-outlined spinning">refresh</span>
+    Loading audit logs...
+  </div>
+</div>

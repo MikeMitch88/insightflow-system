@@ -15,6 +15,10 @@ import { DataPipelineComponent } from './pages/data-pipeline/data-pipeline.compo
 import { AiAssistantComponent } from './pages/ai-assistant/ai-assistant.component';
 import { AiInsightsComponent } from './pages/ai-insights/ai-insights.component';
 import { AdminComponent } from './pages/admin/admin.component';
+import { WorkflowDashboardComponent } from './pages/workflow-dashboard/workflow-dashboard.component';
+import { CrossPillarFormsComponent } from './pages/cross-pillar-forms/cross-pillar-forms.component';
+import { DonorReportBuilderComponent } from './pages/donor-report-builder/donor-report-builder.component';
+import { AuditTrailComponent } from './pages/audit-trail/audit-trail.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -31,6 +35,11 @@ const routes: Routes = [
   { path: 'ai-assistant', component: AiAssistantComponent, canActivate: [AuthGuard] },
   { path: 'ai-insights', component: AiInsightsComponent, canActivate: [AuthGuard] },
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuard] },
+  // New routes
+  { path: 'workflow', component: WorkflowDashboardComponent, canActivate: [AuthGuard] },
+  { path: 'cross-pillar-forms', component: CrossPillarFormsComponent, canActivate: [AuthGuard] },
+  { path: 'donor-report-builder', component: DonorReportBuilderComponent, canActivate: [AuthGuard] },
+  { path: 'audit-trail', component: AuditTrailComponent, canActivate: [AuthGuard] },
   { path: '**', redirectTo: 'dashboard' }
 ];
 

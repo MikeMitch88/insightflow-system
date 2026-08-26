@@ -23,6 +23,10 @@ import { DataPipelineComponent } from './pages/data-pipeline/data-pipeline.compo
 import { AiAssistantComponent } from './pages/ai-assistant/ai-assistant.component';
 import { AiInsightsComponent } from './pages/ai-insights/ai-insights.component';
 import { AdminComponent } from './pages/admin/admin.component';
+import { WorkflowDashboardComponent } from './pages/workflow-dashboard/workflow-dashboard.component';
+import { CrossPillarFormsComponent } from './pages/cross-pillar-forms/cross-pillar-forms.component';
+import { DonorReportBuilderComponent } from './pages/donor-report-builder/donor-report-builder.component';
+import { AuditTrailComponent } from './pages/audit-trail/audit-trail.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +44,11 @@ import { AdminComponent } from './pages/admin/admin.component';
     DataPipelineComponent,
     AiAssistantComponent,
     AiInsightsComponent,
-    AdminComponent
+    AdminComponent,
+    WorkflowDashboardComponent,
+    CrossPillarFormsComponent,
+    DonorReportBuilderComponent,
+    AuditTrailComponent
   ],
   imports: [
     BrowserModule,

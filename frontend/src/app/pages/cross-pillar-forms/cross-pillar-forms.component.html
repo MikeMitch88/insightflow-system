@@ -1,0 +1,321 @@
+<div class="page-container">
+  <div class="page-header">
+    <div>
+      <h1>Cross-Pillar Data Collection</h1>
+      <p>Submit data across M&E, Finance, Operations, and Field Notes departments</p>
+    </div>
+    <button class="btn btn-primary" (click)="showForm = !showForm">
+      <span class="material-icons-outlined">{{ showForm ? 'close' : 'add' }}</span>
+      {{ showForm ? 'Cancel' : 'New Entry' }}
+    </button>
+  </div>
+
+  <!-- Department Tabs -->
+  <div class="tabs">
+    <button class="tab" [class.active]="activeTab === 'kpi'" (click)="activeTab = 'kpi'">
+      <span class="material-icons-outlined">assessment</span> M&E KPIs
+    </button>
+    <button class="tab" [class.active]="activeTab === 'financial'" (click)="activeTab = 'financial'">
+      <span class="material-icons-outlined">account_balance</span> Financial Items
+    </button>
+    <button class="tab" [class.active]="activeTab === 'risks'" (click)="activeTab = 'risks'">
+      <span class="material-icons-outlined">warning</span> Operational Risks
+    </button>
+    <button class="tab" [class.active]="activeTab === 'notes'" (click)="activeTab = 'notes'">
+      <span class="material-icons-outlined">note</span> Field Notes
+    </button>
+  </div>
+
+  <!-- KPI Form -->
+  <div class="form-card" *ngIf="showForm && activeTab === 'kpi'">
+    <h3>Submit KPI Metric</h3>
+    <form [formGroup]="kpiForm" (ngSubmit)="submitKpi()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Project *</label>
+          <select formControlName="project_id">
+            <option [ngValue]="null">Select project</option>
+            <option *ngFor="let p of projects" [ngValue]="p.id">{{ p.name }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>KPI Name *</label>
+          <input type="text" formControlName="kpi_name" placeholder="e.g., Beneficiaries Enrolled">
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select formControlName="kpi_category">
+            <option value="">Select category</option>
+            <option>Enrollment</option><option>Completion</option><option>Outcome</option>
+            <option>Quality</option><option>Delivery</option><option>Timeliness</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Target Value *</label>
+          <input type="number" formControlName="target_value" min="0">
+        </div>
+        <div class="form-group">
+          <label>Actual Value *</label>
+          <input type="number" formControlName="actual_value" min="0">
+        </div>
+        <div class="form-group">
+          <label>Unit</label>
+          <input type="text" formControlName="unit" placeholder="e.g., %, count, score">
+        </div>
+      </div>
+      <div class="form-group full-width">
+        <label>Notes</label>
+        <textarea formControlName="notes" rows="3" placeholder="Additional context..."></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="kpiForm.invalid || submitting">
+          {{ submitting ? 'Submitting...' : 'Submit KPI' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Financial Form -->
+  <div class="form-card" *ngIf="showForm && activeTab === 'financial'">
+    <h3>Submit Financial Line Item</h3>
+    <form [formGroup]="financialForm" (ngSubmit)="submitFinancial()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Project *</label>
+          <select formControlName="project_id">
+            <option [ngValue]="null">Select project</option>
+            <option *ngFor="let p of projects" [ngValue]="p.id">{{ p.name }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Line Item *</label>
+          <input type="text" formControlName="line_item" placeholder="e.g., Scholarship Tuition Fees">
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select formControlName="category">
+            <option value="">Select category</option>
+            <option>Program Costs</option><option>Capital</option><option>Operations</option>
+            <option>Professional</option><option>IT</option><option>Health</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Budget Amount *</label>
+          <input type="number" formControlName="budget_amount" min="0">
+        </div>
+        <div class="form-group">
+          <label>Actual Spend *</label>
+          <input type="number" formControlName="actual_spend" min="0">
+        </div>
+        <div class="form-group">
+          <label>Currency</label>
+          <select formControlName="currency">
+            <option value="USD">USD</option><option value="KES">KES</option><option value="EUR">EUR</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group full-width">
+        <label>Notes</label>
+        <textarea formControlName="notes" rows="3"></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="financialForm.invalid || submitting">
+          {{ submitting ? 'Submitting...' : 'Submit Financial Item' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Risk Form -->
+  <div class="form-card" *ngIf="showForm && activeTab === 'risks'">
+    <h3>Log Operational Risk</h3>
+    <form [formGroup]="riskForm" (ngSubmit)="submitRisk()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Project *</label>
+          <select formControlName="project_id">
+            <option [ngValue]="null">Select project</option>
+            <option *ngFor="let p of projects" [ngValue]="p.id">{{ p.name }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Risk Title *</label>
+          <input type="text" formControlName="risk_title" placeholder="e.g., Funding Gap Risk">
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select formControlName="risk_category">
+            <option value="">Select category</option>
+            <option>Financial</option><option>Technical</option><option>Compliance</option>
+            <option>Human Resources</option><option>Strategic</option><option>Operations</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Severity *</label>
+          <select formControlName="severity">
+            <option value="low">Low</option><option value="medium">Medium</option>
+            <option value="high">High</option><option value="critical">Critical</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Likelihood</label>
+          <select formControlName="likelihood">
+            <option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Impact</label>
+          <select formControlName="impact">
+            <option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group full-width">
+        <label>Mitigation Strategy</label>
+        <textarea formControlName="mitigation_strategy" rows="3" placeholder="Describe mitigation approach..."></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="riskForm.invalid || submitting">
+          {{ submitting ? 'Submitting...' : 'Log Risk' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Field Note Form -->
+  <div class="form-card" *ngIf="showForm && activeTab === 'notes'">
+    <h3>Add Field Note</h3>
+    <form [formGroup]="fieldNoteForm" (ngSubmit)="submitFieldNote()">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Project *</label>
+          <select formControlName="project_id">
+            <option [ngValue]="null">Select project</option>
+            <option *ngFor="let p of projects" [ngValue]="p.id">{{ p.name }}</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Title *</label>
+          <input type="text" formControlName="title" placeholder="e.g., Beneficiary Impact Story">
+        </div>
+        <div class="form-group">
+          <label>Note Type</label>
+          <select formControlName="note_type">
+            <option value="program_update">Program Update</option>
+            <option value="beneficiary_story">Beneficiary Story</option>
+            <option value="audit_finding">Audit Finding</option>
+            <option value="intervention_log">Intervention Log</option>
+            <option value="success_story">Success Story</option>
+            <option value="partnership_update">Partnership Update</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" formControlName="location" placeholder="e.g., Nairobi, Kenya">
+        </div>
+        <div class="form-group">
+          <label>Date Observed</label>
+          <input type="date" formControlName="date_observed">
+        </div>
+      </div>
+      <div class="form-group full-width">
+        <label>Content *</label>
+        <textarea formControlName="content" rows="5" placeholder="Describe what you observed..."></textarea>
+      </div>
+      <div class="form-group full-width">
+        <label>Beneficiary Quote</label>
+        <textarea formControlName="beneficiary_quote" rows="2" placeholder="Direct quote from beneficiary..."></textarea>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="fieldNoteForm.invalid || submitting">
+          {{ submitting ? 'Submitting...' : 'Save Field Note' }}
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Data Tables -->
+  <div class="data-section" *ngIf="!loading">
+    <!-- KPI Metrics Table -->
+    <div class="table-card" *ngIf="activeTab === 'kpi'">
+      <h3>M&E KPI Metrics (Targets vs Actuals)</h3>
+      <table class="data-table">
+        <thead>
+          <tr><th>KPI</th><th>Category</th><th>Target</th><th>Actual</th><th>Attainment</th><th>Status</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let m of kpiMetrics">
+            <td>{{ m.kpi_name }}</td>
+            <td>{{ m.kpi_category || '-' }}</td>
+            <td>{{ m.target_value }}</td>
+            <td>{{ m.actual_value }}</td>
+            <td><span class="attainment" [class.good]="m.attainment_pct >= 80" [class.warn]="m.attainment_pct >= 60 && m.attainment_pct < 80" [class.bad]="m.attainment_pct < 60">{{ m.attainment_pct }}%</span></td>
+            <td><span class="badge" [class.verified]="m.verified">{{ m.verified ? 'Verified' : 'Pending' }}</span></td>
+            <td><button class="btn btn-sm btn-secondary" *ngIf="!m.verified && auth.canVerifyData()" (click)="verifyMetric(m.id)">Verify</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Financial Table -->
+    <div class="table-card" *ngIf="activeTab === 'financial'">
+      <h3>Financial Line Items (Budget vs Spend)</h3>
+      <table class="data-table">
+        <thead>
+          <tr><th>Line Item</th><th>Category</th><th>Budget</th><th>Spend</th><th>Burn Rate</th><th>Variance</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let f of financialItems">
+            <td>{{ f.line_item }}</td>
+            <td>{{ f.category || '-' }}</td>
+            <td>${{ f.budget_amount | number:'1.0-0' }}</td>
+            <td>${{ f.actual_spend | number:'1.0-0' }}</td>
+            <td><span class="attainment" [class.good]="f.burn_rate <= 100" [class.warn]="f.burn_rate > 100">{{ f.burn_rate }}%</span></td>
+            <td [style.color]="f.variance >= 0 ? '#10b981' : '#ef4444'">${{ f.variance | number:'1.0-0' }}</td>
+            <td><span class="badge" [class.verified]="f.verified">{{ f.verified ? 'Verified' : 'Pending' }}</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Risks Table -->
+    <div class="table-card" *ngIf="activeTab === 'risks'">
+      <h3>Operational Risks & Mitigation</h3>
+      <table class="data-table">
+        <thead>
+          <tr><th>Risk</th><th>Category</th><th>Severity</th><th>Status</th><th>Mitigation</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let r of risks">
+            <td>{{ r.risk_title }}</td>
+            <td>{{ r.risk_category || '-' }}</td>
+            <td><span class="severity" [class]="'severity-' + r.severity">{{ r.severity }}</span></td>
+            <td><span class="badge" [class.open]="r.status === 'open'">{{ r.status }}</span></td>
+            <td class="mitigation-cell">{{ r.mitigation_strategy || '-' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Field Notes Table -->
+    <div class="table-card" *ngIf="activeTab === 'notes'">
+      <h3>Field Notes & Qualitative Data</h3>
+      <div class="notes-grid">
+        <div class="note-card" *ngFor="let n of fieldNotes">
+          <div class="note-header">
+            <h4>{{ n.title }}</h4>
+            <span class="note-type">{{ n.note_type }}</span>
+          </div>
+          <p class="note-content">{{ n.content | slice:0:200 }}{{ n.content.length > 200 ? '...' : '' }}</p>
+          <blockquote *ngIf="n.beneficiary_quote" class="beneficiary-quote">
+            "{{ n.beneficiary_quote }}"
+          </blockquote>
+          <div class="note-meta">
+            <span *ngIf="n.location"><span class="material-icons-outlined" style="font-size:14px">location_on</span> {{ n.location }}</span>
+            <span class="vectorized-badge" *ngIf="n.vectorized">Vectorized</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

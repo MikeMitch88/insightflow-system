@@ -1,10 +1,74 @@
-from datetime import datetime
+from datetime import datetime, date
 from typing import Any, Dict, Generic, List, Optional, TypeVar
 
 from pydantic import BaseModel, Field
 
 T = TypeVar("T")
 
+
+# ============================================================
+# RBAC & AUTH SCHEMAS
+# ============================================================
+
+class DepartmentOut(BaseModel):
+    id: int
+    name: str
+    code: str
+    description: Optional[str] = None
+
+    model_config = {"from_attributes": True}
+
+
+class RoleOut(BaseModel):
+    id: int
+    name: str
+    tier: int
+    description: Optional[str] = None
+
+    model_config = {"from_attributes": True}
+
+
+class PermissionOut(BaseModel):
+    id: int
+    resource: str
+    action: str
+    description: Optional[str] = None
+
+    model_config = {"from_attributes": True}
+
+
+class UserOut(BaseModel):
+    id: int
+    email: str
+    name: str
+    role: Optional[RoleOut] = None
+    department: Optional[DepartmentOut] = None
+    status: str
+
+    model_config = {"from_attributes": True}
+
+
+class UserCreate(BaseModel):
+    email: str = Field(min_length=3, max_length=255)
+    name: str = Field(min_length=1, max_length=255)
+    password: str = Field(min_length=6)
+    role_id: int
+    department_id: Optional[int] = None
+
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+
+class LoginResponse(BaseModel):
+    token: str
+    user: dict
+
+
+# ============================================================
+# EXISTING SCHEMAS
+# ============================================================
 
 class DashboardSummary(BaseModel):
     total_beneficiaries: int
@@ -111,4 +175,184 @@ class PaginationResponse(BaseModel, Generic[T]):
     total_pages: int
 
 
+# ============================================================
+# CROSS-PILLAR DATA COLLECTION SCHEMAS
+# ============================================================
+
+class KPIMetricCreate(BaseModel):
+    project_id: int
+    reporting_period_id: Optional[int] = None
+    department_id: Optional[int] = None
+    kpi_name: str = Field(min_length=1, max_length=255)
+    kpi_category: Optional[str] = None
+    target_value: float = 0
+    actual_value: float = 0
+    unit: Optional[str] = None
+    notes: Optional[str] = None
+
+
+class KPIMetricOut(BaseModel):
+    id: int
+    project_id: int
+    kpi_name: str
+    kpi_category: Optional[str] = None
+    target_value: float
+    actual_value: float
+    unit: Optional[str] = None
+    attainment_pct: Optional[float] = None
+    notes: Optional[str] = None
+    verified: bool
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class FinancialLineItemCreate(BaseModel):
+    project_id: int
+    reporting_period_id: Optional[int] = None
+    department_id: Optional[int] = None
+    line_item: str = Field(min_length=1, max_length=255)
+    category: Optional[str] = None
+    budget_amount: float = 0
+    actual_spend: float = 0
+    currency: str = "USD"
+    notes: Optional[str] = None
+
+
+class FinancialLineItemOut(BaseModel):
+    id: int
+    project_id: int
+    line_item: str
+    category: Optional[str] = None
+    budget_amount: float
+    actual_spend: float
+    burn_rate: Optional[float] = None
+    variance: Optional[float] = None
+    currency: str
+    notes: Optional[str] = None
+    verified: bool
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class OperationalRiskCreate(BaseModel):
+    project_id: int
+    reporting_period_id: Optional[int] = None
+    department_id: Optional[int] = None
+    risk_title: str = Field(min_length=1, max_length=255)
+    risk_category: Optional[str] = None
+    severity: str = "medium"
+    likelihood: Optional[str] = None
+    impact: Optional[str] = None
+    mitigation_strategy: Optional[str] = None
+
+
+class OperationalRiskOut(BaseModel):
+    id: int
+    project_id: int
+    risk_title: str
+    risk_category: Optional[str] = None
+    severity: str
+    likelihood: Optional[str] = None
+    impact: Optional[str] = None
+    mitigation_strategy: Optional[str] = None
+    status: str
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class FieldNoteCreate(BaseModel):
+    project_id: int
+    reporting_period_id: Optional[int] = None
+    department_id: Optional[int] = None
+    title: str = Field(min_length=1, max_length=255)
+    content: str = Field(min_length=1)
+    note_type: Optional[str] = None
+    beneficiary_quote: Optional[str] = None
+    location: Optional[str] = None
+    date_observed: Optional[date] = None
+    tags: Optional[dict] = None
+
+
+class FieldNoteOut(BaseModel):
+    id: int
+    project_id: int
+    title: str
+    content: str
+    note_type: Optional[str] = None
+    beneficiary_quote: Optional[str] = None
+    location: Optional[str] = None
+    date_observed: Optional[date] = None
+    tags: Optional[dict] = None
+    vectorized: bool
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+# ============================================================
+# WORKFLOW & REPORT SCHEMAS
+# ============================================================
+
+class DonorReportCreate(BaseModel):
+    title: str = Field(min_length=1, max_length=255)
+    reporting_period_id: Optional[int] = None
+    donor_name: Optional[str] = None
+    sections_json: Optional[dict] = None
+
+
+class DonorReportOut(BaseModel):
+    id: int
+    title: str
+    donor_name: Optional[str] = None
+    workflow_status: str
+    current_tier: int
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class ApprovalAction(BaseModel):
+    action: str = Field(pattern="^(save_draft|submit_for_review|approve|reject|request_changes|assemble_report|edit_content|submit_for_final_approval)$")
+    comments: Optional[str] = None
+    changes_json: Optional[dict] = None
+
+
+class AuditLogOut(BaseModel):
+    id: int
+    user_id: int
+    action: str
+    entity_type: str
+    entity_id: Optional[int] = None
+    changes_json: Optional[dict] = None
+    timestamp: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class ProjectCreate(BaseModel):
+    name: str = Field(min_length=1, max_length=255)
+    program_id: Optional[int] = None
+    department_id: Optional[int] = None
+    description: Optional[str] = None
+    start_date: Optional[date] = None
+    end_date: Optional[date] = None
+
+
+class ProjectOut(BaseModel):
+    id: int
+    name: str
+    program_id: Optional[int] = None
+    department_id: Optional[int] = None
+    description: Optional[str] = None
+    status: str
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+# Rebuild forward references
 BeneficiaryAnalytics.model_rebuild()

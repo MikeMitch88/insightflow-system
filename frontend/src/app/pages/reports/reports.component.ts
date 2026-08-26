@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../../services/api.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-reports',
@@ -60,7 +61,7 @@ export class ReportsComponent implements OnInit {
 
   downloadReport(reportId: number, format: string): void {
     const token = localStorage.getItem('insightflow_token');
-    const url = `http://localhost:8000/api/reports/${reportId}/download?format=${format}`;
+    const url = `${environment.apiUrl}/reports/${reportId}/download?format=${format}`;
     fetch(url, { headers: { 'Authorization': `Bearer ${token}` } })
       .then(res => {
         if (!res.ok) throw new Error('Download failed');

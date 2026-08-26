@@ -1,6 +1,6 @@
 from typing import Generator
 
-from sqlalchemy import create_engine, event
+from sqlalchemy import create_engine, event, text
 from sqlalchemy.orm import Session, sessionmaker, DeclarativeBase
 
 from src.config import DATABASE_URL
@@ -12,6 +12,7 @@ engine = create_engine(
     DATABASE_URL,
     pool_pre_ping=True,
     connect_args=connect_args,
+    **({} if is_sqlite else {"pool_size": 20, "max_overflow": 10}),
 )
 
 if is_sqlite:
@@ -41,3 +42,14 @@ def get_db() -> Generator[Session, None, None]:
 def init_db() -> None:
     from src.models import models
     Base.metadata.create_all(bind=engine)
+
+
+def check_postgres_connection() -> bool:
+    if is_sqlite:
+        return True
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("SELECT 1"))
+        return True
+    except Exception:
+        return False

@@ -1,0 +1,52 @@
+.page-container { padding: 24px; max-width: 1400px; margin: 0 auto; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.page-header h1 { font-size: 24px; color: #0f172a; margin: 0; }
+.page-header p { color: #64748b; margin: 4px 0 0; font-size: 14px; }
+.header-actions { display: flex; gap: 12px; }
+
+.workflow-pipeline { display: flex; align-items: center; justify-content: space-between; background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow-x: auto; }
+.pipeline-stage { text-align: center; position: relative; flex: 1; min-width: 140px; }
+.pipeline-stage.active .stage-icon { transform: scale(1.15); box-shadow: 0 0 0 3px rgba(99,102,241,0.3); }
+.stage-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; color: #fff; transition: all 0.2s; }
+.stage-label { font-size: 13px; font-weight: 600; color: #1e293b; }
+.stage-desc { font-size: 11px; color: #94a3b8; margin-top: 2px; }
+.stage-arrow { position: absolute; right: -12px; top: 12px; font-size: 20px; color: #cbd5e1; }
+
+.filter-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.tab-btn { padding: 8px 16px; border: 1px solid #e2e8f0; border-radius: 8px; background: #fff; cursor: pointer; font-size: 13px; display: flex; align-items: center; gap: 6px; transition: all 0.2s; }
+.tab-btn.active { background: #6366f1; color: #fff; border-color: #6366f1; }
+.tab-btn .badge { background: rgba(0,0,0,0.1); padding: 2px 6px; border-radius: 10px; font-size: 11px; }
+.tab-btn.active .badge { background: rgba(255,255,255,0.2); }
+
+.reports-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.report-card { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
+.report-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+.report-card.selected { border-color: #6366f1; }
+.report-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+.report-header h3 { font-size: 15px; color: #0f172a; margin: 0; flex: 1; }
+.status-badge { padding: 4px 10px; border-radius: 6px; color: #fff; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.report-meta { display: flex; gap: 16px; font-size: 12px; color: #64748b; }
+
+.detail-panel { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-top: 20px; }
+.detail-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.detail-header h2 { font-size: 20px; color: #0f172a; margin: 0; }
+.detail-body { display: flex; flex-direction: column; gap: 16px; }
+.info-row { display: flex; gap: 12px; align-items: center; }
+.info-row label { font-weight: 600; color: #475569; min-width: 120px; }
+.approval-history { border-top: 1px solid #e2e8f0; padding-top: 12px; }
+.approval-entry { padding: 12px; background: #f8fafc; border-radius: 8px; margin-bottom: 8px; }
+.entry-action { font-weight: 600; color: #1e293b; text-transform: capitalize; }
+.entry-meta { font-size: 12px; color: #64748b; margin-top: 2px; }
+.entry-comments { font-size: 13px; color: #475569; margin-top: 4px; font-style: italic; }
+.no-history { color: #94a3b8; font-style: italic; padding: 12px; }
+.action-buttons { display: flex; gap: 12px; margin-top: 16px; padding-top: 16px; border-top: 1px solid #e2e8f0; }
+.btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s; }
+.btn-primary { background: #6366f1; color: #fff; }
+.btn-success { background: #10b981; color: #fff; }
+.btn-danger { background: #ef4444; color: #fff; }
+.btn-warning { background: #f59e0b; color: #fff; }
+.btn-secondary { background: #e2e8f0; color: #475569; }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+.loading { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 40px; color: #64748b; }
+.spinning { animation: spin 1s linear infinite; }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
