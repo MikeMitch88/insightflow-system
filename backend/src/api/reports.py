@@ -21,7 +21,7 @@ from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from ..database import get_db
-from ..models.models import Report, ReportingPeriod, Notification, AuditLog
+from ..models.models import Report, ReportingPeriod, AuditLog
 from ..models.schemas import (
     ReportCreate,
     ReportPreviewRequest,
@@ -66,12 +66,13 @@ def _log_audit_event(
     now_dt = datetime.now(timezone.utc)
     try:
         audit_entry = AuditLog(
-            user=user,
-            role=role,
+            user_id=1,
+            action=action,
+            entity_type=category or "Report",
+            entity_id=report_id,
+            timestamp=now_dt,
             report_id=report_id,
             report_version=report_version or 1,
-            action=action,
-            timestamp=now_dt,
             details=details,
             comment=comment,
             category=category,
@@ -79,6 +80,7 @@ def _log_audit_event(
         db.add(audit_entry)
         db.commit()
     except Exception:
+        db.rollback()
         pass
 
     try:
@@ -105,8 +107,8 @@ def _get_report_timeline(db: Session, report_id: int) -> List[dict]:
         return [
             {
                 "timestamp": l.timestamp.strftime("%d %b %H:%M") if l.timestamp else "Recently",
-                "user": l.user,
-                "role": l.role or "System",
+                "user": l.details or "Staff",
+                "role": l.category or "System",
                 "action": l.action.replace("_", " ").title(),
                 "details": l.details or "",
                 "comment": l.comment or "",

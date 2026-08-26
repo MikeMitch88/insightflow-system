@@ -14,6 +14,29 @@ SHARED_HASHED = bcrypt.hashpw(SHARED_PASSWORD.encode(), bcrypt.gensalt()).decode
 
 TOKEN_EXPIRY_HOURS = 24
 
+USERS = [
+    {"id": 1, "name": "Program Administrator", "email": "admin@inukafoundation.org", "role": "admin", "status": "Active"},
+    {"id": 2, "name": "Grace Wanjiku", "email": "grace.w@inukafoundation.org", "role": "program_manager", "status": "Active"},
+    {"id": 3, "name": "James Otieno", "email": "james.o@inukafoundation.org", "role": "me_officer", "status": "Active"},
+    {"id": 4, "name": "Amina Hassan", "email": "amina.h@inukafoundation.org", "role": "reporting_officer", "status": "Active"},
+    {"id": 5, "name": "David Mwangi", "email": "david.m@inukafoundation.org", "role": "leadership", "status": "Active"},
+    {"id": 6, "name": "Sarah Njeri", "email": "sarah.n@inukafoundation.org", "role": "program_manager", "status": "Active"},
+    {"id": 7, "name": "Dr. James Mwangi", "email": "director@inukafoundation.org", "role": "director", "status": "Active"},
+]
+
+ROLE_LABELS = {
+    "admin": "Administrator",
+    "program_manager": "Program Manager",
+    "me_officer": "M&E Officer",
+    "reporting_officer": "Reporting Officer",
+    "leadership": "Leadership",
+    "director": "Director",
+    "data_contributor": "Data Contributor",
+    "reviewer": "Reviewer",
+    "report_generator": "Report Generator",
+    "final_approver": "Final Approver",
+}
+
 
 def authenticate(db: Session, email: str, password: str) -> Optional[User]:
     user = db.query(User).filter(User.email == email.lower()).first()

@@ -285,7 +285,7 @@ export class DashboardComponent
 
     if (
       !user ||
-      user.role !== 'program_manager'
+      user.role?.name !== 'program_manager'
     ) {
       this.pendingReviewsCount = 0;
       return;
@@ -408,7 +408,7 @@ export class DashboardComponent
 
   isProgramManager(): boolean {
     return (
-      this.auth.currentUser?.role ===
+      this.auth.currentUser?.role?.name ===
       'program_manager'
     );
   }

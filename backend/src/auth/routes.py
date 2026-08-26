@@ -177,3 +177,43 @@ def _get_user_permissions(user: User) -> list[str]:
         ])
 
     return permissions
+
+
+def get_current_user_optional(authorization: Optional[str] = None) -> Optional[dict]:
+    """Extract user from optional Authorization header. Returns None if no header or invalid."""
+    if not authorization or not authorization.startswith("Bearer "):
+        return None
+    token = authorization.replace("Bearer ", "", 1)
+    try:
+        payload = decode_token(token)
+        return {
+            "id": payload.get("sub"),
+            "name": payload.get("name", "Staff"),
+            "email": payload.get("email", ""),
+            "role": payload.get("role", "staff"),
+            "tier": payload.get("tier", 1),
+        }
+    except Exception:
+        return None
+
+
+def require_manager_role(authorization: Optional[str] = None) -> dict:
+    """Dependency that requires tier >= 2 (Reviewer/Manager or higher)."""
+    user = get_current_user_optional(authorization)
+    if not user:
+        raise HTTPException(status_code=401, detail="Authentication required")
+    tier = user.get("tier", 0)
+    if tier < 2:
+        raise HTTPException(status_code=403, detail="Program Manager role or higher required")
+    return user
+
+
+def require_admin_or_reporter_role(authorization: Optional[str] = None) -> dict:
+    """Dependency that requires tier >= 3 (Report Generator/Admin or higher)."""
+    user = get_current_user_optional(authorization)
+    if not user:
+        raise HTTPException(status_code=401, detail="Authentication required")
+    tier = user.get("tier", 0)
+    if tier < 3:
+        raise HTTPException(status_code=403, detail="Admin or Report Generator role required")
+    return user

@@ -319,6 +319,29 @@ class Report(Base):
     )
     completed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
 
+    reporting_period_name: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    version: Mapped[Optional[int]] = mapped_column(Integer, nullable=True, default=1)
+    parent_report_id: Mapped[Optional[int]] = mapped_column(
+        ForeignKey("reports.id"), nullable=True, index=True
+    )
+    generated_by: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    generated_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    submitted_to: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
+    submitted_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    reviewed_by: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    reviewed_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    approved_by: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    approved_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    approval_comment: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    rejected_by: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
+    rejected_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    rejection_reason: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    rejection_feedback: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    validation_status: Mapped[Optional[str]] = mapped_column(String(20), nullable=True, default="PASS")
+    validation_result: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    report_snapshot: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+    kpi_snapshot: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
+
     reporting_period: Mapped["ReportingPeriod"] = relationship(back_populates="reports")
     runs: Mapped[list["ReportRun"]] = relationship(
         back_populates="report", cascade="all, delete-orphan"
@@ -614,6 +637,12 @@ class AuditLog(Base):
     )
 
     user: Mapped["User"] = relationship(back_populates="audit_logs")
+
+    report_id: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    report_version: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    details: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    comment: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
+    category: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
 
 
 # ============================================================

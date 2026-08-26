@@ -307,4 +307,52 @@ export class ApiService {
   getVectorStoreStats(reportId: number): Observable<any> {
     return this.http.get(`${this.baseUrl}/report-gen/donor-reports/${reportId}/stats`);
   }
+
+  // ============================================================
+  // ADMIN NOTIFICATIONS
+  // ============================================================
+
+  getNotifications(role: string): Observable<any> {
+    return this.http.get(`${this.baseUrl}/admin/notifications`, { params: { role } });
+  }
+
+  markNotificationRead(id: number): Observable<any> {
+    return this.http.post(`${this.baseUrl}/admin/notifications/${id}/read`, {});
+  }
+
+  clearAllNotifications(role: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/admin/notifications/clear`, { role });
+  }
+
+  // ============================================================
+  // ADMIN USER MANAGEMENT
+  // ============================================================
+
+  getAdminUsers(): Observable<any> {
+    return this.http.get(`${this.baseUrl}/admin/users`);
+  }
+
+  updateAdminUser(id: number, data: any): Observable<any> {
+    return this.http.put(`${this.baseUrl}/admin/users/${id}`, data);
+  }
+
+  // ============================================================
+  // AUDIT LOGS
+  // ============================================================
+
+  createAuditLog(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/workflow/audit-logs`, data);
+  }
+
+  // ============================================================
+  // DATA QUALITY MANAGEMENT
+  // ============================================================
+
+  resolveDataQualityIssue(id: number, data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/data-quality/issues/${id}/resolve`, data);
+  }
+
+  batchResolveDataQualityIssues(): Observable<any> {
+    return this.http.post(`${this.baseUrl}/data-quality/batch-resolve`, {});
+  }
 }
