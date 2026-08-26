@@ -110,15 +110,16 @@ PROGRAM_NAME_MAP = {
 # Standardizers
 # ---------------------------------------------------------------------------
 
-def standardize_county(name) -> Optional[str]:
+def standardize_county(name) -> str:
     """Normalize county names to title case with the 'County' suffix stripped."""
     if pd.isna(name):
-        return None
+        return "Unknown"
     text = re.sub(r"\s+", " ", str(name)).strip()
     if not text:
-        return None
+        return "Unknown"
     text = re.sub(r"\s+county$", "", text, flags=re.IGNORECASE).strip()
     return text.title()
+
 
 
 def standardize_gender(gender) -> str:

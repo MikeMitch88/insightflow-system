@@ -5,4 +5,11 @@
 .btn { border-radius: 7px; font-weight: 600; }.btn-primary { background: #e92134; box-shadow: 0 4px 10px rgba(233,33,52,.18); }.btn-primary:hover:not(:disabled) { background: #c91224; }.btn-secondary { color: #c91224; border-color: #e5b7bd; background: #fff; }.btn-secondary:hover { color: #a80c1b; border-color: #e92134; background: #fff1f2; }
 .form-group label { color: #454545; }.form-input { border-color: #cacaca; border-radius: 7px; color: #212121; }.form-input:focus { border-color: #e92134; box-shadow: 0 0 0 3px rgba(233,33,52,.13); }input[type="checkbox"] { accent-color: #e92134; }.save-success { color: #316c30; font-size: 13px; font-weight: 600; }
 .permissions-row td { padding: 0 !important; background: #fff7f8; }.permissions-panel { padding: 18px 24px; border-top: 1px solid #f0cbd0; }.permissions-header { margin-bottom: 13px; color: #2b2b2b; font-weight: 700; }.permissions-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 7px; }.perm-item { display: flex; align-items: center; gap: 6px; padding: 7px 10px; border-radius: 6px; font-size: 13px; }.perm-granted { color: #316c30; background: #edf7ec; }.perm-denied { color: #a34a54; background: #f9ebec; text-decoration: line-through; opacity: .72; }.perm-icon { font-size: 16px; }
+.form-input-sm { padding: 4px 8px; font-size: 12px; border: 1px solid #cacaca; border-radius: 6px; background: #fff; color: #212121; outline: none; }
+.form-input-sm:focus { border-color: #e92134; }
+.tab-icon { font-size: 16px; vertical-align: middle; margin-right: 4px; }
+.btn-danger { background: #dc2626; color: #fff; border: none; }
+.btn-danger:hover { background: #b91c1c; }
+.badge-info { background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
 @media (max-width: 640px) { .card { padding: 14px; }.tab-item { padding: 10px 9px; font-size: 12px; }.permissions-panel { padding: 14px; } }
+

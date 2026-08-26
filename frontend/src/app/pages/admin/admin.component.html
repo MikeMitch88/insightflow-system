@@ -1,17 +1,76 @@
 <div class="page">
   <div class="page-header">
     <div>
-      <h1>Administration</h1>
-      <p class="subtitle">Manage users, roles, and system settings</p>
+      <h1>Administration &amp; Workflow Control</h1>
+      <p class="subtitle">Manage user permissions, automated reporting schedules, and compliance audit trail</p>
     </div>
   </div>
 
   <div class="tab-bar">
-    <div class="tab-item" [class.active]="activeTab === 'users'" (click)="activeTab = 'users'">Users &amp; Roles</div>
-    <div class="tab-item" [class.active]="activeTab === 'settings'" (click)="activeTab = 'settings'">Settings</div>
-    <div class="tab-item" [class.active]="activeTab === 'audit'" (click)="activeTab = 'audit'">Audit Logs</div>
+    <div class="tab-item" [class.active]="activeTab === 'notifications'" (click)="activeTab = 'notifications'">
+      <span class="material-icons-outlined tab-icon">notifications</span> Notifications
+      <span class="badge badge-danger" *ngIf="unreadNotifsCount > 0" style="margin-left:6px;border-radius:10px;padding:2px 6px;">{{ unreadNotifsCount }}</span>
+    </div>
+    <div class="tab-item" [class.active]="activeTab === 'users'" (click)="activeTab = 'users'">
+      <span class="material-icons-outlined tab-icon">people</span> Users &amp; Roles
+    </div>
+    <div class="tab-item" [class.active]="activeTab === 'settings'" (click)="activeTab = 'settings'">
+      <span class="material-icons-outlined tab-icon">schedule</span> Automated Workflows &amp; Settings
+    </div>
+    <div class="tab-item" [class.active]="activeTab === 'audit'" (click)="activeTab = 'audit'">
+      <span class="material-icons-outlined tab-icon">history</span> Audit Trail Logs
+    </div>
   </div>
 
+  <!-- Tab 0: Admin Notification Center -->
+  <div class="card" *ngIf="activeTab === 'notifications'">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border-color);">
+      <div>
+        <h3 style="margin:0;font-size:16px;color:var(--text-primary)">Admin Notification Center</h3>
+        <p style="margin:4px 0 0;font-size:12px;color:var(--text-secondary)">Persistent real-time alerts for report approvals, revisions required, and workflow actions.</p>
+      </div>
+      <button class="btn btn-sm btn-secondary" (click)="clearAllNotifs()" *ngIf="notifications.length > 0">
+        Mark All Read
+      </button>
+    </div>
+
+    <div *ngIf="notifications.length === 0" style="padding:32px;text-align:center;color:var(--text-secondary);">
+      <span class="material-icons-outlined" style="font-size:36px;opacity:0.4;">notifications_off</span>
+      <p style="margin-top:8px;">No notifications at this time.</p>
+    </div>
+
+    <div class="notif-list" *ngIf="notifications.length > 0" style="display:flex;flex-direction:column;gap:12px;">
+      <div
+        *ngFor="let notif of notifications"
+        class="notif-card"
+        [style.background]="notif.read ? 'var(--card-bg)' : 'rgba(0,88,190,0.06)'"
+        [style.border-left]="notif.type === 'REPORT_APPROVED' ? '4px solid #16a34a' : (notif.type === 'REPORT_REVISION_REQUIRED' || notif.type === 'REPORT_REJECTED' ? '4px solid #dc2626' : '4px solid #0058be')"
+        style="padding:14px;border:1px solid var(--border-color);border-radius:8px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;"
+      >
+        <div style="flex:1;">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+            <span *ngIf="notif.type === 'REPORT_APPROVED'" style="color:#16a34a;font-weight:700;font-size:13px;">✅ REPORT APPROVED</span>
+            <span *ngIf="notif.type === 'REPORT_REVISION_REQUIRED' || notif.type === 'REPORT_REJECTED'" style="color:#dc2626;font-weight:700;font-size:13px;">🔴 REPORT REQUIRES REVISION</span>
+            <span *ngIf="notif.type !== 'REPORT_APPROVED' && notif.type !== 'REPORT_REVISION_REQUIRED' && notif.type !== 'REPORT_REJECTED'" style="color:#0058be;font-weight:700;font-size:13px;">🔔 {{ notif.title }}</span>
+            <span class="badge" *ngIf="!notif.read" style="background:#0058be;color:#ffffff;font-size:9px;">NEW</span>
+          </div>
+          <p style="margin:0;font-size:13px;color:var(--text-primary);">{{ notif.message }}</p>
+          <div style="font-size:11px;color:var(--text-secondary);margin-top:6px;display:flex;gap:16px;">
+            <span>{{ notif.created_at | date:'d MMMM y, HH:mm' }}</span>
+            <a *ngIf="notif.report_id" [routerLink]="['/reports']" style="color:#0058be;font-weight:600;text-decoration:none;">
+              [ VIEW REPORT ]
+            </a>
+          </div>
+        </div>
+
+        <button *ngIf="!notif.read" class="btn btn-sm btn-secondary" (click)="markRead(notif)" title="Mark as read">
+          <span class="material-icons-outlined" style="font-size:14px;">check</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 1: Users & RBAC -->
   <div class="card" *ngIf="activeTab === 'users'">
     <div class="table-container">
       <table class="data-table">
@@ -21,7 +80,7 @@
             <th>Email</th>
             <th>Role</th>
             <th>Status</th>
-            <th>Pages</th>
+            <th>Pages Allowed</th>
             <th>Last Active</th>
             <th>Actions</th>
           </tr>
@@ -32,27 +91,40 @@
               <td class="cell-strong">{{ user.name }}</td>
               <td>{{ user.email }}</td>
               <td>
-                <span class="status-badge" [ngClass]="{
-                  'badge-admin': user.roleKey === 'admin',
-                  'badge-active': user.status === 'Active' && user.roleKey !== 'admin',
-                  'badge-draft': user.status === 'Inactive'
-                }">{{ user.role }}</span>
+                <select class="form-input-sm" [(ngModel)]="user.roleKey" (change)="changeUserRole(user, user.roleKey)">
+                  <option value="admin">Administrator</option>
+                  <option value="program_manager">Program Manager</option>
+                  <option value="me_officer">M&amp;E Officer</option>
+                  <option value="reporting_officer">Reporting Officer</option>
+                  <option value="leadership">Leadership</option>
+                </select>
               </td>
               <td>
-                <span class="status-badge" [ngClass]="user.status === 'Active' ? 'badge-active' : 'badge-draft'">{{ user.status }}</span>
+                <span class="status-badge" [ngClass]="user.status === 'Active' ? 'badge-active' : 'badge-draft'">
+                  {{ user.status }}
+                </span>
               </td>
-              <td>{{ getPermissionCount(user) }}</td>
+              <td>
+                <span class="badge badge-info">{{ getPermissionCount(user) }} / 12 pages</span>
+              </td>
               <td>{{ user.lastActive }}</td>
               <td class="actions-cell">
                 <button class="btn btn-sm btn-secondary" (click)="viewPermissions(user)">
                   {{ selectedUser?.id === user.id ? 'Hide' : 'Permissions' }}
+                </button>
+                <button
+                  class="btn btn-sm"
+                  [ngClass]="user.status === 'Active' ? 'btn-danger' : 'btn-primary'"
+                  (click)="toggleUserStatus(user)"
+                  style="margin-left: 6px;">
+                  {{ user.status === 'Active' ? 'Deactivate' : 'Activate' }}
                 </button>
               </td>
             </tr>
             <tr *ngIf="selectedUser?.id === user.id" class="permissions-row">
               <td colspan="7">
                 <div class="permissions-panel">
-                  <div class="permissions-header">Page Access for {{ user.name }} ({{ user.role }})</div>
+                  <div class="permissions-header">Page Access Matrix for {{ user.name }} ({{ user.role }})</div>
                   <div class="permissions-grid">
                     <div *ngFor="let page of getAllPages()" class="perm-item" [class.perm-granted]="getUserPermissions(user).includes(page)" [class.perm-denied]="!getUserPermissions(user).includes(page)">
                       <span class="material-icons-outlined perm-icon">{{ getUserPermissions(user).includes(page) ? 'check_circle' : 'cancel' }}</span>
@@ -68,74 +140,120 @@
     </div>
   </div>
 
+  <!-- Tab 2: Settings & Automated Workflows -->
   <div class="card" *ngIf="activeTab === 'settings'">
-    <div style="max-width: 480px;">
+    <div style="max-width: 640px;">
+      <h3 style="margin-top:0;margin-bottom:16px;font-size:16px;color:var(--text-primary)">Organization Configuration</h3>
       <div class="form-group">
         <label for="orgName">Organization Name</label>
         <input id="orgName" type="text" class="form-input" [(ngModel)]="settings.orgName" />
       </div>
 
       <div class="form-group">
-        <label for="reportingFrequency">Reporting Frequency</label>
-        <select id="reportingFrequency" class="form-input" [(ngModel)]="settings.reportingFrequency">
-          <option value="monthly">Monthly</option>
-          <option value="quarterly">Quarterly</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="defaultPeriod">Default Period</label>
+        <label for="defaultPeriod">Default Active Period</label>
         <select id="defaultPeriod" class="form-input" [(ngModel)]="settings.defaultPeriod">
           <option *ngFor="let p of periods" [value]="p.name">{{ p.name }}</option>
         </select>
       </div>
 
-      <div class="form-group">
-        <label for="emailNotifications">Email Notifications</label>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <input
-            id="emailNotifications"
-            type="checkbox"
-            [(ngModel)]="settings.emailNotifications"
-            style="width: 16px; height: 16px; cursor: pointer;" />
-          <span style="font-size: 13px; color: var(--text-secondary);">
-            {{ settings.emailNotifications ? 'Enabled — receive email alerts for reports and data quality issues' : 'Disabled' }}
-          </span>
+      <div class="workflow-box" style="margin: 20px 0; padding: 16px; border-radius: 8px; background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255, 255, 255, 0.08);">
+        <h4 style="margin: 0 0 12px 0; color: var(--primary, #3b82f6); display: flex; align-items: center; gap: 8px;">
+          <span class="material-icons-outlined" style="font-size: 20px;">auto_awesome</span>
+          Automated Cross-Pillar Reporting Workflow
+        </h4>
+
+        <div class="form-group">
+          <label for="reportingFrequency">Reporting &amp; Ingestion Cadence</label>
+          <select id="reportingFrequency" class="form-input" [(ngModel)]="settings.reportingFrequency">
+            <option value="monthly">Monthly Automated Consolidation</option>
+            <option value="quarterly">Quarterly Board &amp; Donor Consolidation</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="scheduledDeliveryDay">Automated Scheduled Delivery Day</label>
+          <select id="scheduledDeliveryDay" class="form-input" [(ngModel)]="settings.scheduledDeliveryDay">
+            <option value="Last Friday of Month">Last Friday of Month</option>
+            <option value="Last Friday of Quarter">Last Friday of Quarter</option>
+            <option value="1st of Every Month">1st of Every Month</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="checkbox" [(ngModel)]="settings.autoGenerateDonorReport" style="width:16px;height:16px;" />
+            <span style="font-weight:600;color:var(--text-primary)">Auto-generate Donor Impact Package</span>
+          </label>
+          <p style="margin:4px 0 0 24px;font-size:12px;color:var(--text-secondary)">Automatically compiles 4-pillar metrics into Excel &amp; triggers executive summary upon period close.</p>
+        </div>
+
+        <div class="form-group" style="margin-bottom:0">
+          <label style="display:flex;align-items:center;gap:8px;cursor:pointer">
+            <input type="checkbox" [(ngModel)]="settings.emailNotifications" style="width:16px;height:16px;" />
+            <span style="font-weight:600;color:var(--text-primary)">Automated Escalation &amp; Email Alerts</span>
+          </label>
+          <p style="margin:4px 0 0 24px;font-size:12px;color:var(--text-secondary)">Notify M&amp;E officers if data quality anomalies exceed threshold or field submissions are pending.</p>
         </div>
       </div>
 
       <div style="display:flex;align-items:center;gap:12px">
         <button class="btn btn-primary" type="button" (click)="saveSettings()" [disabled]="settingsSaving">
-          {{ settingsSaving ? 'Saving...' : 'Save Settings' }}
+          {{ settingsSaving ? 'Saving...' : 'Save Workflow Configuration' }}
         </button>
-          <span *ngIf="settingsSaved" class="save-success">
+        <span *ngIf="settingsSaved" class="save-success">
           <span class="material-icons-outlined" style="font-size:16px;vertical-align:middle">check_circle</span>
-          Settings saved successfully
+          Settings &amp; Workflows saved successfully
         </span>
       </div>
     </div>
   </div>
 
+  <!-- Tab 3: Audit Trail -->
   <div class="card" *ngIf="activeTab === 'audit'">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span style="font-size:13px;color:var(--text-secondary)">Filter by Category:</span>
+        <button
+          *ngFor="let cat of categories"
+          class="btn btn-sm"
+          [ngClass]="selectedCategory === cat ? 'btn-primary' : 'btn-secondary'"
+          (click)="selectedCategory = cat">
+          {{ cat }}
+        </button>
+      </div>
+      <button class="btn btn-sm btn-secondary" (click)="loadAuditLogs()">
+        <span class="material-icons-outlined" style="font-size:14px">refresh</span> Refresh Log
+      </button>
+    </div>
+
     <div class="table-container">
       <table class="data-table">
         <thead>
           <tr>
             <th>Timestamp</th>
-            <th>User</th>
+            <th>User &amp; Role</th>
+            <th>Category</th>
             <th>Action</th>
             <th>Details</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let log of auditLogs">
-            <td>{{ log.timestamp }}</td>
+          <tr *ngFor="let log of filteredAuditLogs">
+            <td style="font-family:monospace;font-size:12px">{{ log.timestamp }}</td>
             <td class="cell-strong">{{ log.user }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="{
+                'badge-admin': log.category === 'Security' || log.category === 'Governance',
+                'badge-active': log.category === 'Report' || log.category === 'Pipeline',
+                'badge-draft': log.category === 'Data Quality' || log.category === 'Settings'
+              }">{{ log.category || 'General' }}</span>
+            </td>
             <td>{{ log.action }}</td>
-            <td>{{ log.details }}</td>
+            <td style="color:var(--text-secondary);font-size:13px">{{ log.details }}</td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
 </div>
+

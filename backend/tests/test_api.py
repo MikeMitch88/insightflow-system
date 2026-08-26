@@ -39,6 +39,17 @@ def test_data_quality():
 def test_reports_list():
     response = client.get("/api/reports")
     assert response.status_code == 200
+    data = response.json()
+    assert "items" in data
+
+
+def test_reports_readiness():
+    response = client.get("/api/reports/readiness")
+    assert response.status_code == 200
+    data = response.json()
+    assert "overall_completeness" in data
+    assert "checklist" in data
+    assert len(data["checklist"]) > 0
 
 
 def test_ai_chat():
@@ -61,3 +72,4 @@ def test_periods():
 def test_data_sources():
     response = client.get("/api/data-sources")
     assert response.status_code == 200
+

@@ -6,6 +6,30 @@
     </div>
   </div>
 
+  <section class="insight-overview">
+    <div><span class="overview-label">Programme intelligence</span><h2>What needs management attention?</h2><p>Verified patterns, unusual changes, and recommended actions from the latest programme data.</p></div>
+    <div class="overview-stat"><strong>{{ insightCount }}</strong><span>Insights detected</span></div>
+  </section>
+
+  <section class="management-dashboard" *ngIf="!loading && insights.length">
+    <article class="management-card">
+      <div class="management-heading"><span class="material-icons-outlined">trending_up</span>What happened?</div>
+      <h3>{{ trendInsight?.title }}</h3><p>{{ trendInsight?.evidence }}</p>
+    </article>
+    <article class="management-card matters-card">
+      <div class="management-heading"><span class="material-icons-outlined">priority_high</span>Why does it matter?</div>
+      <h3>{{ attentionInsight?.title }}</h3><p>{{ attentionInsight?.explanation }}</p>
+    </article>
+    <article class="management-card attention-card">
+      <div class="management-heading"><span class="material-icons-outlined">visibility</span>What needs attention?</div>
+      <h3>{{ attentionInsight?.program || attentionInsight?.title }}</h3><p>{{ attentionInsight?.evidence }}</p>
+    </article>
+    <article class="management-card action-card">
+      <div class="management-heading"><span class="material-icons-outlined">task_alt</span>What should we do next?</div>
+      <h3>{{ recommendationInsight?.title || 'Review priority findings' }}</h3><p>{{ recommendationInsight?.recommended_action || recommendationInsight?.recommendation }}</p>
+    </article>
+  </section>
+
   <div class="filter-bar">
     <div class="filter-group">
       <select class="form-input" [(ngModel)]="filterSeverity">
@@ -31,7 +55,7 @@
         <div class="insight-header">
           <div>
             <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 4px;">
-              {{ insight.category || 'General' }}
+              {{ getTypeLabel(getInsightType(insight)) }}<span *ngIf="insight.program"> · {{ insight.program }}</span>
             </div>
             <div class="insight-title">{{ insight.title }}</div>
           </div>

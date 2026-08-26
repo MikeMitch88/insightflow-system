@@ -14,8 +14,24 @@
           <span class="material-icons-outlined" style="font-size:16px">description</span>
           Generate Report
         </button>
+  </div>
+
+  <!-- Manager Review Alert Queue Banner -->
+  <div
+    *ngIf="auth.currentUser?.role === 'program_manager' && pendingReviewsCount > 0"
+    style="background:linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);border:1px solid #4338ca;border-radius:12px;padding:16px 20px;margin-bottom:24px;color:#ffffff;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;"
+  >
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span style="font-size:24px;">🔔</span>
+      <div>
+        <h3 style="margin:0;font-size:15px;font-weight:700;color:#e0e7ff;">REPORTS REQUIRING YOUR REVIEW ({{ pendingReviewsCount }})</h3>
+        <p style="margin:2px 0 0;font-size:12px;color:#c7d2fe;">New official report snapshots submitted by Admin are awaiting your review and sign-off decision.</p>
       </div>
     </div>
+    <button class="btn btn-primary btn-sm" routerLink="/reports" style="background:#ffffff;color:#1e1b4b;font-weight:700;">
+      <span class="material-icons-outlined" style="font-size:16px;">assignment_turned_in</span>
+      Review Reports Now
+    </button>
   </div>
 
   <div class="kpi-grid" *ngIf="!loading">

@@ -1,95 +1,937 @@
-<div class="page">
+<div class="page animate-in">
+  <!-- Toast Notification -->
+  <div *ngIf="toastMessage" class="toast-alert" [ngClass]="'toast-' + toastType">
+    <span class="material-icons-outlined" style="font-size:18px;">
+      {{ toastType === 'success' ? 'check_circle' : (toastType === 'danger' ? 'error' : 'info') }}
+    </span>
+    <span>{{ toastMessage }}</span>
+    <button class="toast-close" (click)="toastMessage = null">&times;</button>
+  </div>
+
+  <!-- Page Header -->
   <div class="page-header">
-    <div>
-      <h1>Reports</h1>
-      <p class="subtitle">View, generate, and manage program reports</p>
+    <div class="header-content">
+      <div class="header-badge">
+        <span class="pulse-dot"></span>
+        <span>INUKAOPS REPORTING &amp; GOVERNANCE CENTER</span>
+      </div>
+      <h1>Reporting Center</h1>
+      <p class="subtitle">Generate multi-pillar intelligence reports, run automated pre-generation validation, and coordinate administrative sign-offs.</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-secondary" (click)="refreshReports()" title="Refresh reports list">
+        <span class="material-icons-outlined">refresh</span>
+        Refresh
+      </button>
+      <button class="btn btn-secondary" routerLink="/report-builder" title="Custom wizard builder">
+        <span class="material-icons-outlined">tune</span>
+        Custom Wizard
+      </button>
     </div>
   </div>
 
-  <div class="filter-bar">
-    <div class="filter-group filter-search">
-      <input
-        type="text"
-        placeholder="Search reports..."
-        [(ngModel)]="searchTerm"
-        (keyup.enter)="onSearch()" />
+  <!-- ========================================================================= -->
+  <!-- ADMIN REPORTING CENTER WORKFLOW CONTROL BAR -->
+  <!-- ========================================================================= -->
+  <div class="card admin-workflow-bar" *ngIf="isAdmin">
+    <div class="workflow-bar-inner">
+      <div class="workflow-field">
+        <label class="field-label">1. Select Reporting Period</label>
+        <div class="select-wrapper">
+          <span class="material-icons-outlined select-icon">calendar_month</span>
+          <select class="form-select" [ngModel]="adminPeriodId" (change)="onAdminPeriodSelect($event)">
+            <option *ngFor="let p of periods" [value]="p.id">
+              {{ p.display_name || p.month_name || p.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="workflow-field">
+        <label class="field-label">2. Select Report Type</label>
+        <div class="select-wrapper">
+          <span class="material-icons-outlined select-icon">description</span>
+          <select class="form-select" [(ngModel)]="adminReportType">
+            <option *ngFor="let t of reportTypes" [value]="t.value">{{ t.label }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="workflow-actions">
+        <button class="btn btn-secondary btn-review" (click)="openValidateOnly()" title="Run automated validation engine">
+          <span class="material-icons-outlined">verified</span>
+          VALIDATE REPORT
+        </button>
+        <button class="btn btn-primary btn-review" (click)="openReviewReport()" title="Open full report preview">
+          <span class="material-icons-outlined">visibility</span>
+          REVIEW REPORT
+        </button>
+      </div>
     </div>
-    <div class="filter-group">
-      <select [(ngModel)]="filterType" (change)="onFilterChange()">
-        <option value="">All Types</option>
-        <option value="executive">Executive</option>
-        <option value="program_performance">Program Performance</option>
-        <option value="donor">Donor</option>
-        <option value="monday_evidence">M&amp;E</option>
-      </select>
-    </div>
-    <button class="btn btn-secondary" (click)="refreshReports()" style="margin-right:8px">
-      <span class="material-icons-outlined" style="font-size:16px">refresh</span>
-      Refresh
-    </button>
-    <button class="btn btn-primary" routerLink="/report-builder">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-      Generate Report
-    </button>
   </div>
 
-  <div *ngIf="loading" class="loading-state">
-    <div class="spinner"></div>
-    <p>Loading reports...</p>
+  <!-- ========================================================================= -->
+  <!-- MANAGER REVIEW QUEUE BANNER (FOR PROGRAM MANAGERS) -->
+  <!-- ========================================================================= -->
+  <div class="manager-review-queue-card" *ngIf="isManager && pendingReviewReports.length > 0">
+    <div class="queue-header">
+      <div class="queue-title-box">
+        <span class="queue-bell">🔔</span>
+        <div>
+          <h2>REPORTS REQUIRING MY REVIEW ({{ pendingReviewReports.length }})</h2>
+          <p>Official reports submitted by Admin awaiting Program Manager sign-off.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="queue-cards-grid">
+      <div class="pending-card" *ngFor="let rep of pendingReviewReports">
+        <div class="pending-card-header">
+          <span class="pending-badge">Pending Manager Review</span>
+          <span class="pending-version">Version {{ rep.version || 1 }}</span>
+        </div>
+        <h3 class="pending-title">{{ rep.title }}</h3>
+        <div class="pending-meta">
+          <div><span>Generated by:</span> <strong>{{ rep.generated_by || 'Admin' }}</strong></div>
+          <div><span>Period:</span> <strong>{{ rep.reporting_period }}</strong></div>
+          <div><span>Generated:</span> <strong>{{ rep.generated_at ? (rep.generated_at | date:'d MMMM y, HH:mm') : '25 August 2026' }}</strong></div>
+        </div>
+        <div class="pending-actions">
+          <button class="btn btn-primary btn-sm" (click)="viewReport(rep)">
+            <span class="material-icons-outlined">visibility</span>
+            VIEW REPORT
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <ng-container *ngIf="!loading">
-    <div class="card" *ngIf="reports.length > 0; else emptyState">
-      <div class="table-container">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Type</th>
-              <th>Period</th>
-              <th>Status</th>
-              <th>Created</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let report of reports">
-              <td class="cell-strong">{{ report.title }}</td>
-              <td>{{ getTypeLabel(report.report_type) }}</td>
-              <td>{{ report.period_name || report.reporting_period || '—' }}</td>
-              <td>
-                <span class="badge {{ getStatusClass(report.status) }}">{{ report.status }}</span>
-              </td>
-              <td>{{ report.created_at | date:'mediumDate' }}</td>
-              <td class="actions-cell">
-                <button class="btn btn-sm btn-secondary" (click)="downloadReport(report.id, 'xlsx')" *ngIf="report.status === 'completed'" title="Download Excel">
-                  <span class="material-icons-outlined" style="font-size:14px">download</span> Excel
+  <!-- KPI Summary Banner -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-icon-box primary">
+        <span class="material-icons-outlined">description</span>
+      </div>
+      <div class="kpi-info">
+        <span class="kpi-label">Total Reports</span>
+        <div class="kpi-value">{{ summaryStats.total }}</div>
+        <span class="kpi-subtext">Versioned audit snapshots</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-box success">
+        <span class="material-icons-outlined">verified</span>
+      </div>
+      <div class="kpi-info">
+        <span class="kpi-label">Approved</span>
+        <div class="kpi-value text-success">{{ summaryStats.approved }}</div>
+        <span class="kpi-subtext">Manager sign-off granted</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-box warning">
+        <span class="material-icons-outlined">pending_actions</span>
+      </div>
+      <div class="kpi-info">
+        <span class="kpi-label">Pending Manager Review</span>
+        <div class="kpi-value text-warning">{{ summaryStats.pendingReview }}</div>
+        <span class="kpi-subtext">Awaiting sign-off decision</span>
+      </div>
+    </div>
+
+    <div class="kpi-card">
+      <div class="kpi-icon-box danger">
+        <span class="material-icons-outlined">rule</span>
+      </div>
+      <div class="kpi-info">
+        <span class="kpi-label">Revision Required</span>
+        <div class="kpi-value text-danger">{{ summaryStats.rejected }}</div>
+        <span class="kpi-subtext">Returned with manager feedback</span>
+      </div>
+    </div>
+
+    <div class="kpi-card highlight-card">
+      <div class="kpi-icon-box accent">
+        <span class="material-icons-outlined">speed</span>
+      </div>
+      <div class="kpi-info">
+        <span class="kpi-label">Data Completeness &amp; Quality</span>
+        <div class="kpi-value">96%</div>
+        <div class="mini-progress-bar">
+          <div class="mini-progress-fill" style="width: 96%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filter & Search Toolbar -->
+  <div class="card filter-card">
+    <div class="filter-bar">
+      <div class="search-input-group">
+        <span class="material-icons-outlined search-icon">search</span>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search reports by title, period, or submitter..."
+          [(ngModel)]="searchTerm"
+          (input)="onSearch()"
+        />
+        <button *ngIf="searchTerm" class="clear-search-btn" (click)="searchTerm = ''; onSearch()">
+          <span class="material-icons-outlined" style="font-size:16px">close</span>
+        </button>
+      </div>
+
+      <div class="filter-controls">
+        <div class="filter-select-wrapper">
+          <select class="filter-select" [(ngModel)]="filterApprovalStatus" (change)="onFilterChange()">
+            <option value="">All Statuses</option>
+            <option value="pending_manager_review">Pending Manager Review</option>
+            <option value="approved">Approved</option>
+            <option value="revision_required">Revision Required</option>
+            <option value="draft">Draft</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reports Table Card -->
+  <div class="card table-card">
+    <div *ngIf="loading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading reports...</p>
+    </div>
+
+    <div *ngIf="!loading && reports.length === 0" class="empty-state">
+      <span class="material-icons-outlined empty-icon">assignment_late</span>
+      <h3>No Reports Found</h3>
+      <p>No reports match your current filter criteria.</p>
+    </div>
+
+    <div *ngIf="!loading && reports.length > 0" class="table-responsive">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Report Title</th>
+            <th>Period</th>
+            <th>Version</th>
+            <th>Generated By</th>
+            <th>Generated Date</th>
+            <th>Status</th>
+            <th class="text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let report of reports" class="report-row">
+            <td>
+              <div class="report-title-cell">
+                <div class="report-type-badge">
+                  <span class="material-icons-outlined">description</span>
+                </div>
+                <div>
+                  <div class="report-name" (click)="viewReport(report)">{{ report.title }}</div>
+                  <div class="report-submeta">{{ report.report_type }}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="period-pill">{{ report.reporting_period }}</span>
+            </td>
+            <td>
+              <span class="version-chip">v{{ report.version || 1 }}</span>
+            </td>
+            <td>
+              <span class="meta-author">{{ report.generated_by || 'Admin' }}</span>
+            </td>
+            <td>
+              <span class="meta-date">{{ report.generated_at ? (report.generated_at | date:'mediumDate') : '—' }}</span>
+            </td>
+            <td>
+              <span class="status-chip" [ngClass]="getStatusBadgeClass(report.status)">
+                {{ getStatusDisplay(report.status) }}
+              </span>
+            </td>
+            <td class="text-right">
+              <div class="action-btn-group">
+                <button class="action-btn" (click)="viewReport(report)" title="View Complete Report">
+                  <span class="material-icons-outlined">visibility</span>
                 </button>
-                <button class="btn btn-sm btn-secondary" (click)="downloadReport(report.id, 'csv')" *ngIf="report.status === 'completed'" title="Download CSV">
-                  <span class="material-icons-outlined" style="font-size:14px">download</span> CSV
+                <button class="action-btn" (click)="downloadReport(report.id, 'excel', report.title)" title="Download Excel (12 Sheets)">
+                  <span class="material-icons-outlined">table_view</span>
                 </button>
-                <span *ngIf="report.status === 'generating'" class="badge badge-generating">Generating...</span>
-                <span *ngIf="report.status === 'failed'" class="badge badge-draft">Failed</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="pagination">
-        <button class="btn btn-sm btn-secondary" [disabled]="page <= 1" (click)="prevPage()">Previous</button>
-        <span class="page-info">Page {{ page }} of {{ totalReports > 0 ? (totalReports + pageSize - 1 - ((totalReports + pageSize - 1) % pageSize)) / pageSize : 1 }}</span>
-        <button class="btn btn-sm btn-secondary" [disabled]="page * pageSize >= totalReports" (click)="nextPage()">Next</button>
-      </div>
+                <button class="action-btn" (click)="downloadReport(report.id, 'csv', report.title)" title="Download CSV">
+                  <span class="material-icons-outlined">text_snippet</span>
+                </button>
+                <button class="action-btn" (click)="downloadReport(report.id, 'pdf', report.title)" title="Download / Print PDF">
+                  <span class="material-icons-outlined">picture_as_pdf</span>
+                </button>
+                <button
+                  *ngIf="isAdmin && (report.status === 'REVISION_REQUIRED' || report.status === 'revision_required')"
+                  class="action-btn revise-btn"
+                  (click)="openReviseModal(report)"
+                  title="Revise & Resubmit Report"
+                >
+                  <span class="material-icons-outlined text-warning">edit_note</span>
+                  Revise
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
-    <ng-template #emptyState>
-      <div class="empty-state">
-        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
-        <h3>No reports found</h3>
-        <p>Generate your first report to see it listed here.</p>
-        <button class="btn btn-primary" routerLink="/report-builder">Generate Report</button>
+    <!-- Pagination -->
+    <div class="pagination-footer" *ngIf="reports.length > 0">
+      <span class="pagination-info">Showing {{ reports.length }} of {{ totalReports }} reports</span>
+      <div class="pagination-buttons">
+        <button class="btn btn-sm btn-secondary" [disabled]="page <= 1" (click)="prevPage()">
+          <span class="material-icons-outlined">chevron_left</span>
+          Previous
+        </button>
+        <span class="page-indicator">Page {{ page }}</span>
+        <button class="btn btn-sm btn-secondary" [disabled]="reports.length < pageSize" (click)="nextPage()">
+          Next
+          <span class="material-icons-outlined">chevron_right</span>
+        </button>
       </div>
-    </ng-template>
-  </ng-container>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 1. ADMIN REPORT PREVIEW & CONFIRMATION MODAL -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" *ngIf="showAdminReviewModal">
+    <div class="modal-dialog modal-xl animate-in">
+      <div class="modal-header">
+        <div class="modal-title-box">
+          <span class="status-chip badge-review">ADMIN REVIEW</span>
+          <h2>REPORT PREVIEW</h2>
+        </div>
+        <button class="modal-close-btn" (click)="closeAdminReviewModal()">&times;</button>
+      </div>
+
+      <div class="modal-body" *ngIf="adminPreviewLoading">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Compiling comprehensive report preview across 4 pillars...</p>
+        </div>
+      </div>
+
+      <div class="modal-body" *ngIf="!adminPreviewLoading && adminPreviewData">
+        <!-- Preview Meta Header Box -->
+        <div class="preview-meta-card">
+          <div class="preview-meta-grid">
+            <div>
+              <span class="meta-lbl">Reporting Period:</span>
+              <strong class="meta-val">{{ adminPreviewData.reporting_period }}</strong>
+            </div>
+            <div>
+              <span class="meta-lbl">Report Type:</span>
+              <strong class="meta-val">{{ adminPreviewData.report_type }}</strong>
+            </div>
+            <div>
+              <span class="meta-lbl">Status:</span>
+              <span class="status-chip badge-review">ADMIN REVIEW</span>
+            </div>
+            <div>
+              <span class="meta-lbl">Data Completeness:</span>
+              <strong class="meta-val text-success">{{ adminPreviewData.data_completeness }}%</strong>
+            </div>
+            <div>
+              <span class="meta-lbl">Data Quality Score:</span>
+              <strong class="meta-val text-accent">{{ adminPreviewData.data_quality }}%</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Preview Navigation Tabs -->
+        <div class="preview-tabs">
+          <button class="tab-btn" [class.active]="adminActiveTab === 'summary'" (click)="adminActiveTab = 'summary'">
+            <span class="material-icons-outlined">dashboard</span> Executive Summary &amp; KPIs
+          </button>
+          <button class="tab-btn" [class.active]="adminActiveTab === 'pillars'" (click)="adminActiveTab = 'pillars'">
+            <span class="material-icons-outlined">view_column</span> Four Pillars
+          </button>
+          <button class="tab-btn" [class.active]="adminActiveTab === 'kpc_log'" (click)="adminActiveTab = 'kpc_log'">
+            <span class="material-icons-outlined">event_note</span> KPC Log
+          </button>
+          <button class="tab-btn" [class.active]="adminActiveTab === 'outcomes'" (click)="adminActiveTab = 'outcomes'">
+            <span class="material-icons-outlined">emoji_events</span> Outcomes
+          </button>
+          <button class="tab-btn" [class.active]="adminActiveTab === 'quality'" (click)="adminActiveTab = 'quality'">
+            <span class="material-icons-outlined">verified</span> Data Quality &amp; Anomalies
+          </button>
+          <button class="tab-btn" [class.active]="adminActiveTab === 'ai_insights'" (click)="adminActiveTab = 'ai_insights'">
+            <span class="material-icons-outlined">psychology</span> AI Insights
+          </button>
+          <button class="tab-btn" [class.active]="adminActiveTab === 'validation'" (click)="adminActiveTab = 'validation'">
+            <span class="material-icons-outlined">rule</span> Validation Checklist
+          </button>
+        </div>
+
+        <!-- Tab 1: Executive Summary & KPIs -->
+        <div *ngIf="adminActiveTab === 'summary'" class="tab-pane animate-in">
+          <div class="narrative-box">
+            <h4>Executive Overview</h4>
+            <p>{{ adminPreviewData.executive_summary?.narrative }}</p>
+          </div>
+
+          <div class="kpi-quad-grid">
+            <div class="mini-kpi">
+              <span class="lbl">Total Beneficiaries</span>
+              <span class="val">{{ adminPreviewData.kpi_snapshot?.total_beneficiaries | number }}</span>
+            </div>
+            <div class="mini-kpi">
+              <span class="lbl">Completion Rate</span>
+              <span class="val">{{ adminPreviewData.kpi_snapshot?.completion_rate }}%</span>
+            </div>
+            <div class="mini-kpi">
+              <span class="lbl">Attendance Rate</span>
+              <span class="val">{{ adminPreviewData.kpi_snapshot?.attendance_rate }}%</span>
+            </div>
+            <div class="mini-kpi">
+              <span class="lbl">Counties Reached</span>
+              <span class="val">{{ adminPreviewData.kpi_snapshot?.counties_reached }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Four Pillars Performance -->
+        <div *ngIf="adminActiveTab === 'pillars'" class="tab-pane animate-in">
+          <div class="pillar-grid">
+            <!-- Scholarship -->
+            <div class="pillar-card sch">
+              <div class="pillar-head">
+                <span class="pillar-tag">Scholarship Pillar</span>
+                <h4>Secondary Scholarship Program</h4>
+              </div>
+              <div class="pillar-stats">
+                <div><span>Enrolled:</span> <strong>{{ adminPreviewData.pillar_performance?.scholarship?.total_enrolled | number }}</strong></div>
+                <div><span>Active:</span> <strong>{{ adminPreviewData.pillar_performance?.scholarship?.active | number }}</strong></div>
+                <div><span>Completion Rate:</span> <strong>{{ adminPreviewData.pillar_performance?.scholarship?.completion_rate }}%</strong></div>
+                <div><span>Avg Attendance:</span> <strong>{{ adminPreviewData.pillar_performance?.scholarship?.avg_attendance_rate }}%</strong></div>
+              </div>
+            </div>
+
+            <!-- Plus -->
+            <div class="pillar-card plus">
+              <div class="pillar-head">
+                <span class="pillar-tag">Plus Pillar</span>
+                <h4>Tertiary Mentorship &amp; Plus</h4>
+              </div>
+              <div class="pillar-stats">
+                <div><span>Enrolled:</span> <strong>{{ adminPreviewData.pillar_performance?.plus?.total_enrolled | number }}</strong></div>
+                <div><span>Active:</span> <strong>{{ adminPreviewData.pillar_performance?.plus?.active | number }}</strong></div>
+                <div><span>Completion Rate:</span> <strong>{{ adminPreviewData.pillar_performance?.plus?.completion_rate }}%</strong></div>
+                <div><span>Avg Attendance:</span> <strong>{{ adminPreviewData.pillar_performance?.plus?.avg_attendance_rate }}%</strong></div>
+              </div>
+            </div>
+
+            <!-- Vocational -->
+            <div class="pillar-card voc">
+              <div class="pillar-head">
+                <span class="pillar-tag">Vocational Pillar</span>
+                <h4>Technical &amp; Vocational Training</h4>
+              </div>
+              <div class="pillar-stats">
+                <div><span>Enrolled:</span> <strong>{{ adminPreviewData.pillar_performance?.vocational?.total_enrolled | number }}</strong></div>
+                <div><span>Active:</span> <strong>{{ adminPreviewData.pillar_performance?.vocational?.active | number }}</strong></div>
+                <div><span>Completion Rate:</span> <strong>{{ adminPreviewData.pillar_performance?.vocational?.completion_rate }}%</strong></div>
+                <div><span>Avg Attendance:</span> <strong>{{ adminPreviewData.pillar_performance?.vocational?.avg_attendance_rate }}%</strong></div>
+              </div>
+            </div>
+
+            <!-- Tech -->
+            <div class="pillar-card tech">
+              <div class="pillar-head">
+                <span class="pillar-tag">Tech Pillar</span>
+                <h4>Digital &amp; Tech Innovation Hub</h4>
+              </div>
+              <div class="pillar-stats">
+                <div><span>Enrolled:</span> <strong>{{ adminPreviewData.pillar_performance?.tech?.total_enrolled | number }}</strong></div>
+                <div><span>Active:</span> <strong>{{ adminPreviewData.pillar_performance?.tech?.active | number }}</strong></div>
+                <div><span>Completion Rate:</span> <strong>{{ adminPreviewData.pillar_performance?.tech?.completion_rate }}%</strong></div>
+                <div><span>Avg Attendance:</span> <strong>{{ adminPreviewData.pillar_performance?.tech?.avg_attendance_rate }}%</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: KPC Log -->
+        <div *ngIf="adminActiveTab === 'kpc_log'" class="tab-pane animate-in">
+          <h4>KPC Operational &amp; Event Log</h4>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Pillar</th>
+                  <th>Activity / Event</th>
+                  <th>Responsible Officer</th>
+                  <th>Status</th>
+                  <th>Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let rec of adminPreviewData.kpc_log?.records">
+                  <td>{{ rec.date }}</td>
+                  <td><strong>{{ rec.pillar }}</strong></td>
+                  <td>{{ rec.activity }}</td>
+                  <td>{{ rec.responsible_officer }}</td>
+                  <td><span class="status-chip badge-approved">{{ rec.status }}</span></td>
+                  <td>{{ rec.notes }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Tab 4: Outcomes -->
+        <div *ngIf="adminActiveTab === 'outcomes'" class="tab-pane animate-in">
+          <div class="narrative-box">
+            <h4>Outcomes &amp; Impact Summary</h4>
+            <p>Total Post-Program Outcome Milestones Verified: <strong>{{ adminPreviewData.outcomes?.total_outcomes | number }}</strong></p>
+            <p>Employment &amp; Placement Rate: <strong>{{ adminPreviewData.outcomes?.employment_rate }}%</strong></p>
+          </div>
+        </div>
+
+        <!-- Tab 5: Data Quality & Anomalies -->
+        <div *ngIf="adminActiveTab === 'quality'" class="tab-pane animate-in">
+          <div class="narrative-box">
+            <h4>Data Quality Cleanliness: {{ adminPreviewData.data_quality_data?.score }}/100</h4>
+            <p>Flagged Issues Audited: <strong>{{ adminPreviewData.data_quality_data?.total_issues }}</strong></p>
+          </div>
+        </div>
+
+        <!-- Tab 6: AI Insights -->
+        <div *ngIf="adminActiveTab === 'ai_insights'" class="tab-pane animate-in">
+          <div class="ai-insights-box">
+            <h4><span class="material-icons-outlined">psychology</span> AI Insights &amp; Strategic Recommendations</h4>
+            <p><strong>Assessment:</strong> {{ adminPreviewData.ai_insights?.overall_assessment }}</p>
+            
+            <div class="ai-recs-list">
+              <h5>Recommendations:</h5>
+              <ul>
+                <li *ngFor="let rec of adminPreviewData.ai_insights?.recommendations">{{ rec }}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 7: Validation Checklist -->
+        <div *ngIf="adminActiveTab === 'validation'" class="tab-pane animate-in">
+          <div class="validation-panel">
+            <div class="validation-summary-bar">
+              <span class="v-pill pass">✓ {{ adminValidationData?.summary?.passed }} Passed</span>
+              <span class="v-pill warn" *ngIf="adminValidationData?.summary?.warnings > 0">⚠ {{ adminValidationData?.summary?.warnings }} Warnings</span>
+              <span class="v-pill err" *ngIf="adminValidationData?.summary?.errors > 0">✕ {{ adminValidationData?.summary?.errors }} Errors</span>
+            </div>
+
+            <div class="checklist-items">
+              <div class="check-item" *ngFor="let check of adminValidationData?.checks" [ngClass]="check.status.toLowerCase()">
+                <div class="check-status-icon">
+                  <span *ngIf="check.status === 'PASS'">✓</span>
+                  <span *ngIf="check.status === 'WARNING'">⚠</span>
+                  <span *ngIf="check.status === 'ERROR'">✕</span>
+                </div>
+                <div class="check-body">
+                  <div class="check-title">{{ check.name }}</div>
+                  <div class="check-msg">{{ check.message }}</div>
+                  <div class="check-dtl">{{ check.details }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ================================================================= -->
+        <!-- 4 MANDATORY CONFIRMATION CHECKBOXES -->
+        <!-- ================================================================= -->
+        <div class="admin-confirmation-card">
+          <h4>Required Admin Confirmation</h4>
+          <p class="subtext">Please review all report metrics and acknowledge validation findings before submitting to Manager.</p>
+
+          <div class="checkbox-list">
+            <label class="confirm-check-item">
+              <input type="checkbox" [(ngModel)]="adminConfirmReviewed" />
+              <span>I have reviewed the complete report across all 4 pillars.</span>
+            </label>
+            <label class="confirm-check-item">
+              <input type="checkbox" [(ngModel)]="adminConfirmKPIs" />
+              <span>I have reviewed the KPIs, KPC log, and enrollment counts.</span>
+            </label>
+            <label class="confirm-check-item">
+              <input type="checkbox" [(ngModel)]="adminConfirmWarnings" />
+              <span>I have reviewed the data-quality warnings and automated validation results.</span>
+            </label>
+            <label class="confirm-check-item">
+              <input type="checkbox" [(ngModel)]="adminConfirmReady" />
+              <span>I confirm that this report is ready for Manager review.</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer (Admin ONLY actions - No Approve/Reject buttons) -->
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeAdminReviewModal()">Close Preview</button>
+        <button
+          class="btn btn-primary btn-generate"
+          [disabled]="!isGenerationReady || actionLoading"
+          (click)="generateAndSendToManager()"
+          title="Create immutable snapshot and submit to Manager"
+        >
+          <span class="material-icons-outlined" *ngIf="!actionLoading">send</span>
+          <span class="material-icons-outlined animate-spin" *ngIf="actionLoading">sync</span>
+          GENERATE &amp; SEND TO MANAGER
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 2. MANAGER VIEW REPORT & APPROVAL / REJECTION MODAL -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" *ngIf="showManagerViewModal">
+    <div class="modal-dialog modal-xl animate-in">
+      <div class="modal-header">
+        <div class="modal-title-box">
+          <span class="status-chip" [ngClass]="getStatusBadgeClass(selectedReport?.status)">
+            {{ getStatusDisplay(selectedReport?.status) }}
+          </span>
+          <h2>{{ selectedReport?.title }} (v{{ selectedReport?.version || 1 }})</h2>
+        </div>
+        <button class="modal-close-btn" (click)="closeManagerViewModal()">&times;</button>
+      </div>
+
+      <div class="modal-body" *ngIf="managerViewLoading">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading complete verified report snapshot...</p>
+        </div>
+      </div>
+
+      <div class="modal-body" *ngIf="!managerViewLoading && selectedReport">
+        <!-- Meta Details Strip -->
+        <div class="preview-meta-card">
+          <div class="preview-meta-grid">
+            <div><span>Reporting Period:</span> <strong>{{ selectedReport.reporting_period }}</strong></div>
+            <div><span>Report Version:</span> <strong>Version {{ selectedReport.version || 1 }}</strong></div>
+            <div><span>Generated By:</span> <strong>{{ selectedReport.generated_by || 'Admin' }}</strong></div>
+            <div><span>Generated Date:</span> <strong>{{ selectedReport.generated_at ? (selectedReport.generated_at | date:'mediumDate') : '—' }}</strong></div>
+            <div><span>Report Status:</span> <strong>{{ getStatusDisplay(selectedReport.status) }}</strong></div>
+          </div>
+        </div>
+
+        <!-- Downloads bar inside modal -->
+        <div class="modal-download-strip">
+          <span>Download Snapshot:</span>
+          <button class="btn btn-sm btn-secondary" (click)="downloadReport(selectedReport.id, 'excel', selectedReport.title)">
+            <span class="material-icons-outlined">table_view</span> Excel (12 Sheets)
+          </button>
+          <button class="btn btn-sm btn-secondary" (click)="downloadReport(selectedReport.id, 'csv', selectedReport.title)">
+            <span class="material-icons-outlined">text_snippet</span> CSV
+          </button>
+          <button class="btn btn-sm btn-secondary" (click)="downloadReport(selectedReport.id, 'pdf', selectedReport.title)">
+            <span class="material-icons-outlined">picture_as_pdf</span> PDF
+          </button>
+          <button class="btn btn-sm btn-secondary" (click)="printReport()">
+            <span class="material-icons-outlined">print</span> Print
+          </button>
+        </div>
+
+        <!-- Preview Tabs -->
+        <div class="preview-tabs">
+          <button class="tab-btn" [class.active]="managerActiveTab === 'summary'" (click)="managerActiveTab = 'summary'">
+            Executive Summary
+          </button>
+          <button class="tab-btn" [class.active]="managerActiveTab === 'pillars'" (click)="managerActiveTab = 'pillars'">
+            Four Pillars
+          </button>
+          <button class="tab-btn" [class.active]="managerActiveTab === 'kpc_log'" (click)="managerActiveTab = 'kpc_log'">
+            KPC Log
+          </button>
+          <button class="tab-btn" [class.active]="managerActiveTab === 'ai_insights'" (click)="managerActiveTab = 'ai_insights'">
+            AI Insights
+          </button>
+          <button class="tab-btn" [class.active]="managerActiveTab === 'timeline'" (click)="managerActiveTab = 'timeline'">
+            Report Timeline
+          </button>
+        </div>
+
+        <!-- Summary Tab -->
+        <div *ngIf="managerActiveTab === 'summary'" class="tab-pane animate-in">
+          <div class="narrative-box">
+            <h4>Executive Narrative</h4>
+            <p>{{ selectedReport.snapshot?.executive_summary?.narrative || selectedReport.report_snapshot?.executive_summary?.narrative }}</p>
+          </div>
+          <div class="kpi-quad-grid">
+            <div class="mini-kpi">
+              <span class="lbl">Total Beneficiaries</span>
+              <span class="val">{{ selectedReport.snapshot?.kpi_snapshot?.total_beneficiaries | number }}</span>
+            </div>
+            <div class="mini-kpi">
+              <span class="lbl">Completion Rate</span>
+              <span class="val">{{ selectedReport.snapshot?.kpi_snapshot?.completion_rate }}%</span>
+            </div>
+            <div class="mini-kpi">
+              <span class="lbl">Attendance Rate</span>
+              <span class="val">{{ selectedReport.snapshot?.kpi_snapshot?.attendance_rate }}%</span>
+            </div>
+            <div class="mini-kpi">
+              <span class="lbl">Data Quality</span>
+              <span class="val">{{ selectedReport.snapshot?.data_quality_score || 94 }}%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pillars Tab -->
+        <div *ngIf="managerActiveTab === 'pillars'" class="tab-pane animate-in">
+          <div class="pillar-grid">
+            <div class="pillar-card sch">
+              <span class="pillar-tag">Scholarship</span>
+              <h4>Secondary Scholarship</h4>
+              <p>Enrolled: <strong>{{ selectedReport.snapshot?.pillar_performance?.scholarship?.total_enrolled | number }}</strong> | Attendance: <strong>{{ selectedReport.snapshot?.pillar_performance?.scholarship?.avg_attendance_rate }}%</strong></p>
+            </div>
+            <div class="pillar-card plus">
+              <span class="pillar-tag">Plus</span>
+              <h4>Tertiary Plus Mentorship</h4>
+              <p>Enrolled: <strong>{{ selectedReport.snapshot?.pillar_performance?.plus?.total_enrolled | number }}</strong> | Attendance: <strong>{{ selectedReport.snapshot?.pillar_performance?.plus?.avg_attendance_rate }}%</strong></p>
+            </div>
+            <div class="pillar-card voc">
+              <span class="pillar-tag">Vocational</span>
+              <h4>Vocational Training</h4>
+              <p>Enrolled: <strong>{{ selectedReport.snapshot?.pillar_performance?.vocational?.total_enrolled | number }}</strong> | Attendance: <strong>{{ selectedReport.snapshot?.pillar_performance?.vocational?.avg_attendance_rate }}%</strong></p>
+            </div>
+            <div class="pillar-card tech">
+              <span class="pillar-tag">Tech</span>
+              <h4>Tech Innovation Hub</h4>
+              <p>Enrolled: <strong>{{ selectedReport.snapshot?.pillar_performance?.tech?.total_enrolled | number }}</strong> | Attendance: <strong>{{ selectedReport.snapshot?.pillar_performance?.tech?.avg_attendance_rate }}%</strong></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPC Log Tab -->
+        <div *ngIf="managerActiveTab === 'kpc_log'" class="tab-pane animate-in">
+          <h4>KPC Operational &amp; Activity Log</h4>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead><tr><th>Date</th><th>Pillar</th><th>Activity / Event</th><th>Officer</th><th>Status</th><th>Notes</th></tr></thead>
+              <tbody>
+                <tr *ngFor="let rec of selectedReport.snapshot?.kpc_log?.records">
+                  <td>{{ rec.date }}</td>
+                  <td><strong>{{ rec.pillar }}</strong></td>
+                  <td>{{ rec.activity }}</td>
+                  <td>{{ rec.responsible_officer }}</td>
+                  <td><span class="status-chip badge-approved">{{ rec.status }}</span></td>
+                  <td>{{ rec.notes }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- AI Insights Tab -->
+        <div *ngIf="managerActiveTab === 'ai_insights'" class="tab-pane animate-in">
+          <div class="ai-insights-box">
+            <h4><span class="material-icons-outlined">psychology</span> Grounded AI Analysis</h4>
+            <p><strong>Assessment:</strong> {{ selectedReport.snapshot?.ai_insights?.overall_assessment }}</p>
+            <h5>Recommendations:</h5>
+            <ul>
+              <li *ngFor="let rec of selectedReport.snapshot?.ai_insights?.recommendations">{{ rec }}</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Timeline Tab -->
+        <div *ngIf="managerActiveTab === 'timeline'" class="tab-pane animate-in">
+          <h4>REPORT TIMELINE</h4>
+          <div class="audit-timeline">
+            <div class="timeline-event" *ngFor="let ev of selectedReport.timeline">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <span class="timeline-time">{{ ev.timestamp }}</span>
+                <strong class="timeline-action">{{ ev.action }}</strong>
+                <span class="timeline-user">by {{ ev.user }} ({{ ev.role }})</span>
+                <p class="timeline-dtl" *ngIf="ev.details">{{ ev.details }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer with ONLY Manager Buttons (when user is Manager) -->
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeManagerViewModal()">Close</button>
+
+        <!-- STRICT RBAC: APPROVE / REJECT VISIBLE ONLY TO PROGRAM MANAGERS -->
+        <ng-container *ngIf="isManager && (selectedReport?.status === 'PENDING_MANAGER_REVIEW' || selectedReport?.status === 'pending_manager_review')">
+          <button class="btn btn-danger" (click)="openRejectModal()">
+            <span class="material-icons-outlined">close</span>
+            REJECT REPORT
+          </button>
+          <button class="btn btn-success" (click)="openApproveModal()">
+            <span class="material-icons-outlined">check_circle</span>
+            APPROVE REPORT
+          </button>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 3. MANAGER APPROVE CONFIRMATION DIALOG -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" *ngIf="showApproveConfirmModal">
+    <div class="modal-dialog modal-md animate-in">
+      <div class="modal-header">
+        <h2>Approve Official Report</h2>
+        <button class="modal-close-btn" (click)="closeApproveConfirmModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="prompt-text">Are you sure you want to approve <strong>{{ selectedReport?.title }}</strong>?</p>
+        <p class="subtext">Approving this report will grant official management sign-off and create an immutable audit record.</p>
+
+        <div class="form-group" style="margin-top:16px;">
+          <label class="field-label">Approval Comment (Optional)</label>
+          <textarea class="form-textarea" rows="3" [(ngModel)]="approvalComment"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeApproveConfirmModal()">Cancel</button>
+        <button class="btn btn-success" [disabled]="actionLoading" (click)="confirmApprove()">
+          <span class="material-icons-outlined">check_circle</span>
+          Confirm &amp; Approve
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 4. MANAGER REJECT REASON MODAL (REQUIRED REASON) -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" *ngIf="showRejectModal">
+    <div class="modal-dialog modal-md animate-in">
+      <div class="modal-header">
+        <h2 class="text-danger">REJECT REPORT</h2>
+        <button class="modal-close-btn" (click)="closeRejectModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="prompt-text">Please provide a mandatory reason for rejecting this report. The report will be returned to Admin for revision.</p>
+
+        <div class="preset-reasons">
+          <span class="preset-label">Preset reasons:</span>
+          <div class="preset-chips">
+            <button class="chip-btn" *ngFor="let r of rejectionReasonsList" (click)="selectPresetRejectReason(r)">
+              {{ r }}
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:16px;">
+          <label class="field-label">Mandatory Rejection Reason *</label>
+          <textarea
+            class="form-textarea"
+            rows="3"
+            placeholder="Enter specific discrepancy or required revision details..."
+            [(ngModel)]="rejectReason"
+          ></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeRejectModal()">Cancel</button>
+        <button
+          class="btn btn-danger"
+          [disabled]="actionLoading || !rejectReason || rejectReason.trim().length < 3"
+          (click)="confirmReject()"
+        >
+          <span class="material-icons-outlined">arrow_back</span>
+          Return for Revision
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 5. ADMIN REVISION MODAL -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" *ngIf="showReviseModal">
+    <div class="modal-dialog modal-md animate-in">
+      <div class="modal-header">
+        <h2>Revise Report: {{ revisingReport?.title }}</h2>
+        <button class="modal-close-btn" (click)="closeReviseModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="rejection-feedback-callout">
+          <strong>Manager Rejection Reason:</strong>
+          <p>{{ revisingReport?.rejection_reason || 'Revisions required before approval.' }}</p>
+        </div>
+
+        <p class="subtext" style="margin-top:16px;">
+          Creating a revision will generate Version {{ (revisingReport?.version || 1) + 1 }} with the latest verified data snapshot and submit it back to the Manager for review.
+        </p>
+
+        <div class="form-group" style="margin-top:16px;">
+          <label class="field-label">Revision Notes</label>
+          <textarea class="form-textarea" rows="3" [(ngModel)]="reviseNotes"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeReviseModal()">Cancel</button>
+        <button class="btn btn-primary" [disabled]="actionLoading" (click)="submitRevision()">
+          <span class="material-icons-outlined">send</span>
+          Generate Version {{ (revisingReport?.version || 1) + 1 }} &amp; Submit
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 6. STANDALONE VALIDATION DIALOG -->
+  <!-- ========================================================================= -->
+  <div class="modal-backdrop" *ngIf="showAdminValidateModal">
+    <div class="modal-dialog modal-lg animate-in">
+      <div class="modal-header">
+        <h2>REPORT VALIDATION ENGINE</h2>
+        <button class="modal-close-btn" (click)="closeAdminValidateModal()">&times;</button>
+      </div>
+      <div class="modal-body" *ngIf="validationRunning">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Running automated checks across 4 pillars...</p>
+        </div>
+      </div>
+      <div class="modal-body" *ngIf="!validationRunning && adminValidationData">
+        <div class="validation-summary-bar">
+          <span class="v-pill pass">✓ {{ adminValidationData?.summary?.passed }} Passed</span>
+          <span class="v-pill warn" *ngIf="adminValidationData?.summary?.warnings > 0">⚠ {{ adminValidationData?.summary?.warnings }} Warnings</span>
+          <span class="v-pill err" *ngIf="adminValidationData?.summary?.errors > 0">✕ {{ adminValidationData?.summary?.errors }} Errors</span>
+        </div>
+
+        <div class="checklist-items" style="margin-top:16px;">
+          <div class="check-item" *ngFor="let check of adminValidationData?.checks" [ngClass]="check.status.toLowerCase()">
+            <div class="check-status-icon">
+              <span *ngIf="check.status === 'PASS'">✓</span>
+              <span *ngIf="check.status === 'WARNING'">⚠</span>
+              <span *ngIf="check.status === 'ERROR'">✕</span>
+            </div>
+            <div class="check-body">
+              <div class="check-title">{{ check.name }}</div>
+              <div class="check-msg">{{ check.message }}</div>
+              <div class="check-dtl">{{ check.details }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeAdminValidateModal()">Close</button>
+        <button class="btn btn-primary" (click)="closeAdminValidateModal(); openReviewReport()">
+          Proceed to Review &amp; Generate
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

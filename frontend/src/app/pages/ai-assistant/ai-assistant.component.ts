@@ -14,13 +14,14 @@ export class AiAssistantComponent implements OnInit {
   addedToReport: number | null = null;
 
   quickQuestions = [
-    'What changed this quarter?',
-    'Which program needs attention?',
-    'Summarize Q3 performance',
-    'Which counties are underperforming?',
-    'Compare Q2 and Q3',
-    'Recommend areas requiring management attention'
+    'Summarize Q3 cross-pillar outcomes for donor brief',
+    'What are the completion rates across all 4 pillars?',
+    'Which counties show highest tech employment rate?',
+    'What are the primary data quality bottlenecks?',
+    'Compare Q2 and Q3 performance trends',
+    'Recommend key areas requiring administrative action'
   ];
+
 
   contextMetrics: any = {};
 
